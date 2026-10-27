@@ -241,6 +241,10 @@ dialog::backdrop{background:rgba(15,20,30,.45)}
 .pm{font-size:12px;padding:2px 4px}.pm.pmY{color:#0a7a33;font-weight:600}.pm.pmO{color:#b45f06;font-weight:600}.pm.pmN{color:#999}
 .role.om{background:rgba(255,255,255,.08)}
 #permBar{position:sticky;top:0;z-index:50;background:#fff4cc;border-bottom:1px solid #e8c84a;padding:8px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:14px}
+.eqt tr.eqsvc td{border-bottom:2px solid var(--line2);padding:2px 4px 10px;background:#fafbfc}
+.eqt tr.eqsvc .tog,.eqt tr.eqsvc .chk{align-items:center}
+.eql{font-size:12px;color:var(--ink2);min-width:64px}
+.eqt tr.eqsvc input[type=checkbox]{width:auto}.eqt tr.eqsvc .chk label{white-space:nowrap}
 </style>
 </head>
 <body>
@@ -286,7 +290,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 <script>
 'use strict';
 /* ================= 常數 ================= */
-const APPVER='2.3.2';
+const APPVER='2.4（每台設備各自服務）';
 const STAGES=['待安排','已排程','待審核','結案','取消','轉系統部門'];
 const OPEN=['待安排','已排程','待審核'];
 const SC={'待安排':'var(--st-wait)','已排程':'var(--st-sched)','待審核':'var(--st-done)','結案':'var(--st-closed)','取消':'var(--st-cancel)','轉系統部門':'var(--st-sys)'};
@@ -971,18 +975,19 @@ function renderMsg(){
 
 
 /* ================= 訊息單 ================= */
-function newSf(){return {sales:ss.get('fsd2_sales')||'',order:'',doc:'',lead:'',priority:(S.set.priorities[0]||''),warranty:'',cust:'',contact:'',phone:'',addr:'',seg:'',kind:'',subject:'',tasks:[],equip:[{brand:'BUSCH',ptype:'',model:'',qty:1,sn:'',wo:'',po:''}],photo:null,notes:''}}
-function sfFromCase(r){const g=r.signal||{};return {sales:r.sales,order:r.order||'',doc:r.doc||'',lead:g.lead||'',priority:g.priority||'Schedule',warranty:g.warranty||'',cust:r.cust,contact:r.contact||'',phone:r.phone||'',addr:r.addr||'',seg:String(r.seg??''),kind:g.kind||'',subject:g.subject||'',tasks:(g.tasks||[]).slice(),equip:JSON.parse(JSON.stringify(g.equip||[])),photo:g.photo??null,notes:g.notes||''}}
+function newSf(){return {sales:ss.get('fsd2_sales')||'',order:'',doc:'',lead:'',priority:(S.set.priorities[0]||''),warranty:'',cust:'',contact:'',phone:'',addr:'',seg:'',kind:'',subject:'',tasks:[],equip:[{brand:'BUSCH',ptype:'',model:'',qty:1,sn:'',wo:'',po:'',subject:'',tasks:[]}],photo:null,notes:''}}
+function sfFromCase(r){const g=r.signal||{};return {sales:r.sales,order:r.order||'',doc:r.doc||'',lead:g.lead||'',priority:g.priority||'Schedule',warranty:g.warranty||'',cust:r.cust,contact:r.contact||'',phone:r.phone||'',addr:r.addr||'',seg:String(r.seg??''),kind:g.kind||'',subject:g.subject||'',tasks:(g.tasks||[]).slice(),equip:JSON.parse(JSON.stringify(g.equip||[])).map(e=>Object.assign({subject:g.subject||'',tasks:(g.tasks||[]).slice()},e,{tasks:(e.tasks||g.tasks||[]).slice()})),photo:g.photo??null,notes:g.notes||''}}
+/* 每台設備各自的服務主旨與任務；一張單的主旨／任務＝所有設備的聯集 */
+const eqSubjects=eq=>[...new Set(eq.map(e=>e.subject).filter(Boolean))];
+const eqTasks=eq=>[...new Set(eq.flatMap(e=>e.tasks||[]))];
+const eqSvc=e=>(e.subject?zh(e.subject):'')+((e.tasks||[]).length?'－'+e.tasks.join('/'):'');
 function tosString(sf){
-  const t=sf.tasks.join('/');
-  return sf.equip.filter(e=>e.model).map(e=>sf.kind==='廠內維修'?`${e.model}${e.sn?'(S/N '+e.sn+')':''} ${t}`.trim():`${e.model} ${t} x${e.qty||1}`).join('、');
+  return sf.equip.filter(e=>e.model).map(e=>sf.kind==='廠內維修'?`${e.model}${e.sn?'(S/N '+e.sn+')':''} ${eqSvc(e)}`.trim():`${e.model} ${eqSvc(e)} x${e.qty||1}`).join('；');
 }
 function sfValidate(sf){
   const bad=[];const B=(k,l)=>bad.push([k,l]);
   if(!sf.sales)B('sales','業務');
   if(!sf.kind)B('kind','服務種類');
-  if(sf.kind&&!sf.subject)B('subject','服務主旨');
-  if(sf.subject&&!sf.tasks.length)B('tasks',(/檢查/.test(sf.subject)?'異常現象':'任務內容')+'（至少選一項）');
   if(!sf.order)B('order','訂單 V/X');
   if(!sf.lead)B('lead','交期預期');
   if(!sf.warranty)B('warranty','Warranty');
@@ -996,7 +1001,9 @@ function sfValidate(sf){
   if(!eq.length)B('equip','設備（至少一列）');
   sf.equip.forEach((e,i)=>{
     if(!e.model&&!e.ptype&&!e.sn&&sf.equip.length>1)return;
-    if(sf.kind==='廠內維修'){if(!e.model)B('equip','第'+(i+1)+'列 型號');if(!e.sn)B('equip','第'+(i+1)+'列 S/N');if(/^PO/.test(sf.subject)&&!e.po)B('equip','第'+(i+1)+'列 PO No.')}
+    if(sf.kind&&!e.subject)B('svc'+i,'第'+(i+1)+'列 服務主旨');
+    else if(sf.kind&&!(e.tasks||[]).length)B('svc'+i,'第'+(i+1)+'列 '+(/檢查/.test(e.subject)?'異常現象':'任務內容')+'（至少選一項）');
+    if(sf.kind==='廠內維修'){if(!e.model)B('equip','第'+(i+1)+'列 型號');if(!e.sn)B('equip','第'+(i+1)+'列 S/N');if(/^PO/.test(e.subject)&&!e.po)B('equip','第'+(i+1)+'列 PO No.')}
     else{if(!e.brand)B('equip','第'+(i+1)+'列 Brand');if(!e.ptype)B('equip','第'+(i+1)+'列 Pump Type');if(!e.model)B('equip','第'+(i+1)+'列 型號');if(!(+e.qty>0))B('equip','第'+(i+1)+'列 數量')}
   });
   if(sf.photo===null)B('photo','照片報告（需要／不需要）');
@@ -1011,7 +1018,6 @@ function renderSignal(){
   const badSet=new Set((S.sfBad||[]).map(b=>b[0]));
   const bc=k=>badSet.has(k)?'bad':'';
   const subjects=sf.kind?Object.keys(st.serviceTree[sf.kind]||{}):[];
-  const tasks=sf.subject&&sf.kind?(st.serviceTree[sf.kind][sf.subject]||[]):[];
   const ptypes=Object.keys(st.pumpTypes);
   const inhouse=sf.kind==='廠內維修';
   const cust=custInfo(sf.cust);
@@ -1028,8 +1034,7 @@ function renderSignal(){
   <div class="panel sec"><div class="ph"><h2>服務內容</h2></div>
    <div class="pb fgrid">
     <div class="fl s4 ${bc('kind')}"><span class="req">服務種類 Type of Services</span><div class="tog">${Object.keys(st.serviceTree).map(k=>`<button type="button" data-kind="${esc(k)}" class="${sf.kind===k?'on':''}">${esc(k)}</button>`).join('')}</div></div>
-    ${sf.kind?`<div class="fl s4 ${bc('subject')}"><span class="req">服務主旨 Subject of Service</span><div class="tog">${subjects.map(k=>`<button type="button" data-subj="${esc(k)}" class="${sf.subject===k?'on':''}">${esc(k)}</button>`).join('')}</div></div>`:''}
-    ${sf.subject?`<div class="fl s4 ${bc('tasks')}"><span class="req">${/檢查/.test(sf.subject)?'異常現象 Symptoms':'任務內容 Mission Details'}（可複選）</span><div class="chk">${tasks.map(t=>`<label class="${sf.tasks.includes(t)?'on':''}"><input type="checkbox" data-task="${esc(t)}" ${sf.tasks.includes(t)?'checked':''}>${esc(t)}</label>`).join('')||'<span class="muted">此主旨尚未設定任務，請到設定新增</span>'}</div></div>`:''}
+    ${sf.kind?'<div class="s4 muted" style="font-size:12px">服務主旨與任務內容請在下方「設備與服務內容」每台設備分別選擇。</div>':''}
    </div></div>
   <div class="panel sec"><div class="ph"><h2>客戶</h2><span class="sp"></span>${cust&&cust.km?`<span class="muted">📍 ${esc(cust.area||'')} 單程 ${cust.km} km · ${cust.min||'?'} 分</span>`:''}</div>
    <div class="pb fgrid">
@@ -1039,14 +1044,17 @@ function renderSignal(){
     <label class="${bc('phone')}"><span class="req">電話 Mobile</span><input type="text" data-k="phone" value="${esc(sf.phone)}"></label>
     <label class="s2 ${bc('addr')}"><span class="req">地址 Address</span><input type="text" data-k="addr" value="${esc(sf.addr)}"></label>`}
    </div></div>
-  <div class="panel sec"><div class="ph"><h2>設備 ${inhouse?'（廠內維修）':'（到場服務）'}</h2><span class="sp"></span><button class="btn sm" id="eqAdd">＋ 加一列</button></div>
+  <div class="panel sec"><div class="ph"><h2>設備與服務內容 ${inhouse?'（廠內維修）':'（到場服務）'}</h2><span class="sp"></span><button class="btn sm" id="eqAdd">＋ 加一台（複製上一台的服務）</button></div>
    <div class="pb ${bc('equip')}"><table class="eqt"><thead><tr><th>Brand</th><th>Pump Type</th><th>型號 Model</th>${inhouse?'<th>S/N</th><th>Work Order No.</th><th>PO No.</th>':'<th style="width:80px">數量</th>'}<th style="width:36px"></th></tr></thead><tbody>
     ${sf.equip.map((e,i)=>`<tr>
      <td><select data-eq="${i}" data-f="brand">${st.brands.map(b=>`<option ${b===e.brand?'selected':''}>${esc(b)}</option>`).join('')}</select></td>
      <td><select data-eq="${i}" data-f="ptype"><option value="">—</option>${ptypes.map(p=>`<option ${p===e.ptype?'selected':''}>${esc(p)}</option>`).join('')}</select></td>
      <td><input type="text" data-eq="${i}" data-f="model" value="${esc(e.model)}" list="pm_${i}" placeholder="選擇或輸入"><datalist id="pm_${i}">${(st.pumpTypes[e.ptype]||Object.values(st.pumpTypes).flat()).map(m=>`<option value="${esc(m)}">`).join('')}</datalist></td>
      ${inhouse?`<td><input type="text" data-eq="${i}" data-f="sn" value="${esc(e.sn)}"></td><td><input type="text" data-eq="${i}" data-f="wo" value="${esc(e.wo)}"></td><td><input type="text" data-eq="${i}" data-f="po" value="${esc(e.po)}"></td>`:`<td><input type="number" min="1" data-eq="${i}" data-f="qty" value="${esc(e.qty)}"></td>`}
-     <td><button type="button" class="btn sm" data-eqdel="${i}">✕</button></td></tr>`).join('')}
+     <td><button type="button" class="btn sm" data-eqdel="${i}">✕</button></td></tr>
+     <tr class="eqsvc"><td colspan="${inhouse?7:5}">${!sf.kind?'<span class="muted">請先選上方「服務種類」</span>':`<div class="fl ${bc('svc'+i)}" style="gap:6px">
+       <div class="tog"><span class="req eql">服務主旨</span>${subjects.map(k=>`<button type="button" data-esubj="${i}|${esc(k)}" class="${e.subject===k?'on':''}">${esc(k)}</button>`).join('')}</div>
+       ${e.subject?`<div class="chk"><span class="req eql">${/檢查/.test(e.subject)?'異常現象':'任務內容'}</span>${((st.serviceTree[sf.kind]||{})[e.subject]||[]).map(t=>`<label class="${(e.tasks||[]).includes(t)?'on':''}"><input type="checkbox" data-etask="${i}|${esc(t)}" ${(e.tasks||[]).includes(t)?'checked':''}>${esc(t)}</label>`).join('')||'<span class="muted">此主旨尚未設定任務，請到設定新增</span>'}</div>`:''}</div>`}</td></tr>`).join('')}
    </tbody></table></div></div>
   <div class="panel sec"><div class="ph"><h2>報告與補充</h2></div>
    <div class="pb fgrid">
@@ -1068,15 +1076,15 @@ function renderSignal(){
     const k=e.target.dataset.k;if(k==='cust'){custFill(e.target.value,true);return}
     if(e.target.dataset.f==='ptype'){setTimeout(renderSignal,0);return}
     if(e.target.dataset.f==='model'){const q=sf.equip[+e.target.dataset.eq];const nm=normModel(e.target.value);q.model=nm;e.target.value=nm;const fm=q.brand==='BUSCH'?famOf('',nm):'';if(fm&&fm!==q.ptype&&st.pumpTypes[fm]){q.ptype=fm;setTimeout(renderSignal,0)}upd();return}
-    const t=e.target.dataset.task;if(t){sf.tasks=e.target.checked?[...sf.tasks,t]:sf.tasks.filter(x=>x!==t);e.target.closest('label').classList.toggle('on',e.target.checked);upd()}
+    const et=e.target.dataset.etask;if(et){const p=et.indexOf('|');const q=sf.equip[+et.slice(0,p)],t=et.slice(p+1);q.tasks=q.tasks||[];q.tasks=e.target.checked?[...q.tasks,t]:q.tasks.filter(x=>x!==t);e.target.closest('label').classList.toggle('on',e.target.checked);upd()}
   };
   m.onclick=e=>{
     const s=e.target.closest('[data-set]');if(s){sf[s.dataset.set]=s.dataset.val;renderSignal();return}
-    const kd=e.target.closest('[data-kind]');if(kd){if(sf.kind!==kd.dataset.kind){sf.kind=kd.dataset.kind;sf.subject='';sf.tasks=[]}renderSignal();return}
-    const sb=e.target.closest('[data-subj]');if(sb){if(sf.subject!==sb.dataset.subj){sf.subject=sb.dataset.subj;sf.tasks=[]}renderSignal();return}
+    const kd=e.target.closest('[data-kind]');if(kd){if(sf.kind!==kd.dataset.kind){sf.kind=kd.dataset.kind;sf.equip.forEach(q=>{q.subject='';q.tasks=[]})}renderSignal();return}
+    const sb=e.target.closest('[data-esubj]');if(sb){const p=sb.dataset.esubj.indexOf('|');const q=sf.equip[+sb.dataset.esubj.slice(0,p)],v=sb.dataset.esubj.slice(p+1);if(q.subject!==v){q.subject=v;q.tasks=[]}renderSignal();return}
     const ph=e.target.closest('[data-photo]');if(ph){sf.photo=ph.dataset.photo==='true';renderSignal();return}
-    if(e.target.id==='eqAdd'){sf.equip.push({brand:'BUSCH',ptype:'',model:'',qty:1,sn:'',wo:'',po:''});renderSignal();return}
-    const dl=e.target.closest('[data-eqdel]');if(dl){sf.equip.splice(+dl.dataset.eqdel,1);if(!sf.equip.length)sf.equip=[{brand:'BUSCH',ptype:'',model:'',qty:1,sn:'',wo:'',po:''}];renderSignal();return}
+    if(e.target.id==='eqAdd'){const pv=sf.equip[sf.equip.length-1]||{};sf.equip.push(Object.assign({brand:'BUSCH',ptype:'',model:'',qty:1,sn:'',wo:'',po:'',subject:'',tasks:[]},{subject:pv.subject||'',tasks:(pv.tasks||[]).slice()}));renderSignal();return}
+    const dl=e.target.closest('[data-eqdel]');if(dl){sf.equip.splice(+dl.dataset.eqdel,1);if(!sf.equip.length)sf.equip=[{brand:'BUSCH',ptype:'',model:'',qty:1,sn:'',wo:'',po:'',subject:'',tasks:[]}];renderSignal();return}
     if(e.target.id==='sfReset'){confirmBox('清空目前填寫的內容？',()=>{S.sf=newSf();S.sfBad=null;renderSignal()});return}
     if(e.target.id==='sfCancel'){S.sigEdit=null;S.sf=null;S.view=S.role==='sales'?'mysig':'list';render();return}
     if(e.target.id==='sfGo')submitSignal();
@@ -1117,8 +1125,9 @@ async function submitSignal(){
   if(bad.length){renderSignal();toast('還有 '+bad.length+' 項未完成');const e=document.querySelector('.bad');if(e)e.scrollIntoView({behavior:'smooth',block:'center'});return}
   const btn=$('#sfGo');if(btn){btn.disabled=true;btn.textContent='送出中…'}
   const equip=sf.equip.filter(e=>e.model);
-  const sig={kind:sf.kind,subject:sf.subject,tasks:sf.tasks.slice(),equip,lead:sf.lead,priority:sf.priority,warranty:sf.warranty,photo:sf.photo,notes:sf.notes,by:salesName(sf.sales),byCode:sf.sales,at:nowLocal()};
-  const derived={cust:sf.cust.trim(),contact:sf.contact.trim(),phone:sf.phone.trim(),addr:sf.addr.trim(),order:sf.order,doc:sf.doc.trim(),type:zh(sf.subject),content:tosString({...sf,equip}),items:equip.map(e=>({model:e.model,qty:sf.kind==='廠內維修'?1:(+e.qty||1)}))};
+  const subs=eqSubjects(equip);
+  const sig={kind:sf.kind,subject:subs.join('、'),tasks:eqTasks(equip),equip,lead:sf.lead,priority:sf.priority,warranty:sf.warranty,photo:sf.photo,notes:sf.notes,by:salesName(sf.sales),byCode:sf.sales,at:nowLocal()};
+  const derived={cust:sf.cust.trim(),contact:sf.contact.trim(),phone:sf.phone.trim(),addr:sf.addr.trim(),order:sf.order,doc:sf.doc.trim(),type:subs.map(zh).join('、'),content:tosString({...sf,equip}),items:equip.map(e=>({model:e.model,qty:sf.kind==='廠內維修'?1:(+e.qty||1)}))};
   try{
     if(S.sigEdit){
       const cur=S.caseData[S.sigEdit];
@@ -1172,17 +1181,21 @@ function sigSummary(r){
   return `<div class="info" style="background:#f3f8fe">
    <div><span>服務種類</span>${esc(g.kind)}</div><div><span>服務主旨</span>${esc(g.subject)}</div><div><span>預期交期</span>${esc(g.lead||'-')}</div><div><span>Priority / 保固</span>${esc(g.priority||'-')} / ${esc(g.warranty||'-')}</div>
    <div class="w2c"><span>${/檢查/.test(g.subject)?'異常現象':'任務內容'}</span>${esc((g.tasks||[]).join('、'))}</div><div><span>照片報告</span>${g.photo?'<b>需要</b>':'不需要'}</div>${can('board.contact',isOwn(r))?`<div><span>聯絡人</span>${esc(r.contact||'')} ${esc(r.phone||'')}</div>`:''}
-   <div class="w4c"><span>設備</span>${esc((g.equip||[]).map(e=>[e.brand,e.ptype,e.model,g.kind==='廠內維修'?('S/N '+(e.sn||'-')+(e.wo?' WO '+e.wo:'')+(e.po?' PO '+e.po:'')):('x'+e.qty)].filter(Boolean).join(' ')).join('；'))}</div>
+   <div class="w4c"><span>設備</span>${(g.equip||[]).map(e=>esc([e.brand,e.ptype,e.model,g.kind==='廠內維修'?('S/N '+(e.sn||'-')+(e.wo?' WO '+e.wo:'')+(e.po?' PO '+e.po:'')):('x'+e.qty)].filter(Boolean).join(' '))+(e.subject?'　<b>'+esc(eqSvc(e))+'</b>':'')).join('<br>')}</div>
    ${g.notes?`<div class="w4c"><span>補充</span>${esc(g.notes)}</div>`:''}
    <div class="w4c"><span>開單</span>${esc(g.by||'')} ${esc(g.at||'')}${g.editedAt?`（${esc(g.editedBy||'')} ${esc(g.editedAt)} 修改）`:''}</div></div>`;
 }
 function printSignal(r){
   if(!r||!r.signal){toast('此案件沒有訊息單資料（舊資料匯入）');return}
   const g=r.signal,st=S.set,inhouse=g.kind==='廠內維修';
-  const all=((st.serviceTree[g.kind]||{})[g.subject]||[]).concat((g.tasks||[]).filter(t=>!(((st.serviceTree[g.kind]||{})[g.subject])||[]).includes(t)));
+  const eqs=(g.equip||[]).map(e=>e.subject?e:Object.assign({},e,{subject:g.subject,tasks:g.tasks||[]}));
   const box=on=>`<span class="box">${on?'✓':''}</span>`;
-  const cols=4,rows=[];for(let i=0;i<all.length;i+=cols)rows.push(all.slice(i,i+cols));
-  const eqRows=(g.equip||[]).map(e=>inhouse?`<tr><td>${esc(e.wo||'')}</td><td>${esc(e.brand)} ${esc(e.ptype)} ${esc(e.model)}</td><td>${esc(e.sn||'')}</td><td>${esc(e.po||'')}</td></tr>`:`<tr><td>${esc(e.brand)}</td><td>${esc(e.model)}</td><td>${esc(e.ptype)}</td><td>${esc(e.qty)}</td></tr>`).join('');
+  const cols=4;
+  // 每個服務主旨一組勾選表：列出該主旨所有任務，任一台有選就打勾
+  const grids=eqSubjects(eqs).map(sj=>{const used=eqTasks(eqs.filter(e=>e.subject===sj));const base=(st.serviceTree[g.kind]||{})[sj]||[];
+    const all=base.concat(used.filter(t=>!base.includes(t)));const rows=[];for(let i=0;i<all.length;i+=cols)rows.push(all.slice(i,i+cols));
+    return `<tr><th colspan="${cols}">${esc(sj)}－${/檢查/.test(sj)?'異常現象 Symptoms':'任務內容 Mission Details'}</th></tr>${rows.map(rw=>`<tr>${rw.map(t=>`<td>${box(used.includes(t))}${esc(t)}</td>`).join('')}${'<td></td>'.repeat(cols-rw.length)}</tr>`).join('')}`}).join('');
+  const eqRows=eqs.map(e=>inhouse?`<tr><td>${esc(e.wo||'')}</td><td>${esc(e.brand)} ${esc(e.ptype)} ${esc(e.model)}</td><td>${esc(e.sn||'')}</td><td>${esc(e.po||'')}</td><td>${esc(eqSvc(e))}</td></tr>`:`<tr><td>${esc(e.brand)}</td><td>${esc(e.model)}</td><td>${esc(e.ptype)}</td><td>${esc(e.qty)}</td><td>${esc(eqSvc(e))}</td></tr>`).join('');
   $('#print').innerHTML=`<div class="pf">
    <div class="hd"><div class="co">Busch Taiwan Corporation<div style="font-size:10pt;font-weight:400">台灣普熙股份有限公司</div></div><div class="busch">BUSCH</div></div>
    <div class="ttl">訊息單 Signal Form</div>
@@ -1193,9 +1206,8 @@ function printSignal(r){
     <tr><th>訂單 PO (V/X)</th><td>${esc(r.order||'')}</td><th>單據編號</th><td>${esc(r.doc||'')}</td></tr>
     <tr><th>業務 Sales</th><td>${esc(r.sales)} ${esc(salesName(r.sales))}</td><th>Segment</th><td>${esc(r.seg)} ${esc(segName(r.seg))}</td></tr>
    </table>
-   <table style="margin-top:8px">${inhouse?'<tr><th>Work Order No.</th><th>Pump</th><th>S/N</th><th>PO No.</th></tr>':'<tr><th>Brand</th><th>Pump Model</th><th>Pump Type</th><th>Qty</th></tr>'}${eqRows}</table>
-   <table style="margin-top:8px"><tr><th colspan="${cols}">${/檢查/.test(g.subject)?'異常現象 Symptoms':'任務內容 Mission Details'}</th></tr>
-    ${rows.map(rw=>`<tr>${rw.map(t=>`<td>${box((g.tasks||[]).includes(t))}${esc(t)}</td>`).join('')}${'<td></td>'.repeat(cols-rw.length)}</tr>`).join('')}
+   <table style="margin-top:8px">${inhouse?'<tr><th>Work Order No.</th><th>Pump</th><th>S/N</th><th>PO No.</th><th>服務內容</th></tr>':'<tr><th style="width:14%">Brand</th><th style="width:18%">Pump Model</th><th style="width:14%">Pump Type</th><th style="width:8%">Qty</th><th>服務內容</th></tr>'}${eqRows}</table>
+   <table style="margin-top:8px">${grids}
     <tr><td colspan="${cols}"><b>完工報告照片頁：</b>${box(g.photo)}需要 ${box(!g.photo)}不需要　　<b>Type of Service：</b>${esc(r.content||'')}</td></tr></table>
    <table style="margin-top:8px"><tr><th>任務細節與補充 Detail and Notes</th></tr><tr><td class="notes" style="min-height:50mm;height:50mm">${esc(g.notes||'')}</td></tr></table>
    <table style="margin-top:8px"><colgroup><col style="width:16%"><col style="width:44%"><col style="width:40%"></colgroup>
@@ -1255,11 +1267,11 @@ function tplFor(g){
 }
 function newReport(r){
   const g=r.signal;const units=[];
-  if(g&&g.equip&&g.equip.length)g.equip.forEach(e=>{const n=g.kind==='廠內維修'?1:Math.min(20,+e.qty||1);for(let i=0;i<n;i++)units.push({model:normModel(e.model),ptype:famOf(e.ptype,e.model),sn:g.kind==='廠內維修'?(e.sn||''):''})});
+  if(g&&g.equip&&g.equip.length)g.equip.forEach(e=>{const n=g.kind==='廠內維修'?1:Math.min(20,+e.qty||1);const es=e.subject?e:Object.assign({},e,{subject:g.subject,tasks:g.tasks||[]});
+    for(let i=0;i<n;i++)units.push({model:normModel(e.model),ptype:famOf(e.ptype,e.model),sn:g.kind==='廠內維修'?(e.sn||''):'',svcText:eqSvc(es),svc:chkDefaultSvc(es),tasks:(es.tasks||[]).slice()})});
   else if(r.items&&r.items.length)r.items.forEach(it=>{for(let i=0;i<Math.min(20,+it.qty||1);i++)units.push({model:normModel(it.model),ptype:famOf('',it.model),sn:''})});
   if(!units.length)units.push({model:'',ptype:'',sn:''});
-  const tpl=g&&g.photo?tplFor(g):[];
-  units.forEach((u,i)=>{u.label=LET[i]||String(i+1);u.cond={};u.photos=tpl.map(p=>({t:p.t,u:p.u||'',k:p.k||'',val:'',file:''}));u.chk=newChk(chkTplFor(u.ptype))});
+  units.forEach((u,i)=>{const tpl=g&&g.photo?tplFor(u.tasks?{tasks:u.tasks}:g):[];u.label=LET[i]||String(i+1);u.cond={};u.photos=tpl.map(p=>({t:p.t,u:p.u||'',k:p.k||'',val:'',file:''}));u.chk=newChk(chkTplFor(u.ptype))});
   return {chkSvc:chkDefaultSvc(g),chkOther:'',date:today(),arrival:r.tStart||'',finish:r.tEnd||'',laborHr:'',laborManual:false,engineers:(r.staff||[]).slice(),failure:'',units,parts:[],laborDesc:'',findings:'',recommend:'',quote:'',sign:'',signType:'',reportBy:'',submittedAt:'',review:null};
 }
 function calcHr(a,b){if(!a||!b)return '';const [h1,m1]=a.split(':').map(Number),[h2,m2]=b.split(':').map(Number);let d=(h2*60+m2)-(h1*60+m1);if(d<0)d+=1440;return (Math.round(d/6)/10).toString()}
@@ -1305,10 +1317,9 @@ function renderRep(){
     <label class="${bc('finish')}"><span class="req">完成時間 Finish</span><input type="time" data-p="finish" value="${esc(rp.finish)}" ${dis}></label>
     <label>工時 Labor Hr<input type="number" step="0.1" data-p="laborHr" value="${esc(rp.laborHr||calcHr(rp.arrival,rp.finish))}" ${dis}></label>
     <div class="fl s4 ${bc('engineers')}"><span class="req">工程師 Engineer</span><div class="tog">${staff.map(s=>`<button type="button" data-eng="${esc(s)}" class="${rp.engineers.includes(s)?'on':''}" ${dis}>${esc(s)}</button>`).join('')}</div></div>
-    <div class="fl s4"><span>檢查表服務類別</span><div class="tog">${SVC_TYPES.map(v=>`<button type="button" data-svc="${v}" class="${rp.chkSvc.includes(v)?'on':''}" ${dis}>${v}</button>`).join('')}<input type="text" data-p="chkOther" value="${esc(rp.chkOther||'')}" placeholder="其他" style="width:140px;margin-left:6px" ${dis}></div></div>
     <label class="s4">問題描述 Description of Failure<textarea rows="2" data-p="failure" ${dis}>${esc(rp.failure)}</textarea></label>
    </div></div>
-   ${rp.units.map((u,i)=>`<div class="panel"><div class="ph"><h2>機台 ${esc(u.label)}</h2><span class="sp"></span>${edit&&rp.units.length>1?`<button class="btn sm dng" data-udel="${i}">移除此機台</button>`:''}</div><div class="pb fgrid">
+   ${rp.units.map((u,i)=>`<div class="panel"><div class="ph"><h2>機台 ${esc(u.label)}</h2>${u.svcText?`<span class="tag">${esc(u.svcText)}</span>`:''}<span class="sp"></span>${edit&&rp.units.length>1?`<button class="btn sm dng" data-udel="${i}">移除此機台</button>`:''}</div><div class="pb fgrid">
      <label class="${bc('model'+i)}"><span class="req">型號 Model</span><input type="text" data-p="units.${i}.model" value="${esc(u.model)}" ${dis}></label>
      <label class="${bc('sn'+i)}"><span class="req">序號 S/N</span><input type="text" data-p="units.${i}.sn" value="${esc(u.sn)}" ${dis}></label>
      <label>機種<select data-uptype="${i}" ${dis}><option value="">—</option>${Object.keys(S.set.pumpTypes).map(p=>`<option ${p===u.ptype?'selected':''}>${esc(p)}</option>`).join('')}</select></label>
@@ -1363,7 +1374,7 @@ function renderRep(){
     const en=t.closest('[data-eng]');if(en){const s=en.dataset.eng;rp.engineers=rp.engineers.includes(s)?rp.engineers.filter(x=>x!==s):[...rp.engineers,s];en.classList.toggle('on');dirty();return}
     const cs=t.closest('[data-cs]');if(cs){const [i,c,v]=cs.dataset.cs.split('|');const u=rp.units[+i];const x=u.chk.res[c]=u.chk.res[c]||{};x.st=x.st===v?'':v;cs.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===cs&&x.st===v));const ni=cs.closest('tr').querySelector('[data-p$=".n"]');if(ni)ni.placeholder=x.st==='N'?'No 請說明':'';if(S.repBad)renderRep();dirty();return}
     const ca=t.closest('[data-chkall]');if(ca){const [i,si]=ca.dataset.chkall.split('|').map(Number);const u=rp.units[i];const tp=S.set.checkTemplates[u.chk.tpl];tp.secs[si].items.forEach(it=>{const x=u.chk.res[it.c]=u.chk.res[it.c]||{};if(!x.st)x.st='Y'});renderRep();dirty();return}
-    const sv=t.closest('[data-svc]');if(sv){const v=sv.dataset.svc;rp.chkSvc=rp.chkSvc.includes(v)?rp.chkSvc.filter(x=>x!==v):[...rp.chkSvc,v];sv.classList.toggle('on');dirty();return}
+    const sv=t.closest('[data-usvc]');if(sv){const [i,v]=sv.dataset.usvc.split('|');const u=rp.units[+i];u.svc=u.svc.includes(v)?u.svc.filter(x=>x!==v):[...u.svc,v];sv.classList.toggle('on');dirty();return}
     const q=t.closest('[data-quote]');if(q){rp.quote=q.dataset.quote;renderRep();dirty();return}
     const ud=t.closest('[data-udel]');if(ud){confirmBox('移除這台機台與它的照片資料？',()=>{rp.units.splice(+ud.dataset.udel,1);rp.units.forEach((u,i)=>u.label=LET[i]||String(i+1));renderRep();dirty()});return}
     if(t.id==='uAdd'){const n=rp.units.length;const u0=rp.units[0]||{};rp.units.push({label:LET[n]||String(n+1),model:u0.model||'',ptype:u0.ptype||'',chk:newChk(u0.chk?u0.chk.tpl:''),sn:'',cond:{},photos:(r.signal&&r.signal.photo?tplFor(r.signal):[]).map(p=>({t:p.t,u:p.u||'',k:p.k||'',val:'',file:''}))});renderRep();dirty();return}
@@ -1675,7 +1686,7 @@ function ensureChk(rp,r){
     if(!u.chk)u.chk=newChk(chkTplFor(famOf(u.ptype,u.model)));
   });
   if(!rp.chkSvc)rp.chkSvc=chkDefaultSvc(g);
-  if(rp.chkOther===undefined)rp.chkOther='';
+  rp.units.forEach(u=>{if(!u.svc){const e=eq.find(x=>normModel(x.model)===normModel(u.model));const es=e&&e.subject?e:{subject:g.subject,tasks:g.tasks||[]};u.svc=e&&e.subject?chkDefaultSvc(es):rp.chkSvc.slice();if(!u.svcText&&e&&e.subject)u.svcText=eqSvc(e)}if(u.svcOther===undefined)u.svcOther=rp.chkOther||''});
 }
 const vt=x=>[...String(x)].map(esc).join('<br>');
 const ST_L={Y:'Yes',N:'No',NA:'N.A.'};
@@ -1683,7 +1694,8 @@ function chkEditorHtml(u,i,dis,bad){
   const T=S.set.checkTemplates||{};const t=T[u.chk.tpl];
   const miss=bad?new Set(chkMissing(u)):new Set();
   const sel=`<select data-chktpl="${i}" ${dis}><option value="">不使用檢查表</option>${Object.entries(T).map(([n,x])=>`<option value="${esc(n)}" ${n===u.chk.tpl?'selected':''}>${esc(x.title||n)}</option>`).join('')}</select>`;
-  let h=`<div class="s4 chkbox ${bad&&miss.size?'bad':''}"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px"><b style="font-size:13px">保養檢查表</b>${sel}${t?`<span class="muted" style="font-size:12px">Ref. ${esc(t.ref||'')}｜已填 ${chkItems(t).length-chkMissing(u).length}/${chkItems(t).length}</span>`:''}</div>`;
+  let h=`<div class="s4 chkbox ${bad&&miss.size?'bad':''}"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px"><b style="font-size:13px">保養檢查表</b>${sel}${t?`<span class="muted" style="font-size:12px">Ref. ${esc(t.ref||'')}｜已填 ${chkItems(t).length-chkMissing(u).length}/${chkItems(t).length}</span>`:''}</div>
+   ${t?`<div class="tog sm" style="margin-bottom:6px;align-items:center"><span class="muted" style="font-size:12px">服務類別</span>${SVC_TYPES.map(v=>`<button type="button" data-usvc="${i}|${v}" class="${(u.svc||[]).includes(v)?'on':''}" ${dis}>${v}</button>`).join('')}<input type="text" data-p="units.${i}.svcOther" value="${esc(u.svcOther||'')}" placeholder="其他" style="width:120px" ${dis}></div>`:''}`;
   if(!t)return h+`<div class="muted" style="font-size:12px">機種「${esc(u.ptype||'未判斷')}」沒有對應的檢查表，可從上面選擇，或到 設定 → 檢查表 新增。</div></div>`;
   h+=`<table class="eqt chkt"><thead><tr><th style="width:38px"></th><th>檢測項目</th><th style="width:18%">標準值</th><th style="width:110px">測試數值</th><th style="width:150px">設備狀態</th><th style="width:20%">備註</th></tr></thead><tbody>`;
   t.secs.forEach((s,si)=>{
@@ -1711,7 +1723,7 @@ function chkPageHtml(r,rp,u){
   const t=(S.set.checkTemplates||{})[u.chk&&u.chk.tpl];if(!t)return '';
   const st=S.set,co=st.company||{},g=r.signal||{};
   const box=on=>`<span class="box">${on?'✓':''}</span>`;
-  const svc=rp.chkSvc||[];
+  const svc=u.svc||rp.chkSvc||[],oth=u.svcOther!==undefined?u.svcOther:(rp.chkOther||'');
   const stc=v=>['Y','N','NA'].map(x=>`${ST_L[x]} ${box(v===x)}`).join('　');
   let rows='';
   t.secs.forEach(s=>{
@@ -1725,7 +1737,7 @@ function chkPageHtml(r,rp,u){
    <table class="kh"><colgroup><col style="width:34%"><col style="width:30%"><col style="width:36%"></colgroup>
     <tr><th colspan="3" style="text-align:center">客戶基本資料</th></tr>
     <tr><td>客戶：${esc(r.cust)}</td><td>地點：${esc(g.kind==='廠內維修'?'廠內':(r.addr||''))}</td><td>訊息單號 FSN：${esc(r.fsn)}</td></tr>
-    <tr><td>泵型：${esc(u.model)}</td><td>序號：${esc(u.sn)}（${esc(u.label)}）</td><td>${SVC_TYPES.map(x=>box(svc.includes(x))+x).join(' ')} ${box(!!rp.chkOther)}${esc(rp.chkOther||'____')}</td></tr>
+    <tr><td>泵型：${esc(u.model)}</td><td>序號：${esc(u.sn)}（${esc(u.label)}）</td><td>${SVC_TYPES.map(x=>box(svc.includes(x))+x).join(' ')} ${box(!!oth)}${esc(oth||'____')}</td></tr>
     <tr><td>日期：${esc(rp.date)}</td><td>運轉時數：${esc((u.cond||{}).hours||'')}</td><td>Ref. document: ${esc(t.ref||'')}</td></tr></table>
    <table class="kt"><colgroup><col style="width:7%"><col style="width:5%"><col style="width:25%"><col style="width:11%"><col style="width:17%"><col style="width:22%"><col style="width:13%"></colgroup>
     <tr><th colspan="4">檢測項目</th><th>標準值</th><th>設備狀態</th><th>備註</th></tr>${rows}
