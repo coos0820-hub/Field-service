@@ -245,6 +245,7 @@ dialog::backdrop{background:rgba(15,20,30,.45)}
 .eqt tr.eqsvc .tog,.eqt tr.eqsvc .chk{align-items:center}
 .eql{font-size:12px;color:var(--ink2);min-width:64px}
 .eqt tr.eqsvc input[type=checkbox]{width:auto}.eqt tr.eqsvc .chk label{white-space:nowrap}
+.lastrec{background:#f3f8fe;border:1px solid #cfe0f5;border-radius:8px;padding:8px 12px;font-size:13px}
 </style>
 </head>
 <body>
@@ -290,7 +291,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 <script>
 'use strict';
 /* ================= 常數 ================= */
-const APPVER='2.4（每台設備各自服務）';
+const APPVER='2.5（自動帶出）';
 const STAGES=['待安排','已排程','待審核','結案','取消','轉系統部門'];
 const OPEN=['待安排','已排程','待審核'];
 const SC={'待安排':'var(--st-wait)','已排程':'var(--st-sched)','待審核':'var(--st-done)','結案':'var(--st-closed)','取消':'var(--st-cancel)','轉系統部門':'var(--st-sys)'};
@@ -1011,7 +1012,7 @@ function sfValidate(sf){
 }
 function renderSignal(){
   if(S.sigEdit?!(S.byFsn[S.sigEdit]&&canEditSig(S.byFsn[S.sigEdit])):!can('sig.new')){$('#main').innerHTML='<div class="empty">你的身分沒有'+(S.sigEdit?'修改這張訊息單':'開立訊息單')+'的權限</div>';S.sigEdit=null;return}
-  if(!S.sf||S.sfFor!==(S.sigEdit||'new')){S.sf=S.sigEdit&&S.caseData[S.sigEdit]?sfFromCase(S.caseData[S.sigEdit]):newSf();S.sfFor=S.sigEdit||'new';S.sfBad=null}
+  if(!S.sf||S.sfFor!==(S.sigEdit||'new')){S.sf=S.sigEdit&&S.caseData[S.sigEdit]?sfFromCase(S.caseData[S.sigEdit]):newSf();S.sfFor=S.sigEdit||'new';S.sfBad=null;if(S.sigEdit)S.sf._leadManual=true;else if(!S.sf.lead)autoLead(S.sf)}
   const sf=S.sf,st=S.set,edit=!!S.sigEdit;
   if(S.role==='sales'&&!edit)sf.sales=ss.get('fsd2_sales')||sf.sales;
   if(S.sfBad)S.sfBad=sfValidate(sf);
@@ -1027,7 +1028,7 @@ function renderSignal(){
     <label class="${bc('sales')}"><span class="req">業務</span><select data-k="sales" ${edit||S.role==='sales'?'disabled':''}><option value="">— 選擇 —</option>${st.sales.filter(s=>s.active||s.code===sf.sales).map(s=>`<option value="${esc(s.code)}" ${s.code===sf.sales?'selected':''}>${esc(s.code)} ${esc(s.name)}</option>`).join('')}</select></label>
     <div class="fl ${bc('order')}"><span class="req">訂單</span><div class="tog">${['V','X'].map(v=>`<button type="button" data-set="order" data-val="${v}" class="${sf.order===v?'on':''}">${v==='V'?'V 有訂單':'X 無訂單'}</button>`).join('')}</div></div>
     <label>單據編號／系統案件編號<input type="text" data-k="doc" value="${esc(sf.doc)}" placeholder="TA-O-…（可空白）"></label>
-    <label class="${bc('lead')}"><span class="req">預期交期 Lead Time</span><input type="date" data-k="lead" value="${esc(sf.lead)}"></label>
+    <label class="${bc('lead')}"><span class="req">預期交期 Lead Time</span><input type="date" data-k="lead" value="${esc(sf.lead)}"><span class="muted" style="font-size:11px">${sf._leadManual?'已手動設定':'依 Priority 預設 '+leadDaysOf(sf.priority)+' 天，可修改'}</span></label>
     <div class="fl s2"><span>Priority</span><div class="tog">${st.priorities.map(v=>`<button type="button" data-set="priority" data-val="${esc(v)}" class="${sf.priority===v?'on':''}">${esc(v)}</button>`).join('')}</div></div>
     <div class="fl s2 ${bc('warranty')}"><span class="req">Warranty 保固</span><div class="tog">${['YES','NO'].map(v=>`<button type="button" data-set="warranty" data-val="${v}" class="${sf.warranty===v?'on':''}">${v}</button>`).join('')}</div></div>
    </div></div>
@@ -1039,12 +1040,13 @@ function renderSignal(){
   <div class="panel sec"><div class="ph"><h2>客戶</h2><span class="sp"></span>${cust&&cust.km?`<span class="muted">📍 ${esc(cust.area||'')} 單程 ${cust.km} km · ${cust.min||'?'} 分</span>`:''}</div>
    <div class="pb fgrid">
     <label class="s2 ${bc('cust')}"><span class="req">客戶 Customer</span><input type="text" data-k="cust" list="custList" value="${esc(sf.cust)}" placeholder="輸入關鍵字選擇，新客戶直接輸入全名"><datalist id="custList">${st.customers.map(c=>`<option value="${esc(c.name)}">`).join('')}</datalist></label>
-    <label class="s2 ${bc('seg')}"><span class="req">Segment（行業別）</span><select data-k="seg" ${edit?'disabled':''}><option value="">— 選擇 —</option>${st.segments.map(s=>`<option value="${esc(s.code)}" ${String(s.code)===sf.seg?'selected':''}>${esc(s.code)} ${esc(s.name)}</option>`).join('')}</select></label>
+    <label class="s2 ${bc('seg')}"><span class="req">Segment（行業別）</span><select data-k="seg" ${edit||segLocked(sf)?'disabled':''}><option value="">— 選擇 —</option>${st.segments.map(s=>`<option value="${esc(s.code)}" ${String(s.code)===sf.seg?'selected':''}>${esc(s.code)} ${esc(s.name)}</option>`).join('')}</select><span class="muted" id="segNote" style="font-size:11px">${segNote(sf,edit)}</span></label>
     ${inhouse?'<div class="s4 muted" style="font-size:12px">廠內維修不需填聯絡人、電話、地址</div>':`<label class="${bc('contact')}"><span class="req">聯絡人 Contact</span><input type="text" data-k="contact" value="${esc(sf.contact)}"></label>
     <label class="${bc('phone')}"><span class="req">電話 Mobile</span><input type="text" data-k="phone" value="${esc(sf.phone)}"></label>
     <label class="s2 ${bc('addr')}"><span class="req">地址 Address</span><input type="text" data-k="addr" value="${esc(sf.addr)}"></label>`}
    </div></div>
   <div class="panel sec"><div class="ph"><h2>設備與服務內容 ${inhouse?'（廠內維修）':'（到場服務）'}</h2><span class="sp"></span><button class="btn sm" id="eqAdd">＋ 加一台（複製上一台的服務）</button></div>
+   ${(()=>{const H=custEquipHistory(sf.cust);return H.length?`<div class="pb" style="padding-bottom:0"><span class="muted" style="font-size:12px">此客戶以前的設備（點一下加入）：</span> ${H.map((h,i)=>`<button type="button" class="btn sm" data-hist="${i}">＋ ${esc(h.model)}${h.ptype?' <span class="muted">'+esc(h.ptype)+'</span>':''}</button>`).join(' ')}</div>`:''})()}
    <div class="pb ${bc('equip')}"><table class="eqt"><thead><tr><th>Brand</th><th>Pump Type</th><th>型號 Model</th>${inhouse?'<th>S/N</th><th>Work Order No.</th><th>PO No.</th>':'<th style="width:80px">數量</th>'}<th style="width:36px"></th></tr></thead><tbody>
     ${sf.equip.map((e,i)=>`<tr>
      <td><select data-eq="${i}" data-f="brand">${st.brands.map(b=>`<option ${b===e.brand?'selected':''}>${esc(b)}</option>`).join('')}</select></td>
@@ -1069,7 +1071,7 @@ function renderSignal(){
   const upd=()=>{const t=$('#tosv');if(t)t.textContent=tosString(sf)||'';
     const eb=$('#sfErr');if(eb&&S.sfBad){const b=sfValidate(sf);eb.innerHTML=b.length?`<b>還有 ${b.length} 項未完成：</b>${b.map(x=>esc(x[1])).join('、')}`:'✓ 全部填寫完成，可以送出';eb.style.background=b.length?'':'#eaf7f1'}};
   m.oninput=e=>{
-    const k=e.target.dataset.k;if(k){sf[k]=e.target.value;if(k==='cust')custFill(e.target.value,false);upd();return}
+    const k=e.target.dataset.k;if(k){sf[k]=e.target.value;if(k==='lead')sf._leadManual=true;if(k==='cust'){custFill(e.target.value,false);syncCustDom()}upd();return}
     const q=e.target.dataset.eq;if(q!==undefined){const f=e.target.dataset.f;sf.equip[+q][f]=f==='qty'?(+e.target.value||''):e.target.value;upd()}
   };
   m.onchange=e=>{
@@ -1079,7 +1081,10 @@ function renderSignal(){
     const et=e.target.dataset.etask;if(et){const p=et.indexOf('|');const q=sf.equip[+et.slice(0,p)],t=et.slice(p+1);q.tasks=q.tasks||[];q.tasks=e.target.checked?[...q.tasks,t]:q.tasks.filter(x=>x!==t);e.target.closest('label').classList.toggle('on',e.target.checked);upd()}
   };
   m.onclick=e=>{
-    const s=e.target.closest('[data-set]');if(s){sf[s.dataset.set]=s.dataset.val;renderSignal();return}
+    const s=e.target.closest('[data-set]');if(s){sf[s.dataset.set]=s.dataset.val;if(s.dataset.set==='priority')autoLead(sf);renderSignal();return}
+    const hq=e.target.closest('[data-hist]');if(hq){const h=custEquipHistory(sf.cust)[+hq.dataset.hist];if(!h)return;const last=sf.equip[sf.equip.length-1];
+      const blank=last&&!last.model&&!last.ptype;const row=Object.assign({brand:'BUSCH',ptype:'',model:'',qty:1,sn:'',wo:'',po:'',subject:last&&blank?'':(last?last.subject:''),tasks:last&&!blank?(last.tasks||[]).slice():[]},h);
+      if(blank){Object.assign(last,{brand:h.brand,ptype:h.ptype,model:h.model})}else sf.equip.push(row);renderSignal();return}
     const kd=e.target.closest('[data-kind]');if(kd){if(sf.kind!==kd.dataset.kind){sf.kind=kd.dataset.kind;sf.equip.forEach(q=>{q.subject='';q.tasks=[]})}renderSignal();return}
     const sb=e.target.closest('[data-esubj]');if(sb){const p=sb.dataset.esubj.indexOf('|');const q=sf.equip[+sb.dataset.esubj.slice(0,p)],v=sb.dataset.esubj.slice(p+1);if(q.subject!==v){q.subject=v;q.tasks=[]}renderSignal();return}
     const ph=e.target.closest('[data-photo]');if(ph){sf.photo=ph.dataset.photo==='true';renderSignal();return}
@@ -1089,17 +1094,39 @@ function renderSignal(){
     if(e.target.id==='sfCancel'){S.sigEdit=null;S.sf=null;S.view=S.role==='sales'?'mysig':'list';render();return}
     if(e.target.id==='sfGo')submitSignal();
   };
+  // 打字時（未離開欄位）直接更新畫面上的客戶相關欄位，不整頁重畫以免打斷輸入
+  function syncCustDom(){
+    ['contact','phone','addr'].forEach(k=>{const el=m.querySelector(`[data-k="${k}"]`);if(el&&el!==document.activeElement&&el.value!==sf[k])el.value=sf[k]});
+    const sg=m.querySelector('[data-k="seg"]');if(sg){sg.value=sf.seg;sg.disabled=edit||segLocked(sf)}
+    const n=$('#segNote');if(n)n.textContent=segNote(sf,edit);
+  }
   function custFill(name,full){
     const c=st.customers.find(x=>x.name===name.trim());
-    if(!c)return;
+    if(!c){if(sf._segAuto&&!edit){sf.seg='';sf._segAuto=false;if(full)setTimeout(renderSignal,0)}return}
     if(full||!sf.contact)sf.contact=c.contact||sf.contact;
     if(full||!sf.phone)sf.phone=c.phone||sf.phone;
     if(full||!sf.addr)sf.addr=c.addr||sf.addr;
-    if(!edit&&c.segment!==''&&c.segment!=null)sf.seg=String(c.segment);
+    if(!edit&&c.segment!==''&&c.segment!=null){sf.seg=String(c.segment);sf._segAuto=true}
     if(c.photo&&sf.photo===null)sf.photo=true;
     if(full)setTimeout(renderSignal,0);
   }
 }
+/* 預期交期：依 Priority 預設天數 */
+function leadDaysOf(pri){const m=S.set.leadDays||{};if(m[pri]!=null)return +m[pri];return /Urgent|緊急/i.test(pri)?3:/GM|總經理/i.test(pri)?7:14}
+function autoLead(sf){if(sf._leadManual)return;sf.lead=addD(today(),leadDaysOf(sf.priority))}
+/* 客戶以前的設備（從過去訊息單／案件） */
+function custEquipHistory(name){
+  name=(name||'').trim();if(!name)return [];const m=new Map();
+  Object.values(S.caseData).filter(r=>r&&!r.placeholder&&r.cust===name).sort((a,b)=>(b.issue||'').localeCompare(a.issue||'')).forEach(r=>{
+    ((r.signal&&r.signal.equip)||[]).forEach(e=>{const k=normModel(e.model);if(k&&!m.has(k))m.set(k,{brand:e.brand||'BUSCH',ptype:famOf(e.ptype,k),model:k})});
+    (r.items||[]).forEach(it=>{const k=normModel(it.model);if(k&&!m.has(k))m.set(k,{brand:'BUSCH',ptype:famOf('',k),model:k})});
+  });
+  return [...m.values()].slice(0,20);
+}
+/* Segment：客戶設定有寫就自動帶出並鎖定 */
+function custSeg(sf){const c=S.set.customers.find(x=>x.name===(sf.cust||'').trim());return c&&c.segment!==''&&c.segment!=null?String(c.segment):''}
+function segLocked(sf){return !!custSeg(sf)}
+function segNote(sf,edit){if(edit)return 'FSN 已含 Segment，不可修改';if(segLocked(sf))return '依「設定 → 客戶」自動帶出；要改請到設定修改客戶資料';const c=S.set.customers.find(x=>x.name===(sf.cust||'').trim());return c?'此客戶尚未設定 Segment，選好後會存回客戶資料':(sf.cust?'新客戶：選好後會存回客戶資料':'')}
 async function allocFsn(sales,seg){
   const y=S.set.year,dir=await casesDir(y,true);
   const re=/^FS\d{4}[A-Za-z]+(\d{4})-/;
@@ -1140,13 +1167,26 @@ async function submitSignal(){
       const t=nowIso();
       const obj=Object.assign({fsn,year:S.set.year,sales:sf.sales,no,seg:sf.seg,issue:today(),stage:'待安排',date:'',days:1,tStart:'',tEnd:'',staff:[],vehicle:'',dept:'業務',price:'',note:'',doneDate:'',src:'signal',createdAt:t,updatedAt:t,updatedBy:who(),signal:sig,report:null,log:[{t,by:who(),msg:'開立訊息單'}]},derived);
       await writeCase(obj);
-      await upsertCustomer(sf);
+      const diff=custDiff(sf);const upd=diff.length&&await askCustUpdate(diff)?diff:null;
+      await upsertCustomer(sf,upd);
       build();S.lastFsn=fsn;S.sf=null;S.sfBad=null;S.view='sigdone';render();
     }
   }catch(e){console.error(e);toast('送出失敗：'+e.message);if(btn){btn.disabled=false;btn.textContent='送出訊息單'}}
 }
-async function upsertCustomer(sf){
+function custDiff(sf){
+  const c=S.set.customers.find(x=>x.name===sf.cust.trim());if(!c||sf.kind==='廠內維修')return [];
+  return [['contact','聯絡人'],['phone','電話'],['addr','地址']].filter(([k])=>c[k]&&sf[k].trim()&&c[k].trim()!==sf[k].trim()).map(([k,l])=>({k,l,old:c[k],nw:sf[k].trim()}));
+}
+function askCustUpdate(diff){
+  return new Promise(res=>{const dlg=$('#dlg');
+    dlg.innerHTML=`<div class="dh"><h3>客戶資料跟設定不同</h3></div><div class="db"><table class="eqt"><tr><th></th><th>設定裡</th><th>這張訊息單</th></tr>${diff.map(d=>`<tr><td>${esc(d.l)}</td><td class="muted">${esc(d.old)}</td><td><b>${esc(d.nw)}</b></td></tr>`).join('')}</table><div class="muted" style="margin-top:8px">要把客戶設定更新成這張訊息單的資料嗎？（不影響已開立的訊息單）</div></div>
+     <div class="df"><button class="btn" data-n>不用，只用在這張</button><button class="btn pri" data-y>更新客戶資料</button></div>`;
+    dlg.onclick=e=>{if(e.target.closest('[data-y]')){dlg.oncancel=null;dlg.close();res(true)}if(e.target.closest('[data-n]')){dlg.oncancel=null;dlg.close();res(false)}};
+    dlg.oncancel=e=>{e.preventDefault()};dlg.showModal()});
+}
+async function upsertCustomer(sf,update){
   const st=S.set;const n=sf.cust.trim();let c=st.customers.find(x=>x.name===n);let ch=false;
+  if(c&&update){update.forEach(d=>{c[d.k]=d.nw});ch=update.length>0}
   if(!c){c={name:n,contact:sf.contact,phone:sf.phone,addr:sf.addr,segment:sf.seg,photo:!!sf.photo,area:'',km:null,min:null};st.customers.push(c);st.customers.sort((a,b)=>a.name.localeCompare(b.name));ch=true}
   else{for(const [k,f] of [['contact','contact'],['phone','phone'],['addr','addr']])if(!c[k]&&sf[f]){c[k]=sf[f];ch=true}if(c.segment===''||c.segment==null){c.segment=sf.seg;ch=true}}
   if(ch){try{await writeSettings()}catch(e){console.warn(e)}}
@@ -1272,8 +1312,27 @@ function newReport(r){
   else if(r.items&&r.items.length)r.items.forEach(it=>{for(let i=0;i<Math.min(20,+it.qty||1);i++)units.push({model:normModel(it.model),ptype:famOf('',it.model),sn:''})});
   if(!units.length)units.push({model:'',ptype:'',sn:''});
   units.forEach((u,i)=>{const tpl=g&&g.photo?tplFor(u.tasks?{tasks:u.tasks}:g):[];u.label=LET[i]||String(i+1);u.cond={};u.photos=tpl.map(p=>({t:p.t,u:p.u||'',k:p.k||'',val:'',file:''}));u.chk=newChk(chkTplFor(u.ptype))});
-  return {chkSvc:chkDefaultSvc(g),chkOther:'',date:today(),arrival:r.tStart||'',finish:r.tEnd||'',laborHr:'',laborManual:false,engineers:(r.staff||[]).slice(),failure:'',units,parts:[],laborDesc:'',findings:'',recommend:'',quote:'',sign:'',signType:'',reportBy:'',submittedAt:'',review:null};
+  return {chkSvc:chkDefaultSvc(g),chkOther:'',date:today(),arrival:r.tStart||'',finish:r.tEnd||'',laborHr:'',laborManual:false,engineers:(r.staff||[]).slice(),failure:(g&&g.notes)||'',units,parts:[],laborDesc:'',findings:'',recommend:'',quote:'',sign:'',signType:'',reportBy:'',submittedAt:'',review:null};
 }
+/* ---------- 從過去報告學習：序號、料號、上次紀錄 ---------- */
+const snKey=s=>String(s||'').toUpperCase().replace(/\s+/g,'');
+function pastReports(exceptFsn){return Object.values(S.caseData).filter(r=>r&&r.report&&!r.placeholder&&r.fsn!==exceptFsn&&r.stage!=='取消')}
+function snSuggest(r,model){
+  const set=new Set(),mk=normModel(model);
+  pastReports(r.fsn).filter(x=>x.cust===r.cust).forEach(x=>(x.report.units||[]).forEach(u=>{if(u.sn&&(!mk||normModel(u.model)===mk))set.add(u.sn.trim())}));
+  Object.values(S.caseData).filter(x=>x&&x.cust===r.cust&&x.signal).forEach(x=>(x.signal.equip||[]).forEach(e=>{if(e.sn&&(!mk||normModel(e.model)===mk))set.add(e.sn.trim())}));
+  return [...set].slice(0,30);
+}
+function partsMap(){const m={};pastReports('').sort((a,b)=>(a.report.date||'').localeCompare(b.report.date||'')).forEach(x=>(x.report.parts||[]).forEach(p=>{if(p.ref&&p.desc)m[p.ref.trim().toUpperCase()]=p.desc}));return m}
+function lastRecord(sn,fsn){
+  const k=snKey(sn);if(!k)return null;let best=null;
+  pastReports(fsn).forEach(x=>(x.report.units||[]).forEach(u=>{if(snKey(u.sn)===k&&(!best||(x.report.date||'')>(best.rp.date||'')))best={r:x,rp:x.report,u}}));
+  if(!best)return null;
+  const t=(S.set.checkTemplates||{})[best.u.chk&&best.u.chk.tpl];
+  const no=t?chkItems(t).filter(it=>((best.u.chk.res||{})[it.c]||{}).st==='N').map(it=>it.c+' '+it.t+((best.u.chk.res[it.c].n)?'：'+best.u.chk.res[it.c].n:'')):[];
+  return {fsn:best.r.fsn,date:best.rp.date,svc:best.u.svcText||((best.r.signal||{}).subject||best.r.type||''),hours:(best.u.cond||{}).hours||'',no,rec:best.rp.recommend||''};
+}
+function lastRecHtml(sn,fsn){const L=lastRecord(sn,fsn);return L?`<div class="lastrec"><b>📋 此序號上次紀錄</b>　${esc(L.date||'')}　${esc(L.fsn)}　${esc(L.svc)}${L.hours?'　運轉時數 '+esc(L.hours):''}${L.no.length?`<div style="color:var(--red)">上次 No 項目：${L.no.map(esc).join('；')}</div>`:''}${L.rec?`<div class="muted">上次建議：${esc(L.rec)}</div>`:''}</div>`:''}
 function calcHr(a,b){if(!a||!b)return '';const [h1,m1]=a.split(':').map(Number),[h2,m2]=b.split(':').map(Number);let d=(h2*60+m2)-(h1*60+m1);if(d<0)d+=1440;return (Math.round(d/6)/10).toString()}
 function syncPhotoVals(rp){(rp.units||[]).forEach(u=>(u.photos||[]).forEach(p=>{if(p.k&&PK[p.k]&&p.val!==''&&p.val!=null&&!u.cond[PK[p.k]])u.cond[PK[p.k]]=p.val+(p.u||'')}))}
 function repValidate(rp,r){
@@ -1321,9 +1380,10 @@ function renderRep(){
    </div></div>
    ${rp.units.map((u,i)=>`<div class="panel"><div class="ph"><h2>機台 ${esc(u.label)}</h2>${u.svcText?`<span class="tag">${esc(u.svcText)}</span>`:''}<span class="sp"></span>${edit&&rp.units.length>1?`<button class="btn sm dng" data-udel="${i}">移除此機台</button>`:''}</div><div class="pb fgrid">
      <label class="${bc('model'+i)}"><span class="req">型號 Model</span><input type="text" data-p="units.${i}.model" value="${esc(u.model)}" ${dis}></label>
-     <label class="${bc('sn'+i)}"><span class="req">序號 S/N</span><input type="text" data-p="units.${i}.sn" value="${esc(u.sn)}" ${dis}></label>
+     <label class="${bc('sn'+i)}"><span class="req">序號 S/N</span><input type="text" data-p="units.${i}.sn" value="${esc(u.sn)}" list="snl_${i}" ${dis}><datalist id="snl_${i}">${snSuggest(r,u.model).map(s=>`<option value="${esc(s)}">`).join('')}</datalist></label>
      <label>機種<select data-uptype="${i}" ${dis}><option value="">—</option>${Object.keys(S.set.pumpTypes).map(p=>`<option ${p===u.ptype?'selected':''}>${esc(p)}</option>`).join('')}</select></label>
      <label>運轉時數 Hours<input type="text" data-p="units.${i}.cond.hours" value="${esc(u.cond.hours||'')}" ${dis}></label>
+     <div class="s4" id="lr_${i}">${lastRecHtml(u.sn,r.fsn)}</div>
      ${chkEditorHtml(u,i,dis,!!S.repBad&&bad.has('chk'+i))}
      <details class="s4"${CF.concat(MF).some(([k])=>u.cond[k])?' open':''}><summary style="cursor:pointer;font-size:12px;color:var(--ink2)">S03 機體／馬達狀況（選填，印在第 1 頁）</summary><div class="fgrid" style="margin-top:8px">
      <div class="s4" style="font-weight:600;font-size:12px;color:var(--ink2)">機體狀況 Pump Condition</div>
@@ -1340,8 +1400,8 @@ function renderRep(){
    ${edit?`<div><button class="btn" id="uAdd">＋ 新增機台</button></div>`:''}
    <div class="panel"><div class="ph"><h2>料件使用 Spare Parts Used</h2><span class="sp"></span>${edit?'<button class="btn sm" id="ptAdd2">＋ 加一列</button>':''}</div><div class="pb">
     <table class="eqt"><thead><tr><th style="width:50px">項目</th><th>料號 Ref. No</th><th>描述 Description</th><th style="width:70px">數量</th><th>備註</th><th style="width:36px"></th></tr></thead><tbody>
-    ${rp.parts.map((p,i)=>`<tr><td>${i+1}</td><td><input type="text" data-p="parts.${i}.ref" value="${esc(p.ref)}" ${dis}></td><td><input type="text" data-p="parts.${i}.desc" value="${esc(p.desc)}" ${dis}></td><td><input type="number" data-p="parts.${i}.qty" value="${esc(p.qty)}" ${dis}></td><td><input type="text" data-p="parts.${i}.remark" value="${esc(p.remark)}" ${dis}></td><td>${edit?`<button class="btn sm" data-prdel="${i}">✕</button>`:''}</td></tr>`).join('')||'<tr><td colspan="6" class="muted">未使用料件</td></tr>'}
-    </tbody></table></div></div>
+    ${rp.parts.map((p,i)=>`<tr><td>${i+1}</td><td><input type="text" data-p="parts.${i}.ref" value="${esc(p.ref)}" list="partRefs" ${dis}></td><td><input type="text" data-p="parts.${i}.desc" value="${esc(p.desc)}" ${dis}></td><td><input type="number" data-p="parts.${i}.qty" value="${esc(p.qty)}" ${dis}></td><td><input type="text" data-p="parts.${i}.remark" value="${esc(p.remark)}" ${dis}></td><td>${edit?`<button class="btn sm" data-prdel="${i}">✕</button>`:''}</td></tr>`).join('')||'<tr><td colspan="6" class="muted">未使用料件</td></tr>'}
+    </tbody></table>${(()=>{const pm=partsMap();return `<datalist id="partRefs">${Object.entries(pm).slice(0,500).map(([k,v])=>`<option value="${esc(k)}">${esc(v)}</option>`).join('')}</datalist>`})()}</div></div>
    <div class="panel"><div class="ph"><h2>施作與建議</h2></div><div class="pb fgrid">
     <label class="s4 ${bc('laborDesc')}"><span class="req">施作紀錄 Labor Description</span><textarea rows="4" data-p="laborDesc" ${dis}>${esc(rp.laborDesc)}</textarea></label>
     <label class="s4">檢查情況 Findings<textarea rows="3" data-p="findings" ${dis}>${esc(rp.findings)}</textarea></label>
@@ -1394,6 +1454,8 @@ function renderRep(){
     if(!edit)return;const t=e.target;
     const ct=t.dataset.chktpl;if(ct!==undefined){const u=rp.units[+ct];const go=()=>{u.chk.tpl=t.value;renderRep();dirty()};if(Object.keys(u.chk.res).length&&u.chk.tpl&&t.value!==u.chk.tpl){const nv=t.value;t.value=u.chk.tpl;confirmBox('切換檢查表？已勾選的項目若代號相同會保留。',()=>{t.value=nv;go()})}else go();return}
     const up=t.dataset.uptype;if(up!==undefined){const u=rp.units[+up];u.ptype=t.value;const n=chkTplFor(u.ptype);if(n&&!Object.keys(u.chk.res).length)u.chk.tpl=n;renderRep();dirty();return}
+    const sm=(t.dataset.p||'').match(/^units\.(\d+)\.sn$/);if(sm){const el=$('#lr_'+sm[1]);if(el)el.innerHTML=lastRecHtml(t.value,r.fsn);return}
+    const pr=(t.dataset.p||'').match(/^parts\.(\d+)\.ref$/);if(pr){const p=rp.parts[+pr[1]];const d=partsMap()[(p.ref||'').trim().toUpperCase()];if(d&&!p.desc){p.desc=d;const el=m.querySelector(`[data-p="parts.${pr[1]}.desc"]`);if(el)el.value=d;dirty()}return}
     const mp=(t.dataset.p||'').match(/^units\.(\d+)\.model$/);if(mp){const u=rp.units[+mp[1]];const nm=normModel(t.value);u.model=nm;t.value=nm;const f=famOf('',nm);if(f&&f!==u.ptype){u.ptype=f;const n=chkTplFor(f);if(n&&!Object.keys(u.chk.res).length)u.chk.tpl=n;renderRep()}dirty()}
   };
   // 拖曳照片到格子
@@ -1906,6 +1968,7 @@ function renderSet(){
     <label class="s2">車輛（逗號分隔）<input type="text" id="gVeh" value="${esc(st.vehicles.join(','))}"></label>
     <label>Brand（逗號分隔）<input type="text" id="gBrand" value="${esc(st.brands.join(','))}"></label>
     <label class="s2">Priority 選項（逗號分隔）<input type="text" id="gPri" value="${esc(st.priorities.join(','))}"></label>
+    <label class="s2">預期交期預設天數（每行：Priority=天數）<textarea id="gLead" rows="3">${esc(st.priorities.map(p=>p+'='+leadDaysOf(p)).join('\n'))}</textarea></label>
     <label class="s2">需求單位（逗號分隔）<input type="text" id="gDept" value="${esc((st.depts||[]).join(','))}"></label>
     <label class="s4">報工 app 網址（選填）<input type="text" id="gBg" value="${esc(st.baogongUrl||'')}"></label>
     <div class="s4" style="border-top:1px solid var(--line);padding-top:10px"><b>報告表頭（公司資料）</b></div>
@@ -1967,7 +2030,7 @@ function bindSet(){
   on('sPick',pickRoot);
   const csv=id=>$('#'+id).value.split(/[,，]/).map(s=>s.trim()).filter(Boolean);
   // 一般
-  on('gSave',()=>{const y=+$('#gYear').value||st.year;st.year=y;st.vehicles=csv('gVeh');st.brands=csv('gBrand');st.priorities=csv('gPri');st.depts=csv('gDept');st.baogongUrl=$('#gBg').value.trim();st.company={name:$('#gCo').value.trim(),addr:$('#gAddr').value.trim(),tel:$('#gTel').value.trim(),fax:$('#gFax').value.trim()};save().then(()=>loadAll())});
+  on('gSave',()=>{const y=+$('#gYear').value||st.year;st.year=y;st.vehicles=csv('gVeh');st.brands=csv('gBrand');st.priorities=csv('gPri');st.leadDays={};$('#gLead').value.split('\n').forEach(l=>{const i=l.lastIndexOf('=');if(i>0){const d=parseInt(l.slice(i+1));if(!isNaN(d))st.leadDays[l.slice(0,i).trim()]=d}});st.depts=csv('gDept');st.baogongUrl=$('#gBg').value.trim();st.company={name:$('#gCo').value.trim(),addr:$('#gAddr').value.trim(),tel:$('#gTel').value.trim(),fax:$('#gFax').value.trim()};save().then(()=>loadAll())});
   on('gPwd',async()=>{const a=$('#gP1').value,b=$('#gP2').value;if(a.length<4){toast('密碼至少 4 碼');return}if(a!==b){toast('兩次輸入不同');return}st.adminHash=await sha(a);ss.set('fsd2_admin_ok',st.adminHash);save('密碼已更新')});
   // 工程師／業務 表格
   if(S.stab==='perm')bindPermSet(st,m,on,save);
