@@ -299,7 +299,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 <script>
 'use strict';
 /* ================= 常數 ================= */
-const APPVER='2.5.3';
+const APPVER='2.6（報工連結）';
 const STAGES=['待安排','已排程','待審核','結案','取消','轉系統部門'];
 const OPEN=['待安排','已排程','待審核'];
 const SC={'待安排':'var(--st-wait)','已排程':'var(--st-sched)','待審核':'var(--st-done)','結案':'var(--st-closed)','取消':'var(--st-cancel)','轉系統部門':'var(--st-sys)'};
@@ -958,7 +958,7 @@ function modelList(){if(!_mdl){const s=new Set();Object.values(S.caseData).forEa
 
 /* ================= 派工訊息（貼到 LINE） ================= */
 function mapLink(c){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(c.addr||c.cust)}
-function caseText(c,i,withLink){
+function caseText(c,i,withLink,bg){
   const r=c.r,items=(r.items||[]).map(x=>x.model+(x.qty?'×'+x.qty:'')).join('、');
   const L=[`${i}. ${c.cust}｜${c.type}${c.days>1?'｜'+md(c.date)+' 起 '+c.days+' 天':''}`,
     `⏰ ${r.tStart||'--'}${r.tEnd?'–'+r.tEnd:''}　👥 ${c.staff.join('、')||'未指派'}${r.vehicle?'　🚐 '+r.vehicle:''}`];
@@ -966,6 +966,7 @@ function caseText(c,i,withLink){
   L.push('📍 '+c.addr);
   if(r.note)L.push('📝 '+r.note);
   L.push('🗺 導航：'+mapLink(c));
+  if(bg)L.push('📝 報工（點開自動帶入）：'+bg);
   return L.join('\n');
 }
 function renderMsg(){
@@ -976,8 +977,10 @@ function renderMsg(){
   L.sort((a,b)=>(a.r.tStart||'').localeCompare(b.r.tStart||''));
   let late=S.cases.filter(c=>c.late);if(who)late=late.filter(c=>c.staff.includes(who));
   const dd=parseD(d);
-  let txt=`【Field Service 派工 ${md(d)}（${WD[dd.getDay()]}）${who?'－'+who:''}】\n共 ${L.length} 件\n\n`+(L.map((c,i)=>caseText(c,i+1,S.msgLink)).join('\n\n')||'（當天沒有排程）');
-  if(late.length)txt+=`\n\n⚠ 尚未完成報告：\n`+late.map(c=>`・${md(c.date)} ${c.cust}`).join('\n');
+  S.msgBg=S.msgBg??true;
+  const mk=bgs=>{let t=`【Field Service 派工 ${md(d)}（${WD[dd.getDay()]}）${who?'－'+who:''}】\n共 ${L.length} 件\n\n`+(L.map((c,i)=>caseText(c,i+1,S.msgLink,bgs&&bgs[i])).join('\n\n')||'（當天沒有排程）');
+    if(late.length)t+=`\n\n⚠ 尚未完成報告：\n`+late.map(c=>`・${md(c.date)} ${c.cust}`).join('\n');return t};
+  let txt=mk(null);
   const warn='';
   $('#main').innerHTML=`<div style="max-width:900px;margin:0 auto" class="grid">
    <div class="panel"><div class="ph"><h2>派工訊息</h2><span class="sp"></span><span class="muted">複製後貼到 LINE 群組或私訊工程師</span></div>
@@ -986,10 +989,12 @@ function renderMsg(){
       <input type="date" id="mD" value="${d}">
       <div class="tog"><button data-w="" class="${!who?'on':''}">全部</button>${staffList().map(s=>`<button data-w="${esc(s)}" class="${who===s?'on':''}">${esc(s)}</button>`).join('')}</div>
     </div>
-    <div class="pb" style="padding-top:0">${warn}<textarea id="mT" rows="22" style="font-family:inherit;line-height:1.55;margin-top:8px">${esc(txt)}</textarea>
+    <div class="pb" style="padding-top:0">${warn}<label style="font-size:13px;display:flex;gap:6px;align-items:center"><input type="checkbox" id="mBg" ${S.msgBg?'checked':''}> 每案附「報工連結」（工程師點開，報工系統自動帶入客戶、時間、機種型號）</label><textarea id="mT" rows="22" style="font-family:inherit;line-height:1.55;margin-top:8px">${esc(txt)}</textarea>
     <div style="display:flex;gap:8px;margin-top:8px">${can('msg.copy')?'<button class="btn pri" id="mC">📋 複製文字</button>':''}<span class="muted" style="align-self:center;font-size:12px">工程師完工後回公司在系統「我的排程」填寫完工報告</span></div></div>
    </div></div>`;
   $('#mD').onchange=e=>{if(e.target.value){S.msgDate=e.target.value;renderMsg()}};
+  $('#mBg').onchange=e=>{S.msgBg=e.target.checked;renderMsg()};
+  if(S.msgBg&&L.length)Promise.all(L.map(c=>bgLink(c).catch(()=>''))).then(bgs=>{const ta=$('#mT');if(ta&&ta.value===txt)ta.value=mk(bgs)});
   if($('#mC'))$('#mC').onclick=()=>{const v=$('#mT').value;(navigator.clipboard?navigator.clipboard.writeText(v):Promise.reject()).then(()=>toast('已複製，可貼到 LINE')).catch(()=>{$('#mT').select();document.execCommand('copy');toast('已複製')})};
   $('#main').onclick=e=>{const q=e.target.closest('[data-dq]');if(q){S.msgDate=addD(today(),+q.dataset.dq);renderMsg();return}
     const w=e.target.closest('[data-w]');if(w){S.msgWho=w.dataset.w;renderMsg()}};
@@ -1580,13 +1585,14 @@ function renderMe(){
     ${back?`<div class="errbox" style="padding:6px 10px">退回原因：${esc(rp.review.reason)}</div>`:''}
     <div class="row">👥 ${esc(c.staff.join('、'))}${r.vehicle?' · 🚐 '+esc(r.vehicle):''}${g&&g.photo?' · 📷 需照片報告':''}${rp&&!rp.submittedAt?' · 📝 草稿':''}</div>
     <div class="row">📍 ${esc(c.addr)}</div>
-    <div class="act">${c.r.signal?`<button class="btn" data-psig="${esc(c.fsn)}">🖨 訊息單</button>`:''}${c.stage==='已排程'?`<button class="btn pri" data-rep="${esc(c.fsn)}">📝 ${rp?'繼續填寫':'填寫'}完工報告</button>`:`<button class="btn" data-rep="${esc(c.fsn)}">查看報告</button>`}</div></div>`};
+    <div class="act">${c.r.signal?`<button class="btn" data-psig="${esc(c.fsn)}">🖨 訊息單</button>`:''}${c.stage!=='結案'?`<button class="btn" data-bg="${esc(c.fsn)}" title="開啟報工系統並自動帶入這張單">⏱ 報工</button>`:''}${c.stage==='已排程'?`<button class="btn pri" data-rep="${esc(c.fsn)}">📝 ${rp?'繼續填寫':'填寫'}完工報告</button>`:`<button class="btn" data-rep="${esc(c.fsn)}">查看報告</button>`}</div></div>`};
   $('#main').innerHTML=`<div style="max-width:780px;margin:0 auto">
    <div class="sec-t">待完成<span class="tag">${todo.length}</span></div><div class="grid">${todo.map(card).join('')||'<div class="empty">目前沒有排程</div>'}</div>
    ${rev.length?`<div class="sec-t">待審核<span class="tag">${rev.length}</span></div><div class="grid">${rev.map(card).join('')}</div>`:''}
    ${done.length?`<div class="sec-t">最近結案</div><div class="grid">${done.map(card).join('')}</div>`:''}</div>`;
   $('#main').onclick=e=>{const p=e.target.closest('[data-rep]');if(p){S.prevView='me';openReport(p.dataset.rep);return}
-    const s=e.target.closest('[data-psig]');if(s){printSignal(S.caseData[s.dataset.psig]);return}};
+    const s=e.target.closest('[data-psig]');if(s){printSignal(S.caseData[s.dataset.psig]);return}
+    const bgb=e.target.closest('[data-bg]');if(bgb){openBg(bgb.dataset.bg);return}};
 }
 
 /* ---------- 審核（排程負責人） ---------- */
@@ -2013,6 +2019,25 @@ function bindPermSet(st,m,on,save){
 
 function canEditSig(c){const r=c.r||c;const own=isOwn(c);const pre=(c.stage||r.stage||'待安排')==='待安排';return pre?can('sig.editPre',own):can('sig.editPost',own)}
 
+/* ================= 報工連結（派工訊息 → 報工系統廠外報工自動帶入） ================= */
+const BG_DEFAULT='https://coos0820-hub.github.io/Service-time-reporting/';
+const SVC_MAP_DEF={'保養':'保養','維修':'檢修','檢查':'檢修','系統定位/試車':'裝機'};
+function bgSvc(subject){const m=Object.assign({},SVC_MAP_DEF,S.set.svcMap||{});const k=zh(subject||'').trim();if(m[k])return m[k];const hit=Object.keys(m).find(x=>k.startsWith(x)||String(subject||'').startsWith(x));return hit?m[hit]:''}
+const _b64u=b=>{let s='';for(let i=0;i<b.length;i+=0x8000)s+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
+async function packSR(obj){const raw=new TextEncoder().encode(JSON.stringify(obj));
+  if(typeof CompressionStream==='undefined')return 'SR0:'+_b64u(raw);
+  const out=new Uint8Array(await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer());return 'SR1:'+_b64u(out)}
+function bgPayload(c){
+  const r=c.r||c,g=r.signal||{},ci=custInfo(r.cust)||{};
+  const eq=(g.equip||[]).filter(e=>e.model);
+  const it=eq.length?eq.map(e=>({m:famOf(e.ptype,e.model),n:normModel(e.model),q:g.kind==='廠內維修'?1:(+e.qty||1),s:bgSvc(e.subject||g.subject)}))
+    :(r.items||[]).filter(x=>x.model).map(x=>({m:famOf('',x.model),n:normModel(x.model),q:+x.qty||1,s:bgSvc(r.type)}));
+  const tr=ci.min?Math.round(ci.min*2/30)/2:'';
+  return {app:'fs-sig',v:1,fsn:r.fsn,d:r.date||'',d2:r.date?addD(r.date,(+r.days||1)-1):'',st:r.staff||[],t1:r.tStart||'',t2:r.tEnd||'',c:r.cust||'',tr,it,no:(r.content||'').slice(0,200)};
+}
+async function bgLink(c){const base=(S.set.baogongUrl||BG_DEFAULT).replace(/#.*$/,'');return base+(base.includes('?')?'&':'?')+'openExternalBrowser=1#fs='+encodeURIComponent(await packSR(bgPayload(c)))}
+async function openBg(fsn){const c=S.byFsn[fsn];if(!c)return;try{window.open(await bgLink(c),'_blank','noopener')}catch(e){toast('無法產生報工連結：'+e.message)}}
+
 /* ================= 設定（管理者） ================= */
 const STABS=[['gen','一般'],['staff','工程師'],['viewer','檢視者'],['sales','業務'],['cust','客戶'],['svc','服務項目'],['pump','機種／型號'],['chk','檢查表'],['photo','照片模板'],['seg','Segment'],['data','匯入／匯出'],['perm','權限']];
 const STAB_PERM={viewer:'staff'};
@@ -2028,7 +2053,8 @@ function renderSet(){
     <label class="s2">車輛（逗號分隔）<input type="text" id="gVeh" value="${esc(st.vehicles.join(','))}"></label>
     <label>Brand（逗號分隔）<input type="text" id="gBrand" value="${esc(st.brands.join(','))}"></label>
     <label class="s2">需求單位（逗號分隔）<input type="text" id="gDept" value="${esc((st.depts||[]).join(','))}"></label>
-    <label class="s4">報工 app 網址（選填）<input type="text" id="gBg" value="${esc(st.baogongUrl||'')}"></label>
+    <label class="s4">報工系統網址（派工訊息的報工連結用；空白＝${BG_DEFAULT}）<input type="text" id="gBg" value="${esc(st.baogongUrl||'')}" placeholder="${BG_DEFAULT}"></label>
+    <label class="s2">服務項目對應（每行：訊息單主旨=報工服務項目）<textarea id="gSvcMap" rows="4">${esc(Object.entries(Object.assign({},SVC_MAP_DEF,st.svcMap||{})).map(([a,b])=>a+'='+b).join('\n'))}</textarea></label>
     <div class="s4" style="border-top:1px solid var(--line);padding-top:10px"><b>報告表頭（公司資料）</b></div>
     <label class="s2">公司名稱<input type="text" id="gCo" value="${esc((st.company||{}).name||'')}"></label><label class="s2">地址<input type="text" id="gAddr" value="${esc((st.company||{}).addr||'')}"></label>
     <label class="s2">電話<input type="text" id="gTel" value="${esc((st.company||{}).tel||'')}"></label><label class="s2">傳真<input type="text" id="gFax" value="${esc((st.company||{}).fax||'')}"></label>
@@ -2088,7 +2114,7 @@ function bindSet(){
   on('sPick',pickRoot);
   const csv=id=>$('#'+id).value.split(/[,，]/).map(s=>s.trim()).filter(Boolean);
   // 一般
-  on('gSave',()=>{const y=+$('#gYear').value||st.year;st.year=y;st.vehicles=csv('gVeh');st.brands=csv('gBrand');st.depts=csv('gDept');st.baogongUrl=$('#gBg').value.trim();st.company={name:$('#gCo').value.trim(),addr:$('#gAddr').value.trim(),tel:$('#gTel').value.trim(),fax:$('#gFax').value.trim()};save().then(()=>loadAll())});
+  on('gSave',()=>{const y=+$('#gYear').value||st.year;st.year=y;st.vehicles=csv('gVeh');st.brands=csv('gBrand');st.depts=csv('gDept');st.baogongUrl=$('#gBg').value.trim();st.svcMap={};$('#gSvcMap').value.split('\n').forEach(l=>{const i=l.indexOf('=');if(i>0)st.svcMap[l.slice(0,i).trim()]=l.slice(i+1).trim()});st.company={name:$('#gCo').value.trim(),addr:$('#gAddr').value.trim(),tel:$('#gTel').value.trim(),fax:$('#gFax').value.trim()};save().then(()=>loadAll())});
   on('gPwd',async()=>{const a=$('#gP1').value,b=$('#gP2').value;if(a.length<4){toast('密碼至少 4 碼');return}if(a!==b){toast('兩次輸入不同');return}st.adminHash=await sha(a);ss.set('fsd2_admin_ok',st.adminHash);save('密碼已更新')});
   // 工程師／業務 表格
   if(S.stab==='perm')bindPermSet(st,m,on,save);
