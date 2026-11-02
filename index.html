@@ -299,7 +299,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 <script>
 'use strict';
 /* ================= 常數 ================= */
-const APPVER='2.6（報工連結）';
+const APPVER='2.6.1';
 const STAGES=['待安排','已排程','待審核','結案','取消','轉系統部門'];
 const OPEN=['待安排','已排程','待審核'];
 const SC={'待安排':'var(--st-wait)','已排程':'var(--st-sched)','待審核':'var(--st-done)','結案':'var(--st-closed)','取消':'var(--st-cancel)','轉系統部門':'var(--st-sys)'};
@@ -906,7 +906,7 @@ function openCase(fsn,prefill){
     <label>天數<input type="number" name="days" min="1" max="30" value="${esc(r.days||1)}" ${eng?'disabled':''}></label>
     <label>完成日<input type="date" name="doneDate" value="${esc(r.doneDate)}" ${ro?'disabled':''}></label>
     <label class="s2">時間<span style="display:flex;gap:6px;align-items:center"><input type="time" name="tStart" value="${esc(r.tStart)}" ${eng?'disabled':''}>–<input type="time" name="tEnd" value="${esc(r.tEnd)}" ${eng?'disabled':''}></span></label>
-    <label class="s2">快速時段<span class="tog" id="qt">${Object.keys(TIMES).map(k=>`<button type="button" data-t="${k}" ${eng?'disabled':''}>${k}</button>`).join('')}</span></label>
+    <label class="s2">快速時段<span class="tog" id="qt">${Object.keys(TIMES).map(k=>`<button type="button" data-t="${k}" class="${TIMES[k][0]===r.tStart&&TIMES[k][1]===r.tEnd?'on':''}" ${eng?'disabled':''}>${k}</button>`).join('')}</span></label>
     <label class="s4">人員（可複選）<span class="tog" id="stf">${allStaff.map(s=>`<button type="button" data-p="${esc(s)}" class="${r.staff.includes(s)?'on':''}" ${eng?'disabled':''}>${esc(s)}</button>`).join('')}</span></label>
     <div class="s4" id="conf"></div>
     <label class="s4">車輛<span class="tog" id="veh">${['',...st.vehicles].map(v=>`<button type="button" data-v="${esc(v)}" class="${(r.vehicle||'')===v?'on':''}" ${eng?'disabled':''}>${v||'不用車'}</button>`).join('')}</span></label>
@@ -930,13 +930,15 @@ function openCase(fsn,prefill){
   renderItems();conflicts();
   F.date.onchange=()=>{if(F.date.value&&F.stage.value==='待安排')F.stage.value='已排程';if(!F.date.value&&F.stage.value==='已排程')F.stage.value='待安排';conflicts()};
   F.days.onchange=conflicts;
+  const markT=()=>dlg.querySelectorAll('#qt [data-t]').forEach(b=>b.classList.toggle('on',TIMES[b.dataset.t][0]===F.tStart.value&&TIMES[b.dataset.t][1]===F.tEnd.value));
+  F.tStart.oninput=markT;F.tEnd.oninput=markT;
   F.stage.onchange=()=>{if(['結案','待審核'].includes(F.stage.value)&&!F.doneDate.value)F.doneDate.value=F.date.value||today()};
   dlg.onclick=e=>{
     if(e.target.closest('[data-x]')){dlg.close();return}
     if(e.target.closest('[data-psig]')){printSignal(c.r);return}
     if(e.target.closest('[data-rpt]')){dlg.close();if(c.stage==='待審核'&&can('rev.view')){reviewDialog(fsn)}else{S.prevView=S.view;openReport(fsn)}return}
     if(e.target.closest('[data-esig]')){dlg.close();S.sigEdit=fsn;S.view='sig';render();return}
-    const q=e.target.closest('[data-t]');if(q){[F.tStart.value,F.tEnd.value]=TIMES[q.dataset.t];return}
+    const q=e.target.closest('[data-t]');if(q){[F.tStart.value,F.tEnd.value]=TIMES[q.dataset.t];markT();return}
     const p=e.target.closest('[data-p]');if(p){const s=p.dataset.p;r.staff=r.staff.includes(s)?r.staff.filter(x=>x!==s):[...r.staff,s];p.classList.toggle('on');conflicts();return}
     const v=e.target.closest('[data-v]');if(v){r.vehicle=v.dataset.v;dlg.querySelectorAll('#veh button').forEach(b=>b.classList.toggle('on',b===v));return}
     if(e.target.id==='addIt'){syncItems();r.items.push({model:'',qty:''});renderItems();return}
