@@ -299,7 +299,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 <script>
 'use strict';
 /* ================= 常數 ================= */
-const APPVER='2.6.2';
+const APPVER='2.6.3';
 const STAGES=['待安排','已排程','待審核','結案','取消','轉系統部門'];
 const OPEN=['待安排','已排程','待審核'];
 const SC={'待安排':'var(--st-wait)','已排程':'var(--st-sched)','待審核':'var(--st-done)','結案':'var(--st-closed)','取消':'var(--st-cancel)','轉系統部門':'var(--st-sys)'};
@@ -1064,7 +1064,7 @@ function renderSignal(){
       <input type="text" data-docnum inputmode="numeric" value="${esc(d.num)}" placeholder="${DOC_LEN[d.pre]} 碼數字，例 2026011205" ${d.pend?'disabled':''}>
       <div class="tog">${DOC_PEND.map(v=>`<button type="button" data-docpend="${v}" class="${d.pend===v?'on':''}">${v}</button>`).join('')}</div></div>
       <span class="muted" style="font-size:11px" id="docMsg">${docMsg(sf.doc)}</span></div>`})():''}
-    <div class="fl ${bc('warranty')}"><span class="req">Warranty 保固</span><div class="tog">${['YES','NO','合約保養'].map(v=>`<button type="button" data-set="warranty" data-val="${v}" class="${sf.warranty===v?'on':''}">${v}</button>`).join('')}</div></div>
+    <div class="fl ${bc('warranty')}"><span class="req">Warranty 保固</span><div class="tog">${['YES','NO','一般保養','合約保養'].map(v=>`<button type="button" data-set="warranty" data-val="${v}" class="${sf.warranty===v?'on':''}">${v}</button>`).join('')}</div></div>
     ${sf.warranty==='合約保養'?(()=>{const cc=custContracts(sf.cust).filter(c=>!sf.contracts.some(x=>x.f===c.f));return `<div class="fl s4"><span>保養合約（可上傳 PDF 或照片，可多份）</span><div class="ctrs">
       ${sf.contracts.map((c,i)=>`<span class="ctr on"><a href="#" data-copen="${esc(c.f)}">📄 ${esc(c.n)}</a><button type="button" class="btn sm" data-cdel="${i}" title="移除">✕</button></span>`).join('')}
       ${cc.map(c=>`<button type="button" class="btn sm" data-cuse="${esc(c.f)}" title="此客戶以前上傳過的合約">＋ 使用 ${esc(c.n)}</button>`).join('')}
