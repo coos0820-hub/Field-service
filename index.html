@@ -80,25 +80,36 @@ tbody tr:hover{background:#f6f8fb}
 /* board */
 .board{display:grid;grid-template-columns:330px 1fr;gap:14px;align-items:start}
 .plist{max-height:calc(100vh - 200px);overflow:auto;padding:8px;display:flex;flex-direction:column;gap:6px}
-.pcard{border:1px solid var(--line);border-left:4px solid var(--st-wait);border-radius:8px;padding:8px 10px;background:#fff;cursor:grab}
+.pcard{border:1px solid var(--line2);border-left:4px solid var(--c,var(--st-wait));border-radius:7px;padding:8px 10px;background:#fff;cursor:grab}
 .pcard:hover{border-color:var(--line2);box-shadow:var(--shadow)}
 .pcard .t{display:flex;justify-content:space-between;gap:6px;font-weight:600}
 .pcard .m{font-size:12px;color:var(--ink2);margin-top:2px;display:flex;gap:8px;flex-wrap:wrap}
 .week{overflow:auto}
 .wk{display:grid;min-width:900px}
-.wk .hd{font-size:12px;font-weight:600;color:var(--ink2);padding:8px 6px;border-bottom:1px solid var(--line2);background:#fafaf8;position:sticky;top:0;z-index:2;text-align:center}
-.wk .hd.today{color:var(--accent)}
-.wk .rh{font-weight:700;padding:8px;border-bottom:1px solid var(--line);background:#fafaf8;position:sticky;left:0;z-index:1;display:flex;flex-direction:column;justify-content:center}
+.wk .hd{font-size:12px;font-weight:600;color:var(--ink2);padding:8px 6px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);background:#f7f8f5;position:sticky;top:0;z-index:2;text-align:center}
+.wk .hd.today{background:#e8f1fb;color:var(--brand)}
+.wk .rh{font-weight:700;font-size:13px;padding:8px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);background:#f7f8f5;position:sticky;left:0;z-index:1;display:flex;flex-direction:column;justify-content:center}
 .wk .rh small{font-weight:400;color:var(--muted);font-size:11px}
-.wk .cell{border-bottom:1px solid var(--line);border-left:1px solid var(--line);min-height:64px;padding:4px;display:flex;flex-direction:column;gap:3px}
-.wk .cell.today{background:#f3f8fe}
-.wk .cell.we{background:#fafaf7}
-.wk .cell.over{background:#e6f0fc;outline:2px dashed var(--accent);outline-offset:-3px}
-.chip{font-size:12px;border-radius:5px;padding:3px 6px;background:#eef4fc;border-left:3px solid var(--c,var(--st-sched));cursor:pointer;line-height:1.35;overflow:hidden}
-.chip b{font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.chip span{color:var(--ink2);font-size:11px;white-space:nowrap;display:block;overflow:hidden;text-overflow:ellipsis}
-.chip.late{background:#fdeeee;box-shadow:inset 0 0 0 1px #f2b3b3}
-.chip.done{background:#fdf6e3}.chip.closed{background:#eaf7f1}
+.wk .cell{border-bottom:1px solid var(--line);border-right:1px solid var(--line);min-height:74px;padding:4px;display:flex;flex-direction:column;gap:3px;background:#fff}
+.wk .cell.today{background:#fbfdff}
+.wk .cell.we{background:#fafaf8}
+.wk .cell.over{background:#e8f1fb;outline:2px dashed var(--accent);outline-offset:-3px}
+.chip{font-size:12px;border-radius:5px;padding:3px 6px;background:var(--c,#7a7d75);color:#fff;cursor:pointer;line-height:1.35;overflow:hidden;position:relative}
+.chip b{font-weight:700;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip.bdg b{padding-right:30px}
+.chip span{color:#fff;opacity:.92;font-size:11px;white-space:nowrap;display:block;overflow:hidden;text-overflow:ellipsis}
+.chip .bd{position:absolute;right:4px;top:2px;font-size:10px;font-weight:700;font-style:normal;background:rgba(255,255,255,.92);color:var(--c);border-radius:8px;padding:0 5px;line-height:15px}
+.chip.closed{opacity:.55}.chip.closed .bd{color:#1baf7a}
+.chip.done .bd{color:#9a6a00}
+.chip.late{box-shadow:0 0 0 2px var(--red)}.chip.late .bd{background:var(--red);color:#fff}
+.cbx{position:relative}
+.cbl{position:absolute;left:0;right:0;top:100%;background:#fff;border:1px solid var(--line2);border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.15);max-height:320px;overflow:auto;z-index:30}
+.cbi{padding:7px 12px;cursor:pointer;display:flex;flex-direction:column;gap:1px;color:var(--ink)}
+.cbi small{color:var(--muted);font-size:11px}
+.cbi:hover,.cbi.on{background:#e8f1fb}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.legend .lb{display:inline-block;font-size:10px;font-weight:700;border-radius:8px;padding:0 5px;border:1px solid var(--line2);margin-right:3px}
+.legend span.nb::before{display:none}
 .chip[draggable=true]{cursor:grab}
 /* month */
 .mon{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
@@ -299,7 +310,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 <script>
 'use strict';
 /* ================= 常數 ================= */
-const APPVER='2.6.3';
+const APPVER='2.7（排程台配色）';
 const STAGES=['待安排','已排程','待審核','結案','取消','轉系統部門'];
 const OPEN=['待安排','已排程','待審核'];
 const SC={'待安排':'var(--st-wait)','已排程':'var(--st-sched)','待審核':'var(--st-done)','結案':'var(--st-closed)','取消':'var(--st-cancel)','轉系統部門':'var(--st-sys)'};
@@ -711,11 +722,16 @@ function renderDash(){
 }
 
 /* ================= 排程台 ================= */
+/* 卡片顏色依「服務主旨」（參考 Repair Shop 依站別上色）；階段用右上角標籤表示 */
+const TYPE_COLORS=[['保養','#1baf7a'],['維修','#eb6834'],['檢查','#6250d6'],['定位','#2a78d6'],['試車','#2a78d6']];
+function typeColor(t){t=String(t||'');let best=null,bi=1e9;TYPE_COLORS.forEach(([k,c])=>{const i=t.indexOf(k);if(i>=0&&i<bi){bi=i;best=c}});return best||'#7a7d75'}
+function typeLegend(){return `<div class="legend">${[['保養','#1baf7a'],['維修','#eb6834'],['檢查','#6250d6'],['系統定位/試車','#2a78d6'],['其他','#7a7d75']].map(([l,c])=>`<span class="nb"><i style="background:${c}"></i>${l}</span>`).join('')}<span class="nb"><b class="lb" style="color:#9a6a00">待審</b>報告待審核</span><span class="nb"><b class="lb" style="color:#1baf7a">✓</b>結案</span><span class="nb"><b class="lb" style="background:var(--red);color:#fff;border-color:var(--red)">逾期</b>未回報</span></div>`}
 function chipHtml(c,drag,rowStaff){
   const cls=c.late?'late':c.stage==='待審核'?'done':c.stage==='結案'?'closed':'';
+  const bd=c.late?'逾期':c.stage==='待審核'?'待審':c.stage==='結案'?'✓':'';
   const t=(c.r.tStart?c.r.tStart+'–'+(c.r.tEnd||''):'')+(c.r.vehicle?' · '+c.r.vehicle:'');
   const others=rowStaff===undefined?c.staff:c.staff.filter(s=>s!==rowStaff);
-  return `<div class="chip ${cls}" style="--c:${SC[c.stage]}" data-fsn="${esc(c.fsn)}" ${drag?`draggable="true" data-from="${esc(rowStaff||'')}"`:''} data-tip="<b>${esc(c.cust)}</b><br>${esc(c.type)} · ${esc(c.stage)}${c.late?' · <b>逾期未回報</b>':''}<br>${esc(md(c.date))}${c.days>1?' 起 '+c.days+' 天':''} ${esc(t)}<br>人員：${esc(c.staff.join('、')||'未指派')}${c.r.content?'<br>'+esc(c.r.content):''}"><b>${c.late?'⚠ ':''}${esc(c.cust)}</b><span>${esc(c.type)}${others.length?' · '+(rowStaff===undefined?'':'+')+esc(others.join('、')):''}</span></div>`;
+  return `<div class="chip ${cls}${bd?' bdg':''}" style="--c:${typeColor(c.type)}" data-fsn="${esc(c.fsn)}" ${drag?`draggable="true" data-from="${esc(rowStaff||'')}"`:''} data-tip="<b>${esc(c.cust)}</b><br>${esc(c.type)} · ${esc(c.stage)}${c.late?' · <b>逾期未回報</b>':''}<br>${esc(md(c.date))}${c.days>1?' 起 '+c.days+' 天':''} ${esc(t)}<br>人員：${esc(c.staff.join('、')||'未指派')}${c.r.content?'<br>'+esc(c.r.content):''}">${bd?`<i class="bd">${bd}</i>`:''}<b>${esc(c.cust)}</b><span>${esc(c.type)}${others.length?' · '+(rowStaff===undefined?'':'+')+esc(others.join('、')):''}</span></div>`;
 }
 function renderBoard(){
   const t=today();S.week=S.week||mondayOf(t);
@@ -744,7 +760,7 @@ function renderBoard(){
    <div class="panel"><div class="ph"><h2>待安排</h2><span class="tag">${pend.length}</span><span class="sp"></span></div>
      <div class="pb filters" style="padding-bottom:0"><input type="text" id="pq" placeholder="搜尋客戶／FSN／地址" value="${esc(S.pq)}" style="flex:1">
      <select id="ptype"><option value="">全部種類</option>${types.map(x=>`<option ${x===S.ptype?'selected':''}>${esc(x)}</option>`).join('')}</select></div>
-     <div class="plist" id="plist">${pend.map(c=>{const ci=custInfo(c.cust);return `<div class="pcard" ${canEdit()?'draggable="true"':''} data-fsn="${esc(c.fsn)}">
+     <div class="plist" id="plist">${pend.map(c=>{const ci=custInfo(c.cust);return `<div class="pcard" style="--c:${typeColor(c.type)}" ${canEdit()?'draggable="true"':''} data-fsn="${esc(c.fsn)}">
        <div class="t"><span>${esc(c.cust)}</span><span class="wait ${waitCls(c.wait)}">${c.wait??'-'} 天</span></div>
        <div class="m"><span>${esc(c.type)}</span><span>${esc(c.sales)}</span><span>${md(c.issue)} 開單</span>${c.order==='X'?'<span style="color:var(--red)">無訂單</span>':''}</div>
        <div class="m">${ci&&ci.km?`<span>📍${esc(ci.area||'')} ${ci.km?ci.km+'km':''} ${ci.min?'· '+ci.min+'分':''}</span>`:`<span class="muted">${esc(c.addr.slice(0,18))}</span>`}</div></div>`}).join('')||'<div class="empty">沒有待安排案件 👍</div>'}</div>
@@ -752,6 +768,7 @@ function renderBoard(){
    <div class="panel"><div class="ph"><h2>人員週排程</h2><span class="sp"></span>
      <button class="btn sm" id="wPrev">‹ 上週</button><button class="btn sm" id="wNow">本週</button><button class="btn sm" id="wNext">下週 ›</button>
      <input type="date" id="wPick" value="${S.week}"></div>
+     <div class="pb" style="padding:8px 14px 0">${typeLegend()}</div>
      <div class="week">${g}</div>
      <div class="pb muted" style="font-size:12px">${canEdit()?'':'<b style="color:var(--red)">唯讀：只有排程負責人可以修改。</b> '}把左側案件拖到「人員 × 日期」格子即可排程；已排的案件可拖到其他格子改期／換人（可復原）。點案件可編輯詳細內容。</div>
    </div></div>`;
@@ -792,7 +809,7 @@ function renderCal(){
     return `<div class="d ${out?'out':''} ${d===t?'today':''}" data-day="${d}"><span class="n">${+d.slice(8)}</span>${cs.slice(0,4).map(c=>chipHtml(c,false)).join('')}${cs.length>4?`<span class="more">+${cs.length-4} 件</span>`:''}</div>`}).join('');
   const cnt=S.cases.filter(c=>c.date&&c.date.startsWith(S.month)&&c.stage!=='取消').length;
   $('#main').innerHTML=`<div class="panel"><div class="ph"><h2>${+S.month.slice(0,4)} 年 ${+S.month.slice(5)} 月</h2><span class="tag">${cnt} 件</span><span class="sp"></span>
-   <div class="legend">${['已排程','待審核','結案'].map(s=>`<span style="--c:${SC[s]}">${s}</span>`).join('')}<span style="--c:var(--red)">逾期</span></div>
+   ${typeLegend()}
    <button class="btn sm" id="mPrev">‹</button><button class="btn sm" id="mNow">本月</button><button class="btn sm" id="mNext">›</button></div>
    <div class="mon">${['一','二','三','四','五','六','日'].map(w=>`<div class="hd">${w}</div>`).join('')}${html}</div></div>`;
   const mv=n=>{const d=new Date(+S.month.slice(0,4),+S.month.slice(5,7)-1+n,1);S.month=ymd(d).slice(0,7);renderCal()};
@@ -1023,7 +1040,6 @@ function sfValidate(sf){
   if(!sf.kind)B('kind','服務種類');
   if(!sf.order)B('order','訂單 V/X');
   if(sf.order==='V'&&!docValid(sf.doc))B('doc','單據編號（格式不正確或未填；沒有單號請按「待補」）');
-  if(!sf.warranty)B('warranty','Warranty');
   if(!sf.cust.trim())B('cust','客戶');
   if(sf.kind!=='廠內維修'){
     if(!sf.contact.trim())B('contact','聯絡人');
@@ -1064,11 +1080,6 @@ function renderSignal(){
       <input type="text" data-docnum inputmode="numeric" value="${esc(d.num)}" placeholder="${DOC_LEN[d.pre]} 碼數字，例 2026011205" ${d.pend?'disabled':''}>
       <div class="tog">${DOC_PEND.map(v=>`<button type="button" data-docpend="${v}" class="${d.pend===v?'on':''}">${v}</button>`).join('')}</div></div>
       <span class="muted" style="font-size:11px" id="docMsg">${docMsg(sf.doc)}</span></div>`})():''}
-    <div class="fl ${bc('warranty')}"><span class="req">Warranty 保固</span><div class="tog">${['YES','NO','一般保養','合約保養'].map(v=>`<button type="button" data-set="warranty" data-val="${v}" class="${sf.warranty===v?'on':''}">${v}</button>`).join('')}</div></div>
-    ${sf.warranty==='合約保養'?(()=>{const cc=custContracts(sf.cust).filter(c=>!sf.contracts.some(x=>x.f===c.f));return `<div class="fl s4"><span>保養合約（可上傳 PDF 或照片，可多份）</span><div class="ctrs">
-      ${sf.contracts.map((c,i)=>`<span class="ctr on"><a href="#" data-copen="${esc(c.f)}">📄 ${esc(c.n)}</a><button type="button" class="btn sm" data-cdel="${i}" title="移除">✕</button></span>`).join('')}
-      ${cc.map(c=>`<button type="button" class="btn sm" data-cuse="${esc(c.f)}" title="此客戶以前上傳過的合約">＋ 使用 ${esc(c.n)}</button>`).join('')}
-      <button type="button" class="btn sm" id="ctrUp">⬆ 上傳合約</button></div></div>`})():''}
    </div></div>
   <div class="panel sec"><div class="ph"><h2>服務內容</h2></div>
    <div class="pb fgrid">
@@ -1077,7 +1088,7 @@ function renderSignal(){
    </div></div>
   <div class="panel sec"><div class="ph"><h2>客戶</h2><span class="sp"></span>${cust&&cust.km?`<span class="muted">📍 ${esc(cust.area||'')} 單程 ${cust.km} km · ${cust.min||'?'} 分</span>`:''}</div>
    <div class="pb fgrid">
-    <label class="s2 ${bc('cust')}"><span class="req">客戶 Customer</span><input type="text" data-k="cust" list="custList" value="${esc(sf.cust)}" placeholder="輸入關鍵字選擇，新客戶直接輸入全名"><datalist id="custList">${st.customers.map(c=>`<option value="${esc(c.name)}">`).join('')}</datalist></label>
+    <label class="s2 cbx ${bc('cust')}"><span class="req">客戶 Customer</span><input type="text" data-k="cust" autocomplete="off" value="${esc(sf.cust)}" placeholder="輸入關鍵字選擇，新客戶直接輸入全名"><div class="cbl" id="custDrop" hidden></div></label>
     <label class="s2 ${bc('seg')}"><span class="req">Segment（行業別）</span><select data-k="seg" ${edit||segLocked(sf)?'disabled':''}><option value="">— 選擇 —</option>${st.segments.map(s=>`<option value="${esc(s.code)}" ${String(s.code)===sf.seg?'selected':''}>${esc(s.code)} ${esc(s.name)}</option>`).join('')}</select><span class="muted" id="segNote" style="font-size:11px">${segNote(sf,edit)}</span></label>
     ${inhouse?'<div class="s4 muted" style="font-size:12px">廠內維修不需填聯絡人、電話、地址</div>':`<label class="${bc('contact')}"><span class="req">聯絡人 Contact</span><input type="text" data-k="contact" value="${esc(sf.contact)}"></label>
     <div class="fl s4 ${bc('phone')}"><span class="req">電話（至少填一支）</span><div class="phs">${sf.phones.map((p,i)=>`<div class="ph1">${i<PH_DEF.length?`<span class="pht">${esc(p.t)}</span>`:`<input type="text" class="pht" data-ph="${i}" data-pf="t" value="${esc(p.t)}" placeholder="名稱">`}<input type="text" data-ph="${i}" data-pf="v" value="${esc(p.v)}" placeholder="${p.t==='手機'?'09xx-xxx-xxx':p.t==='市話'?'03-xxxxxxx #分機':''}">${i>=PH_DEF.length?`<button type="button" class="btn sm" data-phdel="${i}">✕</button>`:''}</div>`).join('')}<button type="button" class="btn sm" id="phAdd">＋ 新增電話</button></div></div>
@@ -1118,6 +1129,7 @@ function renderSignal(){
     const k=e.target.dataset.k;if(k){sf[k]=e.target.value;if(k==='cust'){custFill(e.target.value,false);syncCustDom()}upd();return}
     const q=e.target.dataset.eq;if(q!==undefined){const f=e.target.dataset.f;sf.equip[+q][f]=f==='qty'?(+e.target.value||''):e.target.value;upd()}
   };
+  attachCombo(m.querySelector('[data-k="cust"]'),$('#custDrop'),()=>st.customers.map(c=>({v:c.name,sub:[c.area,c.contact].filter(Boolean).join(' · '),k:[c.name,...(c.alias||[]),c.area||''].join(' ')})),v=>{sf.cust=v;custFill(v,true)});
   m.onchange=e=>{
     const k=e.target.dataset.k;if(k==='cust'){custFill(e.target.value,true);return}
     if(e.target.dataset.f==='ptype'){setTimeout(renderSignal,0);return}
@@ -1163,6 +1175,28 @@ function renderSignal(){
     if(c.photo&&sf.photo===null)sf.photo=true;
     if(full)setTimeout(renderSignal,0);
   }
+}
+/* 自製下拉選單：取代瀏覽器內建 datalist（中文輸入法打字時 datalist 不會即時更新） */
+function attachCombo(inp,box,items,onPick){
+  if(!inp||!box)return;let hi=-1,list=[];
+  const close=()=>{box.hidden=true;hi=-1};
+  const show=()=>{
+    const q=inp.value.trim().toLowerCase(),toks=q.split(/\s+/).filter(Boolean);
+    const all=items();
+    list=(toks.length?all.filter(x=>toks.every(t=>x.k.toLowerCase().includes(t))):all)
+      .sort((a,b)=>{const ai=a.v.toLowerCase().indexOf(q),bi=b.v.toLowerCase().indexOf(q);return (ai<0?99:ai)-(bi<0?99:bi)||a.v.length-b.v.length}).slice(0,15);
+    if(!list.length||(list.length===1&&list[0].v===inp.value.trim())){close();return}
+    hi=-1;box.style.top=(inp.offsetTop+inp.offsetHeight+2)+'px';box.innerHTML=list.map((x,i)=>`<div class="cbi" data-i="${i}"><b>${esc(x.v)}</b>${x.sub?`<small>${esc(x.sub)}</small>`:''}</div>`).join('');box.hidden=false};
+  const pick=i=>{const x=list[i];if(!x)return;inp.value=x.v;close();onPick(x.v)};
+  const mark=()=>box.querySelectorAll('.cbi').forEach((d,i)=>{d.classList.toggle('on',i===hi);if(i===hi)d.scrollIntoView({block:'nearest'})});
+  inp.addEventListener('input',show);inp.addEventListener('compositionend',show);inp.addEventListener('focus',()=>{if(inp.value.trim())show()});
+  inp.addEventListener('keydown',e=>{if(box.hidden)return;
+    if(e.key==='ArrowDown'){hi=Math.min(list.length-1,hi+1);mark();e.preventDefault()}
+    else if(e.key==='ArrowUp'){hi=Math.max(0,hi-1);mark();e.preventDefault()}
+    else if(e.key==='Enter'&&hi>=0){e.preventDefault();pick(hi)}
+    else if(e.key==='Escape')close()});
+  box.addEventListener('mousedown',e=>{const d=e.target.closest('.cbi');if(d){e.preventDefault();pick(+d.dataset.i)}});
+  inp.addEventListener('blur',()=>setTimeout(close,150));
 }
 /* 保養合約：檔案存在 contracts 資料夾，並記到客戶資料供下次選用 */
 const contractsDir=c=>subDir(['contracts'],c);
@@ -1287,7 +1321,7 @@ function renderMySig(){
 function sigSummary(r){
   const g=r.signal;
   return `<div class="info" style="background:#f3f8fe">
-   <div><span>服務種類</span>${esc(g.kind)}</div><div><span>服務主旨</span>${esc(g.subject)}</div><div><span>保固</span>${esc(g.warranty||'-')}${(g.contracts||[]).map(c=>` <a href="#" onclick="openContract('${esc(c.f).replace(/'/g,'')}');return false">📄${esc(c.n)}</a>`).join('')}</div>
+   <div><span>服務種類</span>${esc(g.kind)}</div><div><span>服務主旨</span>${esc(g.subject)}</div><div${g.warranty?'':' hidden'}><span>保固</span>${esc(g.warranty||'-')}${(g.contracts||[]).map(c=>` <a href="#" onclick="openContract('${esc(c.f).replace(/'/g,'')}');return false">📄${esc(c.n)}</a>`).join('')}</div>
    <div class="w2c"><span>${/檢查/.test(g.subject)?'異常現象':'任務內容'}</span>${esc((g.tasks||[]).join('、'))}</div><div><span>照片報告</span>${g.photo?'<b>需要</b>':'不需要'}</div>${can('board.contact',isOwn(r))?`<div><span>聯絡人</span>${esc(r.contact||'')} ${esc(r.phone||'')}</div>`:''}
    <div class="w4c"><span>設備</span>${(g.equip||[]).map(e=>esc([e.brand,e.ptype,e.model,g.kind==='廠內維修'?('S/N '+(e.sn||'-')+(e.wo?' WO '+e.wo:'')+(e.po?' PO '+e.po:'')):('x'+e.qty)].filter(Boolean).join(' '))+(e.subject?'　<b>'+esc(eqSvc(e))+'</b>':'')).join('<br>')}</div>
    ${g.notes?`<div class="w4c"><span>補充</span>${esc(g.notes)}</div>`:''}
@@ -1309,7 +1343,7 @@ function printSignal(r){
    <div class="ttl">訊息單 Signal Form</div>
    <table><colgroup><col style="width:22%"><col style="width:28%"><col style="width:20%"><col style="width:30%"></colgroup>
     <tr><th>服務種類 Type of Services</th><td>${esc(g.kind)}</td><th>單號 FSN</th><td><b>${esc(r.fsn)}</b></td></tr>
-    <tr><th>服務主旨 Subject of Service</th><td>${esc(g.subject)}</td><th>Warranty</th><td>${esc(g.warranty||'')}${(g.contracts||[]).length?`<div style="font-size:8.5pt">附合約：${g.contracts.map(c=>esc(c.n)).join('、')}</div>`:''}</td></tr>
+    <tr><th>服務主旨 Subject of Service</th><td>${esc(g.subject)}</td><th>${g.warranty?'Warranty':''}</th><td>${esc(g.warranty||'')}${(g.contracts||[]).length?`<div style="font-size:8.5pt">附合約：${g.contracts.map(c=>esc(c.n)).join('、')}</div>`:''}</td></tr>
     <tr><th>訂單 PO (V/X)</th><td>${esc(r.order||'')}</td><th>單據編號</th><td>${esc(r.doc||'')}</td></tr>
     <tr><th>業務 Sales</th><td>${esc(r.sales)} ${esc(salesName(r.sales))}</td><th>Segment</th><td>${esc(r.seg)} ${esc(segName(r.seg))}</td></tr>
    </table>
