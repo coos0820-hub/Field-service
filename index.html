@@ -310,7 +310,29 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 <script>
 'use strict';
 /* ================= 常數 ================= */
-const APPVER='2.7（排程台配色）';
+const APPVER='2.8（共用設定）';
+(function(){const put=()=>{const h=document.querySelector('header h1');if(h&&!h.querySelector('.hver'))h.insertAdjacentHTML('beforeend','<small class="hver" style="opacity:.65;margin-left:6px">v'+APPVER.replace(/（.*$/,'')+'</small>')};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',put);else put()})();
+/* ===== 入口網站共用設定（中繼複製到本資料夾的 _共用設定.json）：人員、客戶、機種／型號 ===== */
+const SHARED_FILE='_共用設定.json';
+function applyShared(st,sh){
+  const on={people:false,cust:false,pump:false,at:sh&&sh.updatedAt||''};
+  if(!sh||sh.app!=='shared-settings'){S.sharedOn=null;return}
+  const pins={};[...(st.staff||[]),...(st.sales||[]),...(st.viewers||[])].forEach(x=>{if(x&&x.name&&x.pin)pins[x.name]=x.pin});
+  const ppl=(sh.people||[]).filter(p=>p&&p.name);const has=r=>p=>(p.roles||[]).includes(r);
+  if(ppl.length){on.people=true;
+    st.staff=ppl.filter(p=>has('eng')(p)||has('chief')(p)).map(p=>({name:p.name,en:p.en||'',title:p.title||'',admin:has('chief')(p),alias:p.alias||[],active:p.active!==false,pin:p.pin||pins[p.name]||''}));
+    st.sales=ppl.filter(p=>has('salesOut')(p)||has('salesIn')(p)).map(p=>({code:p.code||p.name,name:p.name,active:p.active!==false,pin:p.pin||pins[p.name]||''}));
+    st.viewers=ppl.filter(has('viewer')).map(p=>({name:p.name,title:p.title||'',active:p.active!==false,pin:p.pin||pins[p.name]||''}));}
+  if((sh.customers||[]).length){on.cust=true;
+    st.customers=sh.customers.filter(c=>c&&c.name).map(c=>Object.assign({name:'',contact:'',phone:'',addr:'',segment:'',photo:false,area:'',km:null,min:null},c));}
+  const mk=Object.keys(sh.models||{});
+  if(mk.length){on.pump=true;const old=Object.keys(st.pumpTypes||{});const order=[...(sh.families||[]),...mk.filter(k=>!(sh.families||[]).some(f=>f.toLowerCase()===k.toLowerCase()))];const pt={};
+    for(const f of order){const k=mk.find(x=>x.toLowerCase()===f.toLowerCase());if(!k)continue;const name=old.find(x=>x.toLowerCase()===k.toLowerCase())||k;pt[name]=[...sh.models[k]]}
+    st.pumpTypes=pt}
+  S.sharedOn=on;
+}
+const SH_TAB={staff:'people',viewer:'people',sales:'people',cust:'cust',pump:'pump'};
+function sharedLocked(tab){return !!(S.sharedOn&&SH_TAB[tab]&&S.sharedOn[SH_TAB[tab]])}
 const STAGES=['待安排','已排程','待審核','結案','取消','轉系統部門'];
 const OPEN=['待安排','已排程','待審核'];
 const SC={'待安排':'var(--st-wait)','已排程':'var(--st-sched)','待審核':'var(--st-done)','結案':'var(--st-closed)','取消':'var(--st-cancel)','轉系統部門':'var(--st-sys)'};
@@ -398,7 +420,10 @@ async function loadAll(quiet){
   if(loading)return;loading=true;if(!quiet)setSync('busy','讀取中…');
   try{
     const sf=await (await H.root.getFileHandle('settings.json')).getFile();
-    if(sf.lastModified!==S.setMod||!S.set){S.set=normSettings(JSON.parse((await sf.text()).replace(/^﻿/,'')));S.setMod=sf.lastModified}
+    if(sf.lastModified!==S.setMod||!S.set){S.set=normSettings(JSON.parse((await sf.text()).replace(/^﻿/,'')));S.setMod=sf.lastModified;S._shApplied=false}
+    try{const hf=await (await H.root.getFileHandle(SHARED_FILE)).getFile();if(hf.lastModified!==S.shMod){S.shared=JSON.parse((await hf.text()).replace(/^﻿/,''));S.shMod=hf.lastModified;S._shApplied=false}}
+    catch(e){if(S.shared){S.shared=null;S.shMod=0;S.sharedOn=null}}
+    if(S.shared&&!S._shApplied){applyShared(S.set,S.shared);S._shApplied=true}
     const dir=await casesDir(S.set.year,true);
     const seen=new Set();let changed=0;
     for await(const [name,h] of dir.entries()){
@@ -2147,8 +2172,9 @@ function renderSet(){
     <div class="panel"><div class="ph"><h2>匯出</h2></div><div class="pb" style="display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn" id="exAll">匯出全部案件 Excel（Service 欄位格式）</button><button class="btn" id="exSet">下載 settings.json 備份</button></div></div></div>`;
   $('#main').innerHTML=`<div class="panel"><div class="ph"><h2>設定</h2><span class="sp"></span><span class="muted">資料夾：${H.root?esc(H.root.name):'—'}｜版本 ${APPVER}</span><button class="btn sm" id="sPick">更換資料夾</button></div><div class="pb">
-    <div class="stabs">${okTabs.map(([k,l])=>`<button data-st="${k}" class="${tab===k?'on':''}">${l}</button>`).join('')}</div>${body}</div></div>`;
+    <div class="stabs">${okTabs.map(([k,l])=>`<button data-st="${k}" class="${tab===k?'on':''}">${l}${sharedLocked(k)?' 🔒':''}</button>`).join('')}</div>${sharedLocked(tab)?`<div style="background:#eef4ff;border:1px solid #c9dafc;border-radius:6px;padding:8px 12px;margin:0 0 10px">🔒 這一頁由<b>入口網站「共用設定」</b>統一維護，這裡只能查看。要新增或修改，請到入口網站 → 共用設定 →「${{people:'人員',cust:'客戶',pump:'機種／型號'}[SH_TAB[tab]]}」頁。${S.sharedOn.at?'（共用設定更新於 '+esc(String(S.sharedOn.at).slice(0,16).replace('T',' '))+'）':''}</div>`:''}${body}</div></div>`;
   bindSet();
+  if(sharedLocked(tab))$('#main .pb').querySelectorAll('input,textarea,select,button:not([data-st])').forEach(el=>{el.disabled=true;if(el.tagName==='BUTTON')el.style.display='none'});
 }
 function bindSet(){
   const st=S.set,m=$('#main');const on=(id,f)=>{const e=$('#'+id);if(e)e.onclick=f};
