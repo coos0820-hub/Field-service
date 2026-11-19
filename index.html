@@ -249,6 +249,9 @@ dialog::backdrop{background:rgba(15,20,30,.45)}
 .pf.ck .lgs u{text-decoration:none;border-bottom:1px solid #000;display:inline-block;min-width:22mm}
 .pf.ck .ks td{height:7mm;text-align:center}.pf.ck .ks th{text-align:center}
 .chkbox.bad input,.chkbox.bad select,.chkbox.bad .tog{outline:none}
+.chip .hf{font-style:normal;font-size:10px;font-weight:700;padding:0 4px;border-radius:3px;background:#fff;border:1px solid var(--c);color:var(--c);margin-right:4px}
+.daysbox{display:flex;gap:4px;align-items:center}.daysbox input{width:70px;text-align:center}
+.dayhint{font-size:11px;color:var(--ink2);margin-top:2px}
 .fgal{display:flex;flex-wrap:wrap;gap:10px}
 .fthumb{width:150px;border:1px solid var(--line2);border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:6px;background:#fff}
 .fthumb img{width:100%;height:190px;object-fit:contain;background:#f5f5f3;cursor:zoom-in}
@@ -327,7 +330,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 <script>
 'use strict';
 /* ================= 常數 ================= */
-const APPVER='3.1（內網唯讀＋報告回傳）';
+const APPVER='3.2（簡化完工報告／半天排程）';
 const BUSCH_LOGO='data:image/png;base64,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';
 (function(){const put=()=>{const h=document.querySelector('header h1');if(h&&!h.querySelector('.hver'))h.insertAdjacentHTML('beforeend','<small class="hver" style="opacity:.65;margin-left:6px">v'+APPVER.replace(/（.*$/,'')+'</small>')};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',put);else put()})();
 /* ===== 入口網站共用設定（中繼複製到本資料夾的 _共用設定.json）：人員、客戶、機種／型號 ===== */
@@ -575,7 +578,7 @@ function build(){
     const c={fsn:r.fsn,sales:r.sales||'',no:r.no||'',seg:String(r.seg??''),doc:r.doc||'',order:r.order||'',issue:r.issue||'',type:normType(r.type),cust:r.cust||'',addr:r.addr||'',r};
     c.stage=r.stage||(c.type==='此單作廢'?'取消':'待安排');
     c.salesName=salesName(c.sales);
-    c.date=r.date||'';c.days=+r.days||1;c.end=c.date?addD(c.date,c.days-1):'';
+    c.date=r.date||'';c.days=roundDays(r.days||1);c.slots=caseSlots(c.date,c.days,r.tStart);c.end=c.slots.length?c.slots[c.slots.length-1].d:'';
     c.staff=r.staff||[];
     c.wait=c.issue?(c.stage==='待安排'?diffD(c.issue,t):(c.date?diffD(c.issue,c.date):null)):null;
     c.due=c.end?dueDate(c.end):'';
@@ -588,7 +591,19 @@ function build(){
 /* 逾期：排程結束日後超過「寬限天數」仍是「已排程」（完工報告還沒送出）。寬限可設定只算工作天 */
 function dueDate(end){const st=S.set||{},n=Math.max(0,+(st.lateDays??0)||0);if(!n)return end;
   if(!st.lateWorkdays)return addD(end,n);let d=end,k=0;while(k<n){d=addD(d,1);const w=parseD(d).getDay();if(w!==0&&w!==6)k++}return d}
-function onDay(c,d){return c.date&&c.date<=d&&d<=c.end}
+const hmm=x=>{const m=String(x||'').match(/^(\d{1,2}):(\d{2})/);return m?+m[1]*60+ +m[2]:null};
+const roundDays=v=>Math.min(60,Math.max(0.5,Math.round((+v||1)*2)/2));
+/* 半天排程（同 Repair Shop）：開始日＋天數（0.5 為單位），開始時間在 12:00 以後＝從下午開始，依序填上午／下午 */
+function caseSlots(date,days,tStart){
+  if(!date)return [];let u=Math.round(roundDays(days)*2),pm=(hmm(tStart)??0)>=720,d=date;const out=[];
+  while(u>0){let r=out.find(o=>o.d===d);if(!r){r={d,am:false,pm:false};out.push(r)}if(pm){r.pm=true;u--;d=addD(d,1);pm=false}else{r.am=true;u--;pm=true}}
+  return out;
+}
+const slotOf=(c,d)=>(c.slots||[]).find(x=>x.d===d);
+const slotTag=sl=>sl&&!(sl.am&&sl.pm)?(sl.am?'上午':'下午'):'';
+const slotRank=(c,d)=>{const x=slotOf(c,d);return !x?1:x.am&&x.pm?1:x.am?0:2};
+const fmtDays=n=>(+n||1)%1?String(+n):String(+n||1);
+function onDay(c,d){return !!slotOf(c,d)}
 function waitCls(w){return w==null?'':w>30?'w3':w>14?'w2':'w1'}
 function who(){return S.role==='sales'?(salesName(ss.get('fsd2_sales')||'')||'業務'):S.role==='admin'?'管理者':S.role==='guest'?'訪客':(ss.get('fsd2_me')||ROLE_SHORT[S.role]||'')}
 
@@ -757,7 +772,7 @@ function renderDash(){
   const mOut=months.map(m=>C.filter(c=>['結案','待審核'].includes(c.stage)&&(c.r.doneDate||c.date||'').startsWith(m)).length);
   // staff load this month (person-days)
   const load={};staffList().forEach(s=>load[s]=0);
-  C.filter(c=>c.date&&c.stage!=='取消').forEach(c=>{for(let i=0;i<c.days;i++){const d=addD(c.date,i);if(d.startsWith(mth))c.staff.forEach(s=>{if(s in load)load[s]++})}});
+  C.filter(c=>c.date&&c.stage!=='取消').forEach(c=>{(c.slots||[]).forEach(sl=>{if(sl.d.startsWith(mth))c.staff.forEach(s=>{if(s in load)load[s]+=sl.am&&sl.pm?1:0.5})})});
   const loadItems=Object.entries(load).map(([l,v])=>({l,v}));
   const top=wait.slice().sort((a,b)=>(b.wait||0)-(a.wait||0)).slice(0,10);
   $('#main').innerHTML=`
@@ -795,12 +810,13 @@ function renderDash(){
 const TYPE_COLORS=[['保養','#1baf7a'],['維修','#eb6834'],['檢查','#6250d6'],['定位','#2a78d6'],['試車','#2a78d6']];
 function typeColor(t){t=String(t||'');let best=null,bi=1e9;TYPE_COLORS.forEach(([k,c])=>{const i=t.indexOf(k);if(i>=0&&i<bi){bi=i;best=c}});return best||'#7a7d75'}
 function typeLegend(){return `<div class="legend">${[['保養','#1baf7a'],['維修','#eb6834'],['檢查','#6250d6'],['系統定位/試車','#2a78d6'],['其他','#7a7d75']].map(([l,c])=>`<span class="nb"><i style="background:${c}"></i>${l}</span>`).join('')}<span class="nb"><b class="lb" style="color:#9a6a00">待審</b>報告待審核</span><span class="nb"><b class="lb" style="color:#1baf7a">✓</b>結案</span><span class="nb"><b class="lb" style="background:var(--red);color:#fff;border-color:var(--red)">逾期</b>未回報</span></div>`}
-function chipHtml(c,drag,rowStaff){
+function chipHtml(c,drag,rowStaff,day){
+  const half=day?slotTag(slotOf(c,day)):'';
   const cls=c.late?'late':c.stage==='待審核'?'done':c.stage==='結案'?'closed':'';
   const bd=c.late?'逾期':c.stage==='待審核'?'待審':c.stage==='結案'?'✓':'';
   const t=(c.r.tStart?c.r.tStart+'–'+(c.r.tEnd||''):'')+(c.r.vehicle?' · '+c.r.vehicle:'');
   const others=rowStaff===undefined?c.staff:c.staff.filter(s=>s!==rowStaff);
-  return `<div class="chip ${cls}${bd?' bdg':''}" style="--c:${typeColor(c.type)}" data-fsn="${esc(c.fsn)}" ${drag?`draggable="true" data-from="${esc(rowStaff||'')}"`:''} data-tip="<b>${esc(c.cust)}</b><br>${esc(c.type)} · ${esc(c.stage)}${c.late?' · <b>逾期未回報</b>':''}<br>${esc(md(c.date))}${c.days>1?' 起 '+c.days+' 天':''} ${esc(t)}<br>人員：${esc(c.staff.join('、')||'未指派')}${c.r.content?'<br>'+esc(c.r.content):''}">${bd?`<i class="bd">${bd}</i>`:''}<b>${esc(c.cust)}</b><span>${esc(c.type)}${others.length?' · '+(rowStaff===undefined?'':'+')+esc(others.join('、')):''}</span></div>`;
+  return `<div class="chip ${cls}${bd?' bdg':''}" style="--c:${typeColor(c.type)}" data-fsn="${esc(c.fsn)}" ${drag?`draggable="true" data-from="${esc(rowStaff||'')}"`:''} data-tip="<b>${esc(c.cust)}</b><br>${esc(c.type)} · ${esc(c.stage)}${c.late?' · <b>逾期未回報</b>':''}<br>${esc(md(c.date))}${c.days!==1?' 起 '+fmtDays(c.days)+' 天':''}${half?'（'+half+'）':''} ${esc(t)}<br>人員：${esc(c.staff.join('、')||'未指派')}${c.r.content?'<br>'+esc(c.r.content):''}">${bd?`<i class="bd">${bd}</i>`:''}${half?`<i class="hf">${half}</i>`:''}<b>${esc(c.cust)}</b><span>${esc(c.type)}${others.length?' · '+(rowStaff===undefined?'':'+')+esc(others.join('、')):''}</span></div>`;
 }
 function renderBoard(){
   const t=today();S.week=S.week||mondayOf(t);
@@ -821,8 +837,8 @@ function renderBoard(){
     const pdays=days.filter(d=>mine.some(c=>onDay(c,d))).length;
     g+=`<div class="rh">${esc(s)}<small>${s==='未指派'?'':pdays+' 天'}</small></div>`;
     days.forEach(d=>{const dd=parseD(d);const we=dd.getDay()===0||dd.getDay()===6;
-      const cs=mine.filter(c=>onDay(c,d));
-      g+=`<div class="cell ${d===t?'today':''} ${we?'we':''}" data-d="${d}" data-s="${esc(s)}">${cs.map(c=>chipHtml(c,canEdit(),s==='未指派'?'':s)).join('')}</div>`});
+      const cs=mine.filter(c=>onDay(c,d)).sort((a,b)=>slotRank(a,d)-slotRank(b,d));
+      g+=`<div class="cell ${d===t?'today':''} ${we?'we':''}" data-d="${d}" data-s="${esc(s)}">${cs.map(c=>chipHtml(c,canEdit(),s==='未指派'?'':s,d)).join('')}</div>`});
   });
   g+='</div>';
   $('#main').innerHTML=`<div class="board">
@@ -875,7 +891,7 @@ function renderCal(){
   const vis=S.cases.filter(c=>c.date&&c.stage!=='取消'&&c.end>=start&&c.date<=end);
   const eng=!canEdit();
   const html=days.map(d=>{const cs=vis.filter(c=>onDay(c,d));const out=d.slice(0,7)!==S.month;
-    return `<div class="d ${out?'out':''} ${d===t?'today':''}" data-day="${d}"><span class="n">${+d.slice(8)}</span>${cs.slice(0,4).map(c=>chipHtml(c,false)).join('')}${cs.length>4?`<span class="more">+${cs.length-4} 件</span>`:''}</div>`}).join('');
+    return `<div class="d ${out?'out':''} ${d===t?'today':''}" data-day="${d}"><span class="n">${+d.slice(8)}</span>${cs.slice(0,4).map(c=>chipHtml(c,false,undefined,d)).join('')}${cs.length>4?`<span class="more">+${cs.length-4} 件</span>`:''}</div>`}).join('');
   const cnt=S.cases.filter(c=>c.date&&c.date.startsWith(S.month)&&c.stage!=='取消').length;
   $('#main').innerHTML=`<div class="panel"><div class="ph"><h2>${+S.month.slice(0,4)} 年 ${+S.month.slice(5)} 月</h2><span class="tag">${cnt} 件</span><span class="sp"></span>
    ${typeLegend()}
@@ -923,7 +939,7 @@ function renderList(){
    ${S.sel.size&&can('board.drag')?`<div class="batch"><b>已勾選 ${S.sel.size} 件</b> 批次改為：${STAGES.filter(s=>s==='取消'?can('board.cancel'):s==='轉系統部門'?can('board.sys'):true).map(s=>`<button class="btn sm" data-bs="${s}">${s}</button>`).join('')}<span style="flex:1"></span><button class="btn sm" id="clrSel">取消勾選</button></div>`:''}
    <div class="tbl-wrap"><table><thead><tr>${can('board.drag')?'<th style="width:30px"><input type="checkbox" id="selAll"></th>':''}${th('fsn','FSN')}${th('issue','開單日')}${th('sales','業務')}${th('type','種類')}${th('cust','客戶')}${th('stage','階段')}${th('date','排程日')}<th>人員</th><th>車輛</th><th>工作內容</th>${th('wait','等待天數')}</tr></thead>
    <tbody>${L.map(c=>`<tr data-fsn="${esc(c.fsn)}">${can('board.drag')?`<td><input type="checkbox" data-ck="${esc(c.fsn)}" ${S.sel.has(c.fsn)?'checked':''}></td>`:''}<td style="white-space:nowrap">${esc(c.fsn)}</td><td>${md(c.issue)}</td><td>${esc(c.sales)}</td><td>${esc(c.type)}</td><td>${esc(c.cust)}</td>
-   <td><span class="stg" style="--c:${SC[c.stage]}"><i></i>${esc(c.stage)}</span>${c.late?' <b style="color:var(--red)">逾期</b>':''}</td><td style="white-space:nowrap">${md(c.date)}${c.days>1?' +'+(c.days-1):''}</td><td>${esc(c.staff.join('、'))}</td><td>${esc(c.r.vehicle||'')}</td><td class="muted" style="max-width:260px">${esc((c.r.content||'').slice(0,40))}</td><td class="wait ${c.stage==='待安排'?waitCls(c.wait):''}">${c.wait??''}</td></tr>`).join('')}</tbody></table>
+   <td><span class="stg" style="--c:${SC[c.stage]}"><i></i>${esc(c.stage)}</span>${c.late?' <b style="color:var(--red)">逾期</b>':''}</td><td style="white-space:nowrap">${md(c.date)}${c.days!==1?' ·'+fmtDays(c.days)+'天':''}</td><td>${esc(c.staff.join('、'))}</td><td>${esc(c.r.vehicle||'')}</td><td class="muted" style="max-width:260px">${esc((c.r.content||'').slice(0,40))}</td><td class="wait ${c.stage==='待安排'?waitCls(c.wait):''}">${c.wait??''}</td></tr>`).join('')}</tbody></table>
    ${L.length?'':'<div class="empty">沒有符合的案件</div>'}</div></div>`;
   const m=$('#main');
   $('#fq').oninput=e=>{f.q=e.target.value;const p=e.target.selectionStart;renderList();const n=$('#fq');n.focus();n.setSelectionRange(p,p)};
@@ -993,7 +1009,7 @@ function openCase(fsn,prefill){
    <form class="form" id="cf" onsubmit="return false">
     <label>階段<select name="stage" ${stOpts.length<2?'disabled':''}>${stOpts.map(s=>`<option ${s===r.stage?'selected':''}>${s}</option>`).join('')}</select></label>
     <label>排程日期<input type="date" name="date" value="${esc(r.date)}" ${eng?'disabled':''}></label>
-    <label>天數<input type="number" name="days" min="1" max="30" value="${esc(r.days||1)}" ${eng?'disabled':''}></label>
+    <label>天數（0.5＝半天）<span class="daysbox"><button type="button" class="btn sm" data-dd="-0.5" ${eng?'disabled':''}>−</button><input type="number" name="days" min="0.5" max="60" step="0.5" value="${esc(roundDays(r.days||1))}" ${eng?'disabled':''}><button type="button" class="btn sm" data-dd="0.5" ${eng?'disabled':''}>＋</button></span><span class="dayhint" id="dHint"></span></label>
     <label>完成日<input type="date" name="doneDate" value="${esc(r.doneDate)}" ${ro?'disabled':''}></label>
     <label class="s2">時間<span style="display:flex;gap:6px;align-items:center"><input type="time" name="tStart" value="${esc(r.tStart)}" ${eng?'disabled':''}>–<input type="time" name="tEnd" value="${esc(r.tEnd)}" ${eng?'disabled':''}></span></label>
     <label class="s2">快速時段<span class="tog" id="qt">${Object.keys(TIMES).map(k=>`<button type="button" data-t="${k}" class="${TIMES[k][0]===r.tStart&&TIMES[k][1]===r.tEnd?'on':''}" ${eng?'disabled':''}>${k}</button>`).join('')}</span></label>
@@ -1012,16 +1028,19 @@ function openCase(fsn,prefill){
   const F=dlg.querySelector('#cf');
   const renderItems=()=>{dlg.querySelector('#items').innerHTML=r.items.map((it,i)=>`<div class="it"><input type="text" data-im="${i}" value="${esc(it.model)}" placeholder="型號" list="mdl" ${eng?'disabled':''}><input type="number" data-iq="${i}" value="${esc(it.qty)}" placeholder="數量" ${eng?'disabled':''}><button type="button" class="btn sm" data-del="${i}" ${eng?'disabled':''}>✕</button></div>`).join('')+modelList()};
   const conflicts=()=>{
-    const d=F.date.value,days=+F.days.value||1;const box=dlg.querySelector('#conf');if(!d||!r.staff.length){box.innerHTML='';return}
-    const end=addD(d,days-1);const hits=[];
-    S.cases.forEach(o=>{if(o.fsn===fsn||!o.date||o.stage==='取消'||o.end<d||o.date>end)return;const ov=o.staff.filter(s=>r.staff.includes(s));if(ov.length)hits.push(`${ov.join('、')} 已排 ${md(o.date)}${o.days>1?'起'+o.days+'天':''} ${o.cust}`)});
+    const d=F.date.value,days=roundDays(F.days.value);const box=dlg.querySelector('#conf');if(!d||!r.staff.length){box.innerHTML='';return}
+    const sl=caseSlots(d,days,F.tStart.value);const hits=[];
+    S.cases.forEach(o=>{if(o.fsn===fsn||!o.date||o.stage==='取消'||!(o.slots||[]).some(x=>sl.some(y=>y.d===x.d&&((x.am&&y.am)||(x.pm&&y.pm)))))return;const ov=o.staff.filter(s=>r.staff.includes(s));if(ov.length)hits.push(`${ov.join('、')} 已排 ${md(o.date)}${o.days!==1?'起'+fmtDays(o.days)+'天':''} ${o.cust}`)});
     box.innerHTML=hits.length?`<div class="warn">⚠ 人員重疊：${hits.map(esc).join('；')}</div>`:'';
   };
   renderItems();conflicts();
   F.date.onchange=()=>{if(F.date.value&&F.stage.value==='待安排')F.stage.value='已排程';if(!F.date.value&&F.stage.value==='已排程')F.stage.value='待安排';conflicts()};
   F.days.onchange=conflicts;
   const markT=()=>dlg.querySelectorAll('#qt [data-t]').forEach(b=>b.classList.toggle('on',TIMES[b.dataset.t][0]===F.tStart.value&&TIMES[b.dataset.t][1]===F.tEnd.value));
-  F.tStart.oninput=markT;F.tEnd.oninput=markT;
+  const dHint=()=>{const h=dlg.querySelector('#dHint');if(!h)return;const v=roundDays(F.days.value);const sl=F.date.value?caseSlots(F.date.value,v,F.tStart.value):[];
+    if(!sl.length){h.textContent='';return}const l=sl[sl.length-1],f=sl[0];
+    h.textContent=sl.length===1?(f.am&&f.pm?'全天':f.am?'上午半天':'下午半天'):`${md(f.d)}${f.am?'':'下午'}起，到 ${md(l.d)}（${WD[parseD(l.d).getDay()]}）${l.pm?'下午':'上午'}結束`};
+  F.tStart.oninput=()=>{markT();dHint()};F.tEnd.oninput=markT;F.date.addEventListener('change',dHint);F.days.addEventListener('input',dHint);dHint();
   F.stage.onchange=()=>{if(['結案','待審核'].includes(F.stage.value)&&!F.doneDate.value)F.doneDate.value=F.date.value||today()};
   dlg.onclick=e=>{
     if(e.target.closest('[data-x]')){dlg.close();return}
@@ -1030,14 +1049,15 @@ function openCase(fsn,prefill){
     if(e.target.closest('[data-eid]')){dlg.close();editIdDialog(fsn);return}
     if(e.target.closest('[data-rpt]')){dlg.close();if(c.stage==='待審核'&&can('rev.view')){reviewDialog(fsn)}else{S.prevView=S.view;openReport(fsn)}return}
     if(e.target.closest('[data-esig]')){dlg.close();S.sigEdit=fsn;S.view='sig';render();return}
-    const q=e.target.closest('[data-t]');if(q){[F.tStart.value,F.tEnd.value]=TIMES[q.dataset.t];markT();return}
+    const q=e.target.closest('[data-t]');if(q){[F.tStart.value,F.tEnd.value]=TIMES[q.dataset.t];const v=roundDays(F.days.value);if(q.dataset.t==='全天'){if(v%1)F.days.value=Math.ceil(v)}else if(v>=1&&v<=1)F.days.value=0.5;markT();dHint();conflicts();return}
+    const dd=e.target.closest('[data-dd]');if(dd){F.days.value=roundDays((+F.days.value||1)+(+dd.dataset.dd));if(+F.days.value===0.5&&TIMES['全天'][0]===F.tStart.value&&TIMES['全天'][1]===F.tEnd.value){[F.tStart.value,F.tEnd.value]=TIMES['上午'];markT()}else if(+F.days.value>=1&&['上午','下午'].some(k=>TIMES[k][0]===F.tStart.value&&TIMES[k][1]===F.tEnd.value)&&+F.days.value%1===0){const pm=TIMES['下午'][0]===F.tStart.value;F.tStart.value=pm?TIMES['下午'][0]:TIMES['全天'][0];F.tEnd.value=TIMES['全天'][1];markT()}dHint();conflicts();return}
     const p=e.target.closest('[data-p]');if(p){const s=p.dataset.p;r.staff=r.staff.includes(s)?r.staff.filter(x=>x!==s):[...r.staff,s];p.classList.toggle('on');conflicts();return}
     const v=e.target.closest('[data-v]');if(v){r.vehicle=v.dataset.v;dlg.querySelectorAll('#veh button').forEach(b=>b.classList.toggle('on',b===v));return}
     if(e.target.id==='addIt'){syncItems();r.items.push({model:'',qty:''});renderItems();return}
     const dl=e.target.closest('[data-del]');if(dl){syncItems();r.items.splice(+dl.dataset.del,1);if(!r.items.length)r.items=[{model:'',qty:''}];renderItems();return}
     if(e.target.closest('[data-save]')){
       syncItems();
-      const patch=eng?{stage:F.stage.value,doneDate:F.doneDate.value,note:F.note.value.trim()}:{stage:F.stage.value,date:F.date.value,days:Math.max(1,+F.days.value||1),doneDate:F.doneDate.value,tStart:F.tStart.value,tEnd:F.tEnd.value,staff:r.staff,vehicle:r.vehicle,
+      const patch=eng?{stage:F.stage.value,doneDate:F.doneDate.value,note:F.note.value.trim()}:{stage:F.stage.value,date:F.date.value,days:roundDays(F.days.value),doneDate:F.doneDate.value,tStart:F.tStart.value,tEnd:F.tEnd.value,staff:r.staff,vehicle:r.vehicle,
         items:r.items.filter(i=>i.model.trim()).map(i=>({model:i.model.trim(),qty:i.qty===''?'':+i.qty})),content:F.content.value.trim(),dept:F.dept.value,price:F.price.value===''?'':+F.price.value,note:F.note.value.trim()};
       if(!eng&&patch.stage==='已排程'&&!patch.date){toast('已排程需要填排程日期');return}
       const chg=[];if(patch.stage!==c.stage)chg.push(c.stage+'→'+patch.stage);if(!eng){if(patch.date!==(c.r.date||''))chg.push('日期 '+(md(patch.date)||'清除'));if(patch.staff.join()!==(c.r.staff||[]).join())chg.push('人員 '+(patch.staff.join('、')||'無'))}
@@ -1054,7 +1074,7 @@ function modelList(){if(!_mdl){const s=new Set();Object.values(S.caseData).forEa
 function mapLink(c){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(c.addr||c.cust)}
 function caseText(c,i,withLink,bg){
   const r=c.r,items=(r.items||[]).map(x=>x.model+(x.qty?'×'+x.qty:'')).join('、');
-  const L=[`${i}. ${c.cust}｜${c.type}${c.days>1?'｜'+md(c.date)+' 起 '+c.days+' 天':''}`,
+  const L=[`${i}. ${c.cust}｜${c.type}${c.days!==1?'｜'+md(c.date)+' 起 '+fmtDays(c.days)+' 天':''}`,
     `⏰ ${r.tStart||'--'}${r.tEnd?'–'+r.tEnd:''}　👥 ${c.staff.join('、')||'未指派'}${r.vehicle?'　🚐 '+r.vehicle:''}`];
   if(r.content||items)L.push('🔧 '+[items,r.content].filter(Boolean).join('｜'));
   L.push('📍 '+c.addr);
@@ -1505,9 +1525,21 @@ function newReport(r){
   // 出發列印時調整過的機台（型號／序號／檢查表）優先
   if(r.prep&&Array.isArray(r.prep.units)&&r.prep.units.length){const base=units.slice();units.length=0;
     r.prep.units.forEach((p,i)=>{const b=base[i]||base[base.length-1]||{};units.push(Object.assign({},b,{model:p.model||b.model||'',ptype:p.fam||b.ptype||'',sn:p.sn||b.sn||'',svc:(p.svc||b.svc||[]).slice(),svcText:p.svcText||b.svcText||'',tasks:(b.tasks||[]).slice(),_tpl:p.tpl||''}))})}
-  units.forEach((u,i)=>{const tpl=g&&g.photo?tplFor(u.tasks?{tasks:u.tasks}:g):[];u.label=LET[i]||String(i+1);u.cond={};u.photos=tpl.map(p=>({t:p.t,u:p.u||'',k:p.k||'',val:'',file:''}));u.chk=newChk(u._tpl!==undefined?u._tpl:chkTplFor(u.ptype));delete u._tpl;u.chkFiles=[]});
-  return {s03Files:[],chkSvc:chkDefaultSvc(g),chkOther:'',date:today(),arrival:r.tStart||'',finish:r.tEnd||'',laborHr:'',laborManual:false,engineers:(r.staff||[]).slice(),failure:(g&&g.notes)||'',units,parts:[],laborDesc:'',findings:'',recommend:'',quote:'',sign:'',signType:'',reportBy:'',submittedAt:'',review:null};
+  units.forEach((u,i)=>{const tpl=g&&g.photo?tplFor(u.tasks?{tasks:u.tasks}:g):[];u.label=LET[i]||String(i+1);u.cond={};u.photos=tpl.map(p=>({t:p.t,u:p.u||'',k:p.k||'',val:'',file:''}));u.chk=newChk(u._tpl!==undefined?u._tpl:chkTplFor(u.ptype));delete u._tpl;u.chkFiles=[];u.docFiles=[]});
+  const days=defaultDays(r);
+  return {days,docMode:'all',docFiles:[],s03Files:[],chkSvc:chkDefaultSvc(g),chkOther:'',date:days[0].date,arrival:days[0].arrival,finish:days[days.length-1].finish,laborHr:sumHr(days),laborManual:false,engineers:(r.staff||[]).slice(),failure:(g&&g.notes)||'',units,parts:[],laborDesc:'',findings:'',recommend:'',quote:'',sign:'',signType:'',reportBy:'',submittedAt:'',review:null};
 }
+/* ---------- v3.2 工時：每日一列，扣休息時段（設定 → 一般） ---------- */
+function breaksOf(){const L=(S.set&&Array.isArray(S.set.breaks))?S.set.breaks:['12:00-13:00'];return L.map(x=>String(x).split('-').map(hmm)).filter(([a,b])=>a!=null&&b!=null&&b>a)}
+function netHr(a,b){const x=hmm(a),y=hmm(b);if(x==null||y==null)return '';let m=y-x;if(m<0)m+=1440;else breaksOf().forEach(([p,q])=>{m-=Math.max(0,Math.min(y,q)-Math.max(x,p))});return String(Math.round(Math.max(0,m)/6)/10)}
+function sumHr(days){const t=(days||[]).reduce((a,d)=>a+(+d.hr||0),0);return t?String(Math.round(t*10)/10):''}
+function defaultDays(r){
+  const sl=caseSlots(r.date||today(),r.days||1,r.tStart);
+  return sl.map(x=>{const tt=sl.length===1&&r.tStart&&r.tEnd?[r.tStart,r.tEnd]:x.am&&x.pm?[r.tStart&&(hmm(r.tStart)<720)?r.tStart:TIMES['全天'][0],r.tEnd&&(hmm(r.tEnd)>780)?r.tEnd:TIMES['全天'][1]]:x.am?TIMES['上午']:TIMES['下午'];
+    return {date:x.d,arrival:tt[0],finish:tt[1],hr:netHr(tt[0],tt[1]),manual:false}});
+}
+function syncDays(rp){const D=rp.days||[];if(!D.length)return;rp.date=D[0].date;rp.arrival=D[0].arrival;rp.finish=D[D.length-1].finish;rp.laborHr=sumHr(D)}
+const docL=(rp,k,i)=>k==='du'||k==='chk'?rp.units[+i].docFiles:rp.docFiles;
 /* ---------- 從過去報告學習：序號、料號、上次紀錄 ---------- */
 const snKey=s=>String(s||'').toUpperCase().replace(/\s+/g,'');
 function pastReports(exceptFsn){return Object.values(S.caseData).filter(r=>r&&r.report&&!r.placeholder&&r.fsn!==exceptFsn&&r.stage!=='取消')}
@@ -1531,13 +1563,12 @@ function calcHr(a,b){if(!a||!b)return '';const [h1,m1]=a.split(':').map(Number),
 function syncPhotoVals(rp){(rp.units||[]).forEach(u=>(u.photos||[]).forEach(p=>{if(p.k&&PK[p.k]&&p.val!==''&&p.val!=null&&!u.cond[PK[p.k]])u.cond[PK[p.k]]=p.val+(p.u||'')}))}
 function repValidate(rp,r){
   const bad=[];const B=(k,l)=>bad.push([k,l]);
-  if(!rp.date)B('date','報告日期');if(!rp.arrival)B('arrival','到達時間');if(!rp.finish)B('finish','完成時間');
+  (rp.days||[]).forEach((d,i)=>{const n=(rp.days.length>1?`第 ${i+1} 天`:'');if(!d.date)B('day'+i,n+'日期');if(!d.arrival)B('day'+i,n+'到達時間');if(!d.finish)B('day'+i,n+'完成時間')});
   if(!rp.engineers.length)B('engineers','工程師');
-  rp.units.forEach((u,i)=>{if(!u.sn.trim())B('sn'+i,`機台 ${u.label} S/N`);if(!u.model.trim())B('model'+i,`機台 ${u.label} 型號`);if(u.chk&&u.chk.tpl&&!(u.chkFiles||[]).length)B('chk'+i,`機台 ${u.label} 檢查表未上傳`)});
-  const s03=(rp.s03Files||[]).length>0; // 已上傳手寫 S03：施作紀錄、報價、簽名都在紙本上
-  if(!s03&&!rp.laborDesc.trim())B('laborDesc','施作紀錄');
-  if(!s03&&!rp.quote)B('quote','是否需要報價');
-  if(!s03&&!rp.sign)B('sign','客戶簽名頁（或上傳手寫 S03）');
+  if(!rp.quote)B('quote','是否需要報價');
+  rp.units.forEach((u,i)=>{if(!u.sn.trim())B('sn'+i,`機台 ${u.label} S/N`);if(!u.model.trim())B('model'+i,`機台 ${u.label} 型號`)});
+  if(rp.docMode==='unit')rp.units.forEach((u,i)=>{if(!(u.docFiles||[]).length)B('du'+i,`機台 ${u.label} 手寫報告未上傳`)});
+  else if(!(rp.docFiles||[]).length)B('docs','手寫報告（含客戶簽名）未上傳');
   if(r.signal&&r.signal.photo){rp.units.forEach(u=>{if(!u.photos.length)B('ph'+u.label,`機台 ${u.label} 照片`);u.photos.forEach((p,j)=>{if(!p.file)B('ph'+u.label,`機台 ${u.label} 照片「${p.t||'第'+(j+1)+'張'}」`);if(p.u&&p.file&&p.val==='')B('ph'+u.label,`機台 ${u.label}「${p.t}」量測值`)})})}
   return bad;
 }
@@ -1564,31 +1595,27 @@ function renderRep(){
   const rev=rp.review&&rp.review.result==='退回'?`<div class="errbox"><b>⚠ 報告被退回（${esc(rp.review.by)} ${esc(rp.review.at)}）：</b>${esc(rp.review.reason)}</div>`:'';
   $('#main').innerHTML=`<div class="sf" style="max-width:1100px">
    <div class="panel"><div class="ph"><h2>完工報告 Service Report</h2><span class="tag">${esc(r.fsn)}</span><span class="sp"></span><span class="muted" id="repSt"></span><button class="btn sm" id="rpBack">← 返回</button></div>
-    <div class="pb">${rev}${S.ro?roRepNote(r,rp,needRet):''}<div class="info" style="margin:0"><div><span>客戶</span>${esc(r.cust)}</div><div><span>服務</span>${esc(g.subject||r.type)}</div><div class="w2c"><span>任務</span>${esc((g.tasks||[]).join('、')||r.content||'')}</div>
-     <div class="w2c"><span>地址</span>${esc(r.addr)}</div><div><span>聯絡人</span>${esc(r.contact||'')} ${esc(r.phone||'')}</div><div><span>照片報告</span>${g.photo?'<b style="color:var(--red)">需要</b>':'不需要'}</div></div></div></div>
+    <div class="pb">${rev}${S.ro?roRepNote(r,rp,needRet):''}<div class="info" style="margin:0"><div><span>客戶</span>${esc(r.cust)}</div><div><span>服務種類</span>${esc(g.kind||'—')}</div><div><span>服務主旨</span>${esc(g.subject||r.type)}</div><div><span>異常現象</span>${esc((g.tasks||[]).join('、')||'—')}</div>
+     <div class="w2c"><span>地址</span>${esc(r.addr)}</div><div><span>聯絡人</span>${esc(r.contact||'')} ${esc(phonesOf(r).filter(p=>p.v).map(p=>p.t+' '+p.v).join('／')||r.phone||'')}</div><div><span>照片報告</span>${g.photo?'<b style="color:var(--red)">需要</b>':'不需要'}</div>
+     <div class="w4c"><span>設備</span>${(g.equip||[]).length?g.equip.map(e=>{const es=e.subject?e:Object.assign({},e,{subject:g.subject,tasks:g.tasks||[]});return `${esc([e.brand,e.ptype,e.model].filter(Boolean).join(' '))} x${esc(e.qty||1)}　<b>${esc(eqSvc(es))}</b>`}).join('<br>'):esc(r.content||'—')}</div>
+     ${g.notes?`<div class="w4c"><span>補充</span>${esc(g.notes)}</div>`:''}</div></div></div>
    <div class="panel"><div class="ph"><h2>基本資料</h2></div><div class="pb fgrid">
-    <label class="${bc('date')}"><span class="req">報告日期</span><input type="date" data-p="date" value="${esc(rp.date)}" ${dis}></label>
-    <label class="${bc('arrival')}"><span class="req">到達時間 Arrival</span><input type="time" data-p="arrival" value="${esc(rp.arrival)}" ${dis}></label>
-    <label class="${bc('finish')}"><span class="req">完成時間 Finish</span><input type="time" data-p="finish" value="${esc(rp.finish)}" ${dis}></label>
-    <label>工時 Labor Hr<input type="number" step="0.1" data-p="laborHr" value="${esc(rp.laborHr||calcHr(rp.arrival,rp.finish))}" ${dis}></label>
+    <div class="s4"><table class="eqt"><thead><tr><th style="width:60px">天</th><th><span class="req">日期</span></th><th><span class="req">到達 Arrival</span></th><th><span class="req">完成 Finish</span></th><th>工時 Hr（已扣休息）</th><th style="width:40px"></th></tr></thead><tbody>
+     ${rp.days.map((d,i)=>`<tr class="${bc('day'+i)}"><td>第 ${i+1} 天</td><td><input type="date" data-p="days.${i}.date" value="${esc(d.date)}" ${dis}></td><td><input type="time" data-p="days.${i}.arrival" value="${esc(d.arrival)}" ${dis}></td><td><input type="time" data-p="days.${i}.finish" value="${esc(d.finish)}" ${dis}></td><td><input type="number" step="0.1" min="0" data-p="days.${i}.hr" value="${esc(d.hr)}" ${dis} style="width:90px"></td><td>${edit&&rp.days.length>1?`<button type="button" class="btn sm" data-ddel="${i}" title="移除這天">✕</button>`:''}</td></tr>`).join('')}
+     </tbody><tfoot><tr><td colspan="4" style="text-align:right">${edit?'<button type="button" class="btn sm" id="dAdd" style="float:left">＋ 加一天</button>':''}<b>合計工時</b></td><td><b id="hrTot">${esc(sumHr(rp.days)||'0')}</b> hr</td><td></td></tr></tfoot></table>
+     <div class="muted" style="font-size:11px;margin-top:4px">工時＝完成－到達，自動扣休息 ${breaksOf().map(([a,b])=>pad(Math.floor(a/60))+':'+pad(a%60)+'–'+pad(Math.floor(b/60))+':'+pad(b%60)).join('、')||'（未設定）'}（設定 → 一般）；可手動修改。</div></div>
+    <div class="fl s2 ${bc('quote')}"><span class="req">是否需要報價</span><div class="tog">${['YES','NO'].map(v=>`<button type="button" data-quote="${v}" class="${rp.quote===v?'on':''}" ${dis}>${v==='YES'?'YES 需要報價':'NO 不需要'}</button>`).join('')}</div></div>
     <div class="fl s4 ${bc('engineers')}"><span class="req">工程師 Engineer</span><div class="tog">${staff.map(s=>`<button type="button" data-eng="${esc(s)}" class="${rp.engineers.includes(s)?'on':''}" ${dis}>${esc(s)}</button>`).join('')}</div></div>
     <label class="s4">問題描述 Description of Failure<textarea rows="2" data-p="failure" ${dis}>${esc(rp.failure)}</textarea></label>
    </div></div>
    <div id="inboxBox"></div>
-   <div class="panel"><div class="ph"><h2>S03 手寫服務報告</h2><span class="muted" style="font-size:12px">選填：上傳後 PDF 第 1 頁改用掃描檔，下方欄位仍可編輯</span><span class="sp"></span>${phUp?'<button class="btn sm" data-fup="s03|0">📎 上傳照片／PDF</button>':''}</div><div class="pb">${rp.s03Files.length?`<div class="fgal">${fileThumbs(r,rp.s03Files,'s03',0,phUp,phDel)}</div>`:'<span class="muted" style="font-size:13px">尚未上傳，PDF 第 1 頁由系統依下方欄位產生。</span>'}<div class="muted" style="font-size:12px;margin-top:6px">📱 手機：用 SharePoint／OneDrive App 把照片上傳到 <b>30_FieldService › inbox › ${esc(r.fsn)}</b>，這裡會出現「手機上傳收件匣」，選位置匯入即可。</div></div></div>
    ${rp.units.map((u,i)=>`<div class="panel"><div class="ph"><h2>機台 ${esc(u.label)}</h2>${u.svcText?`<span class="tag">${esc(u.svcText)}</span>`:''}<span class="sp"></span>${edit&&rp.units.length>1?`<button class="btn sm dng" data-udel="${i}">移除此機台</button>`:''}</div><div class="pb fgrid">
      <label class="${bc('model'+i)}"><span class="req">型號 Model</span><input type="text" data-p="units.${i}.model" value="${esc(u.model)}" ${dis}></label>
      <label class="${bc('sn'+i)}"><span class="req">序號 S/N</span><input type="text" data-p="units.${i}.sn" value="${esc(u.sn)}" list="snl_${i}" ${dis}><datalist id="snl_${i}">${snSuggest(r,u.model).map(s=>`<option value="${esc(s)}">`).join('')}</datalist></label>
      <label>機種<select data-uptype="${i}" ${dis}><option value="">—</option>${Object.keys(S.set.pumpTypes).map(p=>`<option ${p===u.ptype?'selected':''}>${esc(p)}</option>`).join('')}</select></label>
      <label>運轉時數 Hours<input type="text" data-p="units.${i}.cond.hours" value="${esc(u.cond.hours||'')}" ${dis}></label>
      <div class="s4" id="lr_${i}">${lastRecHtml(u.sn,r.fsn)}</div>
-     ${chkUploadHtml(r,u,i,dis,phUp,phDel,bc('chk'+i))}
-     <details class="s4"${CF.concat(MF).some(([k])=>u.cond[k])?' open':''}><summary style="cursor:pointer;font-size:12px;color:var(--ink2)">S03 機體／馬達狀況（選填，印在第 1 頁）</summary><div class="fgrid" style="margin-top:8px">
-     <div class="s4" style="font-weight:600;font-size:12px;color:var(--ink2)">機體狀況 Pump Condition</div>
-     ${CF.map(([k,l])=>`<label>${l}<input type="text" data-p="units.${i}.cond.${k}" value="${esc(u.cond[k]||'')}" ${dis}></label>`).join('')}
-     <div class="s4" style="font-weight:600;font-size:12px;color:var(--ink2)">馬達狀況 Motor Condition</div>
-     ${MF.map(([k,l])=>`<label>${l}<input type="text" data-p="units.${i}.cond.${k}" value="${esc(u.cond[k]||'')}" ${dis}></label>`).join('')}
-     ${XF.filter(([k])=>k!=='hours').map(([k,l])=>`<label>${l}<input type="text" data-p="units.${i}.cond.${k}" value="${esc(u.cond[k]||'')}" ${dis}></label>`).join('')}</div></details>
+     ${rp.docMode==='unit'?`<div class="s4 chkbox ${bc('du'+i)}"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px"><b style="font-size:13px"><span class="req">機台 ${esc(u.label)} 手寫報告</span>（含檢查表、客戶簽名）</b>${phUp?`<button type="button" class="btn sm" data-fup="du|${i}">📎 上傳照片／PDF</button>`:''}${u.docFiles.length?`<span class="tag">✓ ${u.docFiles.length} 個檔案</span>`:''}</div>${u.docFiles.length?`<div class="fgal">${fileThumbs(r,u.docFiles,'du',i,phUp,phDel)}</div>`:''}</div>`:''}
      <div class="s4 ${bc('ph'+u.label)}" style="margin-top:6px"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><b style="font-size:13px">照片 ${u.photos.length?'（'+u.photos.filter(p=>p.file).length+'/'+u.photos.length+'）':''}</b><span class="sp" style="flex:1"></span>${phUp?`<button class="btn sm" data-batch="${i}">📁 批次上傳</button><button class="btn sm" data-padd="${i}">＋ 新增照片格</button>${!u.photos.length?`<button class="btn sm" data-ptpl="${i}">套用預設模板</button>`:''}`:''}</div>
       <div class="pgrid">${u.photos.map((p,j)=>`<div class="pslot ${p.file?'has':''}">
         <input type="text" class="pcap" data-p="units.${i}.photos.${j}.t" value="${esc(p.t)}" placeholder="照片說明" ${dis}>
@@ -1596,17 +1623,10 @@ function renderRep(){
         <div class="prow">${p.u?`<input type="text" data-p="units.${i}.photos.${j}.val" data-pk="${esc(p.k)}" data-ui="${i}" value="${esc(p.val)}" placeholder="量測值" ${dis}><span>${esc(p.u)}</span>`:'<span></span>'}${phUp&&p.file?`<button type="button" class="btn sm" data-pedit="${i}|${j}" title="裁切／旋轉">✂ 裁切旋轉</button>`:''}${phDel?`<button type="button" class="btn sm" data-pdel="${i}|${j}" title="刪除此格">✕</button>`:''}</div></div>`).join('')}</div></div>
    </div></div>`).join('')}
    ${edit?`<div><button class="btn" id="uAdd">＋ 新增機台</button></div>`:''}
-   <div class="panel"><div class="ph"><h2>料件使用 Spare Parts Used</h2><span class="sp"></span>${edit?'<button class="btn sm" id="ptAdd2">＋ 加一列</button>':''}</div><div class="pb">
-    <table class="eqt"><thead><tr><th style="width:50px">項目</th><th>料號 Ref. No</th><th>描述 Description</th><th style="width:70px">數量</th><th>備註</th><th style="width:36px"></th></tr></thead><tbody>
-    ${rp.parts.map((p,i)=>`<tr><td>${i+1}</td><td><input type="text" data-p="parts.${i}.ref" value="${esc(p.ref)}" list="partRefs" ${dis}></td><td><input type="text" data-p="parts.${i}.desc" value="${esc(p.desc)}" ${dis}></td><td><input type="number" data-p="parts.${i}.qty" value="${esc(p.qty)}" ${dis}></td><td><input type="text" data-p="parts.${i}.remark" value="${esc(p.remark)}" ${dis}></td><td>${edit?`<button class="btn sm" data-prdel="${i}">✕</button>`:''}</td></tr>`).join('')||'<tr><td colspan="6" class="muted">未使用料件</td></tr>'}
-    </tbody></table>${(()=>{const pm=partsMap();return `<datalist id="partRefs">${Object.entries(pm).slice(0,500).map(([k,v])=>`<option value="${esc(k)}">${esc(v)}</option>`).join('')}</datalist>`})()}</div></div>
-   <div class="panel"><div class="ph"><h2>施作與建議</h2></div><div class="pb fgrid">
-    <label class="s4 ${bc('laborDesc')}"><span class="req">施作紀錄 Labor Description</span><textarea rows="4" data-p="laborDesc" ${dis}>${esc(rp.laborDesc)}</textarea></label>
-    <label class="s4">檢查情況 Findings<textarea rows="3" data-p="findings" ${dis}>${esc(rp.findings)}</textarea></label>
-    <label class="s4">建議事項 Remarks / Recommendation（需要報價的零件與位置請拍照）<textarea rows="3" data-p="recommend" ${dis}>${esc(rp.recommend)}</textarea></label>
-    <div class="fl s2 ${bc('quote')}"><span class="req">是否需要報價</span><div class="tog">${['YES','NO'].map(v=>`<button type="button" data-quote="${v}" class="${rp.quote===v?'on':''}" ${dis}>${v==='YES'?'YES 需要報價':'NO 不需要'}</button>`).join('')}</div></div>
-    <div class="fl s2 ${bc('sign')}"><span class="req">客戶簽名頁（照片或 PDF）</span><div style="display:flex;gap:8px;align-items:center">${rp.sign?`<span class="tag">✓ ${rp.signType==='pdf'?'PDF':'圖片'}已上傳</span>`:'<span class="muted">尚未上傳</span>'}${phUp?'<button class="btn sm" id="sgUp">上傳</button>':''}</div>${rp.sign&&rp.signType!=='pdf'?`<img data-img="${esc(r.fsn)}|${esc(rp.sign)}" style="max-width:220px;max-height:160px;margin-top:6px;border:1px solid var(--line)">`:''}</div>
-   </div></div>
+   <div class="panel ${bc('docs')}"><div class="ph"><h2>手寫報告上傳</h2><span class="muted" style="font-size:12px">現場手寫的 S03、檢查表、客戶簽名，拍照或掃描上傳</span><span class="sp"></span>
+     <span class="tog">${[['all','整份一起上傳'],['unit','每台各一份']].map(([k,l])=>`<button type="button" data-dmode="${k}" class="${rp.docMode===k?'on':''}" ${dis}>${l}</button>`).join('')}</span></div><div class="pb">
+    ${rp.docMode==='all'?`<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">${phUp?'<button type="button" class="btn" data-fup="da|0">📎 上傳照片／PDF（可多選）</button>':''}${rp.docFiles.length?`<span class="tag">✓ ${rp.docFiles.length} 個檔案</span>`:'<span class="muted">尚未上傳</span>'}</div>${rp.docFiles.length?`<div class="fgal">${fileThumbs(r,rp.docFiles,'da',0,phUp,phDel)}</div>`:''}`:'<div class="muted" style="font-size:13px">每台機台的上傳欄位在各機台區塊內。</div>'}
+    <div class="muted" style="font-size:12px;margin-top:8px">照片會依上傳順序成為 PDF 的頁面；PDF 檔會存檔但無法併入列印。📱 手機可用 SharePoint／OneDrive App 上傳到 <b>30_FieldService › inbox › ${esc(r.fsn)}</b>，再從上方「手機上傳收件匣」匯入。</div></div></div>
    ${S.repBad&&S.repBad.length?`<div class="errbox" id="rpErr"><b>還有 ${S.repBad.length} 項未完成：</b>${S.repBad.map(b=>esc(b[1])).join('、')}</div>`:''}
    <div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap">
     ${can('prep.print',ownR)?'<button class="btn" id="rpPrep">🧾 出發列印</button>':''}<button class="btn" id="rpPrint">🖨 預覽／列印 PDF</button>
@@ -1619,8 +1639,8 @@ function renderRep(){
   m.oninput=e=>{
     const p=e.target.dataset.p;if(!p)return;
     let v=e.target.value;if(!setChkPath(rp,p,v))setPath(rp,p,v);
-    if(p==='laborHr')rp.laborManual=true;
-    if((p==='arrival'||p==='finish')&&!rp.laborManual){rp.laborHr=calcHr(rp.arrival,rp.finish);const h=m.querySelector('[data-p=laborHr]');if(h)h.value=rp.laborHr}
+    const dm=p.match(/^days\.(\d+)\.(arrival|finish|hr|date)$/);
+    if(dm){const d=rp.days[+dm[1]];if(dm[2]==='hr')d.manual=true;else if(dm[2]!=='date'&&!d.manual){d.hr=netHr(d.arrival,d.finish);const h=m.querySelector(`[data-p="days.${dm[1]}.hr"]`);if(h)h.value=d.hr}syncDays(rp);const tt=$('#hrTot');if(tt)tt.textContent=sumHr(rp.days)||'0'}
     const pk=e.target.dataset.pk;if(pk&&PK[pk]){const u=rp.units[+e.target.dataset.ui];const unit=u.photos.find(x=>x.k===pk);u.cond[PK[pk]]=v?v+(unit&&unit.u?unit.u:''):'';const ci=m.querySelector(`[data-p="units.${e.target.dataset.ui}.cond.${PK[pk]}"]`);if(ci)ci.value=u.cond[PK[pk]]}
     if(S.repBad){const eb=$('#rpErr');const b=repValidate(rp,r);if(eb){eb.innerHTML=b.length?`<b>還有 ${b.length} 項未完成：</b>${b.map(x=>esc(x[1])).join('、')}`:'✓ 全部填寫完成，可以送出';eb.style.background=b.length?'':'#eaf7f1'}}
     dirty();
@@ -1634,15 +1654,20 @@ function renderRep(){
     const fo=t.closest('[data-fopen]');if(fo){e.preventDefault();openStored(r.fsn,fo.dataset.fopen);return}
     if(!edit)return;
     const fu=t.closest('[data-fup]');if(fu&&phUp){S.fupSlot=fu.dataset.fup.split('|');$('#fChk').click();return}
-    const fd=t.closest('[data-fdel]');if(fd&&phDel){const [k,i,j]=fd.dataset.fdel.split('|');const L=k==='s03'?rp.s03Files:rp.units[+i].chkFiles;confirmBox('移除這個檔案？（檔案仍保留在資料夾）',()=>{L.splice(+j,1);renderRep();dirty()});return}
-    const fr=t.closest('[data-frot]');if(fr&&phUp){const [k,i,j]=fr.dataset.frot.split('|');rotateStored(r,k==='s03'?rp.s03Files:rp.units[+i].chkFiles,+j);return}
+    const fd=t.closest('[data-fdel]');if(fd&&phDel){const [k,i,j]=fd.dataset.fdel.split('|');const L=docL(rp,k,i);confirmBox('移除這個檔案？（檔案仍保留在資料夾）',()=>{L.splice(+j,1);renderRep();dirty()});return}
+    const fr=t.closest('[data-frot]');if(fr&&phUp){const [k,i,j]=fr.dataset.frot.split('|');rotateStored(r,docL(rp,k,i),+j);return}
+    const dm=t.closest('[data-dmode]');if(dm){const nm=dm.dataset.dmode;if(nm===rp.docMode)return;
+      const go=()=>{if(nm==='all'){rp.units.forEach(u=>{rp.docFiles.push(...u.docFiles);u.docFiles=[]})}else if(rp.docFiles.length){(rp.units[0].docFiles).push(...rp.docFiles);rp.docFiles=[]}rp.docMode=nm;renderRep();dirty()};
+      const has=nm==='all'?rp.units.some(u=>u.docFiles.length):rp.docFiles.length;if(has)confirmBox(nm==='all'?'切換成整份一起上傳？各機台已上傳的檔案會合併在一起。':'切換成每台各一份？已上傳的檔案會先放到機台 A，可再重新整理。',go);else go();return}
+    if(t.id==='dAdd'){const L=rp.days[rp.days.length-1]||{};const d={date:L.date?addD(L.date,1):today(),arrival:TIMES['全天'][0],finish:TIMES['全天'][1],hr:'',manual:false};d.hr=netHr(d.arrival,d.finish);rp.days.push(d);syncDays(rp);renderRep();dirty();return}
+    const dl=t.closest('[data-ddel]');if(dl){rp.days.splice(+dl.dataset.ddel,1);syncDays(rp);renderRep();dirty();return}
     const en=t.closest('[data-eng]');if(en){const s=en.dataset.eng;rp.engineers=rp.engineers.includes(s)?rp.engineers.filter(x=>x!==s):[...rp.engineers,s];en.classList.toggle('on');dirty();return}
     const cs=t.closest('[data-cs]');if(cs){const [i,c,v]=cs.dataset.cs.split('|');const u=rp.units[+i];const x=u.chk.res[c]=u.chk.res[c]||{};x.st=x.st===v?'':v;cs.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===cs&&x.st===v));const ni=cs.closest('tr').querySelector('[data-p$=".n"]');if(ni)ni.placeholder=x.st==='N'?'No 請說明':'';if(S.repBad)renderRep();dirty();return}
     const ca=t.closest('[data-chkall]');if(ca){const [i,si]=ca.dataset.chkall.split('|').map(Number);const u=rp.units[i];const tp=S.set.checkTemplates[u.chk.tpl];tp.secs[si].items.forEach(it=>{const x=u.chk.res[it.c]=u.chk.res[it.c]||{};if(!x.st)x.st='Y'});renderRep();dirty();return}
     const sv=t.closest('[data-usvc]');if(sv){const [i,v]=sv.dataset.usvc.split('|');const u=rp.units[+i];u.svc=u.svc.includes(v)?u.svc.filter(x=>x!==v):[...u.svc,v];sv.classList.toggle('on');dirty();return}
     const q=t.closest('[data-quote]');if(q){rp.quote=q.dataset.quote;renderRep();dirty();return}
     const ud=t.closest('[data-udel]');if(ud){confirmBox('移除這台機台與它的照片資料？',()=>{rp.units.splice(+ud.dataset.udel,1);rp.units.forEach((u,i)=>u.label=LET[i]||String(i+1));renderRep();dirty()});return}
-    if(t.id==='uAdd'){const n=rp.units.length;const u0=rp.units[0]||{};rp.units.push({label:LET[n]||String(n+1),model:u0.model||'',ptype:u0.ptype||'',chk:newChk(u0.chk?u0.chk.tpl:''),chkFiles:[],sn:'',cond:{},photos:(r.signal&&r.signal.photo?tplFor(r.signal):[]).map(p=>({t:p.t,u:p.u||'',k:p.k||'',val:'',file:''}))});renderRep();dirty();return}
+    if(t.id==='uAdd'){const n=rp.units.length;const u0=rp.units[0]||{};rp.units.push({label:LET[n]||String(n+1),model:u0.model||'',ptype:u0.ptype||'',chk:newChk(u0.chk?u0.chk.tpl:''),chkFiles:[],docFiles:[],sn:'',cond:{},photos:(r.signal&&r.signal.photo?tplFor(r.signal):[]).map(p=>({t:p.t,u:p.u||'',k:p.k||'',val:'',file:''}))});renderRep();dirty();return}
     const pa=t.closest('[data-padd]');if(pa){rp.units[+pa.dataset.padd].photos.push({t:'',u:'',k:'',val:'',file:''});renderRep();dirty();return}
     const pt=t.closest('[data-ptpl]');if(pt){rp.units[+pt.dataset.ptpl].photos=tplFor(r.signal||{tasks:[]}).map(p=>({t:p.t,u:p.u||'',k:p.k||'',val:'',file:''}));renderRep();dirty();return}
     const pe=t.closest('[data-pedit]');if(pe&&phUp){const [i,j]=pe.dataset.pedit.split('|').map(Number);photoEditor(i,j);return}
@@ -1701,7 +1726,7 @@ async function saveRepDraft(silent){
 }
 async function submitReport(){
   const r=S.caseData[S.repFsn],rp=S.rep;
-  syncPhotoVals(rp);
+  syncPhotoVals(rp);syncDays(rp);
   const bad=repValidate(rp,r);S.repBad=bad;
   if(bad.length){renderRep();toast('還有 '+bad.length+' 項未完成');const e=document.querySelector('.bad');if(e)e.scrollIntoView({behavior:'smooth',block:'center'});return}
   rp.submittedAt=nowLocal();rp.submittedBy=who();rp.reportBy=rp.reportBy||who();if(rp.review&&rp.review.result==='退回')rp.review.resolved=true;
@@ -1721,7 +1746,7 @@ function renderMe(){
   const done=mine.filter(c=>c.stage==='結案').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);
   const card=c=>{const r=c.r,g=r.signal,dr=S.ro&&S.roDrafts&&S.roDrafts[c.fsn],rp=dr?dr.rep:r.report;const back=rp&&rp.review&&rp.review.result==='退回'&&!rp.review.resolved;
     return `<div class="mcard" style="--c:${back||c.late?'var(--red)':SC[c.stage]}">
-    <div class="h"><div><b>${esc(c.cust)}</b><div class="row">${esc(c.fsn)}｜${md(c.date)}${c.days>1?' 起 '+c.days+' 天':''} ${esc(r.tStart||'')}${r.tEnd?'–'+esc(r.tEnd):''}</div></div><span class="stg" style="--c:${SC[c.stage]}"><i></i>${back?'報告退回':c.late?'逾期未報告':esc(c.stage)}</span></div>
+    <div class="h"><div><b>${esc(c.cust)}</b><div class="row">${esc(c.fsn)}｜${md(c.date)}${c.days!==1?' 起 '+fmtDays(c.days)+' 天':''} ${esc(r.tStart||'')}${r.tEnd?'–'+esc(r.tEnd):''}</div></div><span class="stg" style="--c:${SC[c.stage]}"><i></i>${back?'報告退回':c.late?'逾期未報告':esc(c.stage)}</span></div>
     <div>${esc(r.content||c.type)}</div>
     ${back?`<div class="errbox" style="padding:6px 10px">退回原因：${esc(rp.review.reason)}</div>`:''}
     <div class="row">👥 ${esc(c.staff.join('、'))}${r.vehicle?' · 🚐 '+esc(r.vehicle):''}${g&&g.photo?' · 📷 需照片報告':''}${dr&&dr.rep.sentItem?' · 📤 已回傳，待主任審核':rp&&!rp.submittedAt?' · 📝 草稿':''}</div>
@@ -1771,6 +1796,7 @@ async function reviewDialog(fsn){
 
 /* ---------- 報告 PDF ---------- */
 function reportHtml(r,rp){
+  ensureChk(rp,r);
   const st=S.set,g=r.signal||{},co=st.company||{};
   const head=`<div class="hd"><div><div class="co">${esc(co.name||'台灣普熙股份有限公司')}</div><div style="font-size:9pt">Address: ${esc(co.addr||'')}　Phone: ${esc(co.tel||'')}　Fax: ${esc(co.fax||'')}</div></div><img class="busch" src="${BUSCH_LOGO}" alt="BUSCH"></div>`;
   const units=rp.units||[];
@@ -1779,34 +1805,14 @@ function reportHtml(r,rp){
   const extra=units.map(u=>{const x=XF.filter(([k])=>u.cond[k]).map(([k,l])=>`${l} ${u.cond[k]}`);return x.length?`${u.label}：${x.join('、')}`:''}).filter(Boolean);
   const parts=(rp.parts||[]).filter(p=>p.ref||p.desc);while(parts.length<3)parts.push({});
   const scan=f=>`<div class="pf pg"><img class="scan" data-img="${esc(r.fsn)}|${esc(f.f)}"></div>`;
-  const s03i=(rp.s03Files||[]).filter(f=>f.type!=='pdf');
-  let html=s03i.length?s03i.map(scan).join(''):`<div class="pf pg">${head}
-   <table style="margin-bottom:6px"><tr><td style="border:0;padding:0"><b>FSN：${esc(r.fsn)}</b></td><td style="border:0;padding:0;text-align:right;font-size:15pt;font-weight:700">SERVICE REPORT 到場服務報告</td></tr></table>
-   <table><colgroup><col style="width:16%"><col style="width:40%"><col style="width:14%"><col style="width:30%"></colgroup>
-    <tr><th>客戶 Company</th><td>${esc(r.cust)}</td><th>日期 Date</th><td>${esc(rp.date)}</td></tr>
-    <tr><th>地址 Address</th><td>${esc(r.addr||'')}</td><th>聯絡人 Contact</th><td>${esc(r.contact||'')}</td></tr>
-    <tr><th>服務 Subject</th><td>${esc(subj)}</td><th>電話 Phone</th><td>${esc(r.phone||'')}</td></tr>
-    <tr><th>型號／序號 Model / S/N</th><td colspan="3">${units.map(u=>`(${esc(u.label)}) ${esc(u.model)}　S/N ${esc(u.sn)}`).join('<br>')}</td></tr>
-    <tr><th>問題描述 Failure</th><td colspan="3" style="min-height:14mm">${esc(rp.failure||'')}</td></tr></table>
-   <table style="margin-top:6px;font-size:8.5pt"><tr><th rowspan="2" style="width:7%">機台</th><th colspan="5" style="text-align:center">機體狀況 Pump Condition</th><th colspan="5" style="text-align:center">馬達狀況 Motor Condition</th></tr>
-    <tr>${CF.concat(MF).map(([k,l])=>`<th style="font-size:8pt">${esc(l)}</th>`).join('')}</tr>
-    ${units.map(u=>`<tr><td>${esc(u.label)}</td>${CF.concat(MF).map(([k])=>`<td style="font-size:9pt">${esc(u.cond[k]||'')}</td>`).join('')}</tr>`).join('')}
-    ${extra.length?`<tr><td colspan="11" style="font-size:9pt">${extra.map(esc).join('<br>')}</td></tr>`:''}</table>
-   <table style="margin-top:6px"><tr><th colspan="5">料件使用 Spare Parts Used</th></tr><tr><th style="width:8%">項目</th><th style="width:22%">料號 Ref. No</th><th>描述 Description</th><th style="width:10%">數量</th><th style="width:20%">備註</th></tr>
-    ${parts.map((p,i)=>`<tr><td>${p.ref||p.desc?i+1:'&nbsp;'}</td><td>${esc(p.ref||'')}</td><td>${esc(p.desc||'')}</td><td>${esc(p.qty||'')}</td><td>${esc(p.remark||'')}</td></tr>`).join('')}</table>
-   <table style="margin-top:6px"><tr><th style="width:16%">工時 Labor Hr</th><td>${esc(rp.laborHr||calcHr(rp.arrival,rp.finish))} hr</td><th style="width:16%">到達 Arrival</th><td>${esc(rp.arrival)}</td><th style="width:16%">完成 Finish</th><td>${esc(rp.finish)}</td></tr></table>
-   <table style="margin-top:6px"><tr><th>施作紀錄 Labor Description</th></tr><tr><td style="height:24mm;white-space:pre-wrap">${esc(rp.laborDesc)}</td></tr>
-    <tr><th>檢查情況 Findings</th></tr><tr><td style="height:16mm;white-space:pre-wrap">${esc(rp.findings)}</td></tr>
-    <tr><th>建議事項 Remarks / Recommendation（需要報價的零件和位置請拍照留存）</th></tr><tr><td style="height:16mm;white-space:pre-wrap">${esc(rp.recommend)}</td></tr>
-    <tr><td><b>報價 Quotation：</b>${box(rp.quote==='YES')}YES　${box(rp.quote==='NO')}NO　<span style="font-size:8.5pt;color:#555">（複印提供業務進行報價）</span></td></tr></table>
-   <table style="margin-top:6px"><tr><th style="width:50%">客戶簽名 Customer Signature</th><th>服務工程師 Service Engineer</th></tr>
-    <tr><td style="height:22mm;text-align:center;vertical-align:middle">${rp.sign?(rp.signType==='pdf'?'<span style="font-size:9pt">客戶簽名頁為 PDF，見附件</span>':'<span style="font-size:9pt">見附件：客戶簽名頁</span>'):''}</td><td style="vertical-align:middle;text-align:center"><div style="font-size:12pt;font-weight:700">${esc((rp.engineers||[]).join('、'))}</div><div style="font-size:8.5pt;color:#555">報告：${esc(rp.reportBy||rp.submittedBy||'')} ${esc(rp.submittedAt||'')}${rp.review&&rp.review.result==='核准'?`｜審核：${esc(rp.review.by)} ${esc(rp.review.at)}`:''}</div></td></tr></table>
-  </div>`;
-  // 檢查表頁（依機種）
-  units.forEach(u=>{const im=(u.chkFiles||[]).filter(f=>f.type!=='pdf');
-    if(im.length)html+=im.map(scan).join('');
-    else if(u.chk&&u.chk.tpl&&Object.keys(u.chk.res||{}).length)html+=chkPageHtml(r,rp,u); // 舊版線上勾選的資料
-  });
+  // v3.2：PDF＝上傳的手寫報告（照片頁）＋照片頁
+  let html='';
+  const docs=rp.docMode==='unit'?units.flatMap(u=>u.docFiles||[]):(rp.docFiles||[]);
+  docs.filter(f=>f.type!=='pdf').forEach(f=>{html+=scan(f)});
+  if(!html)html=`<div class="pf pg">${head}<div class="ttl">完工報告 ${esc(r.fsn)}</div><p style="text-align:center;color:#666">尚未上傳手寫報告${docs.length?'（上傳的是 PDF，請另外附上）':''}</p>
+   <table style="margin-top:8mm"><tr><th style="width:18%">客戶</th><td>${esc(r.cust)}</td><th style="width:14%">工時</th><td>${esc(rp.laborHr||'')} hr</td></tr>
+   <tr><th>機台／序號</th><td colspan="3">${units.map(u=>`(${esc(u.label)}) ${esc(u.model)}　S/N ${esc(u.sn)}`).join('<br>')}</td></tr>
+   <tr><th>工程師</th><td colspan="3">${esc((rp.engineers||[]).join('、'))}</td></tr></table></div>`;
   // 照片頁
   units.forEach(u=>{
     const ph=(u.photos||[]).filter(p=>p.file);
@@ -1821,14 +1827,13 @@ function reportHtml(r,rp){
        <div class="pgrid-p">${chunk.map(p=>`<div class="pc"><div class="pt">${esc(p.t)}${p.val!==''&&p.val!=null?esc(p.val)+esc(p.u||''):''}</div><div class="pi"><img data-img="${esc(r.fsn)}|${esc(p.file)}"></div></div>`).join('')}</div></div>`;
     }
   });
-  if(rp.sign&&rp.signType!=='pdf')html+=`<div class="pf pg">${head}<div class="ttl">客戶簽名頁 Customer Signature</div><div style="text-align:center"><img data-img="${esc(r.fsn)}|${esc(rp.sign)}" style="max-width:100%;max-height:230mm"></div></div>`;
   return html;
 }
 async function printReport(r,rp){
   syncPhotoVals(rp);
   $('#print').innerHTML=reportHtml(r,rp);
   setSync('busy','準備列印…');await hydrateImgs($('#print'));setSync('ok','');
-  const pdfs=[...(rp.sign&&rp.signType==='pdf'?['客戶簽名頁']:[]),...(rp.s03Files||[]).filter(f=>f.type==='pdf').map(()=>'S03'),...(rp.units||[]).flatMap(u=>(u.chkFiles||[]).filter(f=>f.type==='pdf').map(()=>u.label+' 檢查表'))];
+  ensureChk(rp,r);const pdfs=(rp.docMode==='unit'?(rp.units||[]).flatMap(u=>(u.docFiles||[]).filter(f=>f.type==='pdf').map(f=>u.label+'：'+(f.n||'PDF'))):(rp.docFiles||[]).filter(f=>f.type==='pdf').map(f=>f.n||'PDF'));
   if(pdfs.length)toast(`${pdfs.join('、')} 是 PDF，無法併入列印，請另外附上（照片資料夾 photos/${r.fsn}）`);
   doPrint('完工報告_'+r.fsn+'_'+r.cust);
 }
@@ -1885,7 +1890,7 @@ async function submitRo(r,rp){
     setSync('busy','送出中…');
     const item=r.fsn+'_'+nowIso().replace(/\D/g,'').slice(0,14);
     const od=await retDir(['outbox',item],true);let dd=null;try{dd=await retDir(['drafts',r.fsn])}catch(e){}
-    const names=new Set();if(rp.sign)names.add(rp.sign);(rp.s03Files||[]).forEach(f=>names.add(f.f));(rp.units||[]).forEach(u=>{(u.chkFiles||[]).forEach(f=>names.add(f.f));(u.photos||[]).forEach(p=>{if(p.file)names.add(p.file)})});
+    const names=new Set();if(rp.sign)names.add(rp.sign);(rp.s03Files||[]).forEach(f=>names.add(f.f));(rp.docFiles||[]).forEach(f=>names.add(f.f));(rp.units||[]).forEach(u=>{(u.chkFiles||[]).forEach(f=>names.add(f.f));(u.docFiles||[]).forEach(f=>names.add(f.f));(u.photos||[]).forEach(p=>{if(p.file)names.add(p.file)})});
     const files=[];
     for(const n of names){let f=null;if(dd){try{f=await (await dd.getFileHandle(n)).getFile()}catch(e){}}if(!f)continue; // 已在 SharePoint photos 裡的舊檔不用再傳
       const w=await (await od.getFileHandle(n,{create:true})).createWritable();await w.write(f);await w.close();files.push(n)}
@@ -1988,8 +1993,8 @@ async function rotateStored(r,L,j){
     renderRep();await saveRepDraft(true);setSync('ok','')}catch(e){toast('旋轉失敗：'+e.message);setSync('err','')}
 }
 $('#fChk').onchange=async e=>{const fs=[...e.target.files];e.target.value='';if(!fs.length||!S.rep||!S.fupSlot)return;
-  const r=S.caseData[S.repFsn];const [k,i]=S.fupSlot;const u=S.rep.units[+i];const L=k==='s03'?S.rep.s03Files:u.chkFiles;
-  try{setSync('busy','上傳中…');for(const f of fs)L.push(await storeUpload(r.fsn,f,k==='s03'?'s03':'chk'+u.label));renderRep();await saveRepDraft(true);setSync('ok','已上傳')}
+  const r=S.caseData[S.repFsn];const [k,i]=S.fupSlot;const u=S.rep.units[+i]||{};const L=docL(S.rep,k,i);
+  try{setSync('busy','上傳中…');for(const f of fs)L.push(await storeUpload(r.fsn,f,k==='du'?'doc'+u.label:'doc'));renderRep();await saveRepDraft(true);setSync('ok','已上傳')}
   catch(er){toast('上傳失敗：'+er.message);setSync('err','上傳失敗');renderRep()}};
 
 /* 手機上傳收件匣：30_FieldService/inbox/<FSN>/ */
@@ -2004,9 +2009,9 @@ async function loadInbox(r,rp,canUp){
   if(!L.length){box.innerHTML='';return}
   const F=await Promise.all(L.map(async x=>{try{const f=await x.h.getFile();const pdf=/\.pdf$/i.test(x.n)||f.type==='application/pdf';const url=pdf?'':URL.createObjectURL(f);if(url)_ibUrls.push(url);return {f,pdf,url}}catch(e){return null}}));
   if($('#inboxBox')!==box)return;
-  const opts=`<option value="">— 放到 —</option><option value="s03|0">S03 手寫服務報告</option>${rp.units.map((u,i)=>`<option value="chk|${i}">機台 ${esc(u.label)} 檢查表</option><option value="ph|${i}">機台 ${esc(u.label)} 照片</option>`).join('')}`;
+  const opts=`<option value="">— 放到 —</option>${rp.docMode==='unit'?'':'<option value="da|0">手寫報告（整份）</option>'}${rp.units.map((u,i)=>`${rp.docMode==='unit'?`<option value="du|${i}">機台 ${esc(u.label)} 手寫報告</option>`:''}<option value="ph|${i}">機台 ${esc(u.label)} 照片</option>`).join('')}`;
   box.innerHTML=`<div class="panel"><div class="ph"><h2>📥 手機上傳收件匣</h2><span class="tag">${L.length}</span><span class="muted" style="font-size:12px">inbox／${esc(r.fsn)}</span><span class="sp"></span>${canUp?'<button class="btn sm pri" id="ibGo">匯入選好的檔案</button>':''}</div><div class="pb">
-   <div class="fgal">${L.map((x,k)=>{const o=F[k];if(!o)return '';return `<div class="fthumb">${o.pdf?`<div class="fpdf">📄 ${esc(x.n)}</div>`:`<img src="${o.url}">`}<div class="muted" style="font-size:11px;word-break:break-all">${esc(x.n)}</div>${canUp?`<select data-ibt="${k}">${opts.replace(/s03\|0"/,/s03/i.test(x.n)?'s03|0" selected':'s03|0"')}</select>`:''}</div>`}).join('')}</div>
+   <div class="fgal">${L.map((x,k)=>{const o=F[k];if(!o)return '';return `<div class="fthumb">${o.pdf?`<div class="fpdf">📄 ${esc(x.n)}</div>`:`<img src="${o.url}">`}<div class="muted" style="font-size:11px;word-break:break-all">${esc(x.n)}</div>${canUp?`<select data-ibt="${k}">${opts}</select>`:''}</div>`}).join('')}</div>
    ${canUp?'<div class="muted" style="font-size:12px;margin-top:6px">每個檔案選好要放的位置後按「匯入」，匯入後會從收件匣移除；沒選的留著。</div>':'<div class="muted" style="font-size:12px;margin-top:6px">需要編輯權限才能匯入。</div>'}</div></div>`;
   const b=$('#ibGo');if(!b)return;
   b.onclick=async()=>{const sel=[...box.querySelectorAll('[data-ibt]')].filter(s=>s.value);if(!sel.length){toast('請先選擇檔案要放的位置');return}
@@ -2015,7 +2020,7 @@ async function loadInbox(r,rp,canUp){
       for(const s of sel){const k0=+s.dataset.ibt,x=L[k0],o=F[k0];if(!o)continue;const [k,i]=s.value.split('|');const u=rp.units[+i];
         if(k==='ph'){if(o.pdf){toast(x.n+' 是 PDF，不能當照片，略過');continue}
           const name=await savePhoto(r.fsn,await compressImage(o.f),u.label);let slot=u.photos.find(p=>!p.file);if(!slot){slot={t:'',u:'',k:'',val:'',file:''};u.photos.push(slot)}slot.file=name}
-        else{const it=await storeUpload(r.fsn,o.f,k==='s03'?'s03':'chk'+u.label);(k==='s03'?rp.s03Files:u.chkFiles).push(it)}
+        else{const it=await storeUpload(r.fsn,o.f,k==='du'?'doc'+u.label:'doc');docL(rp,k,i).push(it)}
         await d.removeEntry(x.n);n++}
       renderRep();await saveRepDraft(true);setSync('ok','已匯入');toast(`已匯入 ${n} 個檔案`)}
     catch(e){console.error(e);toast('匯入失敗：'+e.message);setSync('err','匯入失敗');renderRep()}};
@@ -2271,7 +2276,8 @@ function migrate5(s){
 }
 
 /* ---------- 報告中使用 ---------- */
-function chkTplFor(fam){const T=S.set.checkTemplates||{};for(const [n,t] of Object.entries(T))if((t.fams||[]).includes(fam))return n;return ''}
+function chkTplFor(fam){const T=S.set.checkTemplates||{};const F=String(fam||'').toUpperCase();if(!F)return '';const E=Object.entries(T);
+  for(const [n,t] of E)if(n.toUpperCase()===F)return n;for(const [n,t] of E)if((t.fams||[]).some(x=>String(x).toUpperCase()===F))return n;return ''}
 function newChk(name){return {tpl:name||'',res:{},log:{}}}
 function chkDefaultSvc(g){const s=((g&&g.subject)||'')+' '+((g&&g.tasks)||[]).join(' ');return SVC_TYPES.filter(t=>s.includes(t))}
 function chkItems(t){return (t.secs||[]).flatMap(s=>s.items)}
@@ -2288,6 +2294,11 @@ function ensureChk(rp,r){
   });
   if(!rp.chkSvc)rp.chkSvc=chkDefaultSvc(g);
   if(!rp.s03Files)rp.s03Files=[];rp.units.forEach(u=>{if(!u.chkFiles)u.chkFiles=[]});
+  // v3.2：手寫報告上傳（舊的 S03／檢查表／簽名檔案併進來）
+  if(!rp.docFiles){rp.docFiles=[...rp.s03Files];if(rp.sign)rp.docFiles.push({f:rp.sign,type:rp.signType==='pdf'?'pdf':'img',n:'客戶簽名頁'});
+    const anyU=rp.units.some(u=>u.chkFiles.length);rp.docMode=anyU&&!rp.docFiles.length?'unit':'all';rp.units.forEach(u=>{u.docFiles=u.chkFiles.slice();if(rp.docMode==='all')rp.docFiles.push(...u.docFiles)})}
+  rp.units.forEach(u=>{if(!u.docFiles)u.docFiles=[]});if(!rp.docMode)rp.docMode='all';
+  if(!rp.days||!rp.days.length){rp.days=[{date:rp.date||today(),arrival:rp.arrival||'',finish:rp.finish||'',hr:rp.laborHr||netHr(rp.arrival,rp.finish),manual:!!rp.laborManual}]}
   rp.units.forEach(u=>{if(!u.svc){const e=eq.find(x=>normModel(x.model)===normModel(u.model));const es=e&&e.subject?e:{subject:g.subject,tasks:g.tasks||[]};u.svc=e&&e.subject?chkDefaultSvc(es):rp.chkSvc.slice();if(!u.svcText&&e&&e.subject)u.svcText=eqSvc(e)}if(u.svcOther===undefined)u.svcOther=rp.chkOther||''});
 }
 const vt=x=>[...String(x)].map(esc).join('<br>');
@@ -2510,7 +2521,7 @@ function bgPayload(c){
   const it=eq.length?eq.map(e=>({m:famOf(e.ptype,e.model),n:normModel(e.model),q:g.kind==='廠內維修'?1:(+e.qty||1),s:bgSvc(e.subject||g.subject)}))
     :(r.items||[]).filter(x=>x.model).map(x=>({m:famOf('',x.model),n:normModel(x.model),q:+x.qty||1,s:bgSvc(r.type)}));
   const tr=ci.min?Math.round(ci.min*2/30)/2:'';
-  return {app:'fs-sig',v:1,fsn:r.fsn,d:r.date||'',d2:r.date?addD(r.date,(+r.days||1)-1):'',st:r.staff||[],t1:r.tStart||'',t2:r.tEnd||'',c:r.cust||'',tr,it,no:(r.content||'').slice(0,200)};
+  return {app:'fs-sig',v:1,fsn:r.fsn,d:r.date||'',d2:r.date?((x=>x.length?x[x.length-1].d:r.date)(caseSlots(r.date,r.days,r.tStart))):'',st:r.staff||[],t1:r.tStart||'',t2:r.tEnd||'',c:r.cust||'',tr,it,no:(r.content||'').slice(0,200)};
 }
 async function bgLink(c){const base=(S.set.baogongUrl||BG_DEFAULT).replace(/#.*$/,'');return base+(base.includes('?')?'&':'?')+'openExternalBrowser=1#fs='+encodeURIComponent(await packSR(bgPayload(c)))}
 async function openBg(fsn){const c=S.byFsn[fsn];if(!c)return;try{window.open(await bgLink(c),'_blank','noopener')}catch(e){toast('無法產生報工連結：'+e.message)}}
@@ -2533,6 +2544,7 @@ function renderSet(){
       <input type="number" id="gLate" min="0" max="30" value="${esc(st.lateDays??0)}" style="width:80px"> 天
       <label style="display:flex;gap:6px;align-items:center;flex-direction:row"><input type="checkbox" id="gLateW" ${st.lateWorkdays?'checked':''}> 只算工作天（跳過週六、日）</label></div>
       <span class="muted" style="font-size:11px">0 天＝結束日隔天就算逾期；1 天＋只算工作天＝週五的案件下週二才算逾期</span></div>
+    <label class="s2">休息時段（完工報告工時自動扣除；逗號分隔，例：12:00-13:00,17:30-18:00）<input type="text" id="gBreaks" value="${esc((Array.isArray(st.breaks)?st.breaks:['12:00-13:00']).join(','))}"></label>
     <label class="s2">需求單位（逗號分隔）<input type="text" id="gDept" value="${esc((st.depts||[]).join(','))}"></label>
     <label class="s4">報工系統網址（派工訊息的報工連結用；空白＝${BG_DEFAULT}）<input type="text" id="gBg" value="${esc(st.baogongUrl||'')}" placeholder="${BG_DEFAULT}"></label>
     <label class="s2">服務項目對應（每行：訊息單主旨=報工服務項目）<textarea id="gSvcMap" rows="4">${esc(Object.entries(Object.assign({},SVC_MAP_DEF,st.svcMap||{})).map(([a,b])=>a+'='+b).join('\n'))}</textarea></label>
@@ -2596,7 +2608,7 @@ function bindSet(){
   on('sPick',pickRoot);
   const csv=id=>$('#'+id).value.split(/[,，]/).map(s=>s.trim()).filter(Boolean);
   // 一般
-  on('gSave',()=>{const y=+$('#gYear').value||st.year;st.year=y;st.vehicles=csv('gVeh');st.brands=csv('gBrand');st.depts=csv('gDept');st.lateDays=Math.max(0,parseInt($('#gLate').value)||0);st.lateWorkdays=$('#gLateW').checked;st.baogongUrl=$('#gBg').value.trim();st.svcMap={};$('#gSvcMap').value.split('\n').forEach(l=>{const i=l.indexOf('=');if(i>0)st.svcMap[l.slice(0,i).trim()]=l.slice(i+1).trim()});st.company={name:$('#gCo').value.trim(),addr:$('#gAddr').value.trim(),tel:$('#gTel').value.trim(),fax:$('#gFax').value.trim()};save().then(()=>loadAll())});
+  on('gSave',()=>{const bk=$('#gBreaks').value.split(/[,，\s]+/).map(x=>x.trim().replace(/[～~–—]/g,'-')).filter(Boolean);const bad=bk.find(x=>!/^\d{1,2}:\d{2}-\d{1,2}:\d{2}$/.test(x));if(bad){toast('休息時段格式錯誤：'+bad+'（例：12:00-13:00）');return}st.breaks=bk;const y=+$('#gYear').value||st.year;st.year=y;st.vehicles=csv('gVeh');st.brands=csv('gBrand');st.depts=csv('gDept');st.lateDays=Math.max(0,parseInt($('#gLate').value)||0);st.lateWorkdays=$('#gLateW').checked;st.baogongUrl=$('#gBg').value.trim();st.svcMap={};$('#gSvcMap').value.split('\n').forEach(l=>{const i=l.indexOf('=');if(i>0)st.svcMap[l.slice(0,i).trim()]=l.slice(i+1).trim()});st.company={name:$('#gCo').value.trim(),addr:$('#gAddr').value.trim(),tel:$('#gTel').value.trim(),fax:$('#gFax').value.trim()};save().then(()=>loadAll())});
   on('gPwd',async()=>{const a=$('#gP1').value,b=$('#gP2').value;if(a.length<4){toast('密碼至少 4 碼');return}if(a!==b){toast('兩次輸入不同');return}st.adminHash=await sha(a);ss.set('fsd2_admin_ok',st.adminHash);save('密碼已更新')});
   // 工程師／業務 表格
   if(S.stab==='perm')bindPermSet(st,m,on,save);
