@@ -262,6 +262,8 @@ dialog::backdrop{background:rgba(15,20,30,.45)}
 .pf.s3p .ft{display:flex;justify-content:space-between;font-size:8pt;color:#444;margin-top:4px}
 .pm{font-size:12px;padding:2px 4px}.pm.pmY{color:#0a7a33;font-weight:600}.pm.pmO{color:#b45f06;font-weight:600}.pm.pmN{color:#999}
 .role.om{background:rgba(255,255,255,.08)}
+#roBar{position:sticky;top:0;z-index:49;background:#e8f1fb;border-bottom:1px solid #9cc0e6;padding:6px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:13px}
+#roBar.stale{background:#fdeeee;border-color:#e3a0a0}
 #permBar{position:sticky;top:0;z-index:50;background:#fff4cc;border-bottom:1px solid #e8c84a;padding:8px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:14px}
 .eqt tr.eqsvc td{border-bottom:2px solid var(--line2);padding:2px 4px 10px;background:#fafbfc}
 .eqt tr.eqsvc .tog,.eqt tr.eqsvc .chk{align-items:center}
@@ -285,6 +287,7 @@ dialog::backdrop{background:rgba(15,20,30,.45)}
   <nav id="nav"></nav>
   <div class="sync"><button class="role om" id="onlyMine" style="display:none" title="只顯示我開的案件">☐ 只看我的</button><button class="role" id="btnRole">選擇身分</button><span class="dot" id="sdot"></span><span class="lbl" id="slbl">未連線</span><button class="hbtn" id="btnReload" title="重新讀取">↻</button></div>
 </header>
+<div id="roBar" style="display:none"></div>
 <div id="permBar" style="display:none"><b>⚠ 還沒允許存取 NAS 資料夾</b><span>目前顯示的是上次的暫存資料，送出或儲存會失敗。</span><button class="btn pri" id="permGo">允許存取</button></div>
 <main id="main"></main>
 <div id="tip"></div>
@@ -324,7 +327,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 <script>
 'use strict';
 /* ================= 常數 ================= */
-const APPVER='3.0.1（出發列印／上傳檢查表）';
+const APPVER='3.1（內網唯讀＋報告回傳）';
 const BUSCH_LOGO='data:image/png;base64,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';
 (function(){const put=()=>{const h=document.querySelector('header h1');if(h&&!h.querySelector('.hver'))h.insertAdjacentHTML('beforeend','<small class="hver" style="opacity:.65;margin-left:6px">v'+APPVER.replace(/（.*$/,'')+'</small>')};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',put);else put()})();
 /* ===== 入口網站共用設定（中繼複製到本資料夾的 _共用設定.json）：人員、客戶、機種／型號 ===== */
@@ -415,7 +418,7 @@ async function ensurePerm(noRender){
   try{const was=S.permOk;const ok=await hasPerm(H.root,true);if(ok&&!was){await loadAll(true);if(!noRender&&!$('#dlg').open)render();else build()}return ok}finally{_permAsking=false}
 }
 function permBar(){const b=$('#permBar');if(!b)return;b.style.display=H.root&&!S.permOk&&FSA?'flex':'none'}
-document.addEventListener('click',e=>{if(H.root&&!S.permOk&&FSA&&!e.target.closest('#permBar'))ensurePerm()},true);
+document.addEventListener('click',e=>{if(H.root&&!S.permOk&&FSA&&!e.target.closest('#permBar'))ensurePerm();if(S.ro&&H.ret&&!S.retOk)hasPerm(H.ret,true).then(ok=>{if(ok){S.retOk=true;loadRoDrafts().then(()=>{if(!$('#dlg').open)render()})}})},true);
 async function pickRoot(){
   try{
     const d=await showDirectoryPicker({id:'fsd2-root',mode:'readwrite'});
@@ -456,7 +459,8 @@ async function loadAll(quiet){
       try{S.caseData[fsn]=JSON.parse(await f.text());S.caseMod[fsn]=f.lastModified;changed++}catch(e){console.warn('壞檔',name)}
     }
     for(const k of Object.keys(S.caseData))if(!seen.has(k)){delete S.caseData[k];delete S.caseMod[k];changed++}
-    S.mode='fs';build();cacheSave();render();
+    await detectRO();await readRelayTime();if(S.ro)await loadRoDrafts();else processPinReturns();
+    S.mode='fs';build();cacheSave();render();roBar();
     setSync('ok','已讀取 '+new Date().toTimeString().slice(0,5));
     if(quiet&&changed)toast(`已更新 ${changed} 筆案件（其他人修改）`);
   }catch(e){console.error(e);setSync('err','讀取失敗');toast('讀取失敗：'+e.message);if(!S.set)render()}
@@ -471,6 +475,7 @@ function cacheLoad(){const c=ls.get(LS_CACHE);if(c&&c.set){S.set=normSettings(c.
 
 /* 寫入單一案件：檢查是否被他人改過（樂觀鎖） */
 async function writeCase(obj,baseUpdatedAt){
+  if(S.ro)throw new Error('這是內網唯讀複本，不能修改案件（完工報告請用「送出」回傳）');
   if(S.mode!=='fs'||!(await hasPerm(H.root,true)))throw new Error('尚未允許存取資料夾，請按上方黃色列「允許存取」後再試');
   const dir=await casesDir(obj.year||S.set.year,true);
   let cur=null;try{const f=await (await dir.getFileHandle(obj.fsn+'.json')).getFile();if(f.lastModified!==S.caseMod[obj.fsn])cur=JSON.parse(await f.text())}catch(e){}
@@ -479,6 +484,7 @@ async function writeCase(obj,baseUpdatedAt){
   S.caseData[obj.fsn]=obj;cacheSave();
 }
 async function writeSettings(){
+  if(S.ro)throw new Error('這是內網唯讀複本，不能修改設定');
   if(!(await hasPerm(H.root,true)))throw new Error('尚未允許存取資料夾，請按上方黃色列「允許存取」後再試');
   S.set.settingsAt=nowIso();
   try{const f=await (await H.root.getFileHandle('settings.json')).getFile();
@@ -657,11 +663,11 @@ function roleDialog(force){
   const showPin=(kind,id)=>{
     if(kind==='guest'){login('guest','guest','訪客');return}
     const p=kind==='sales'?S.set.sales.find(x=>x.code===id):kind==='staff'?S.set.staff.find(x=>x.name===id):kind==='viewer'?(S.set.viewers||[]).find(x=>x.name===id):null;
-    const first=kind!=='admin'&&!(p&&p.pin);
+    const first=kind!=='admin'&&!(p&&p.pin);const locPin=first&&S.ro&&ls.get(roPinKey(kind,id));
     pick.style.display='none';pinBox.style.display='flex';
     pinBox.innerHTML=`<div style="font-size:16px"><b>${esc(kind==='sales'?id+' '+(p?p.name:''):id)}</b></div>
       ${kind==='admin'?`<label class="fl">管理者密碼<input type="password" id="pin1" autocomplete="off"></label>${S.set.adminHash?'':'<div class="muted" style="font-size:12px">尚未設定，預設 1234，登入後請到設定修改</div>'}`
-      :first?`<div class="muted">第一次登入，請設定你的個人 PIN 碼（4 碼以上數字），之後切換身分都要輸入。</div><label class="fl">設定 PIN<input type="password" id="pin1" inputmode="numeric" autocomplete="off"></label><label class="fl">再輸入一次<input type="password" id="pin2" inputmode="numeric" autocomplete="off"></label>`
+      :first&&!locPin?`<div class="muted">${S.ro?'（內網）':''}第一次登入，請設定你的個人 PIN 碼（4 碼以上數字），之後切換身分都要輸入。</div><label class="fl">設定 PIN<input type="password" id="pin1" inputmode="numeric" autocomplete="off"></label><label class="fl">再輸入一次<input type="password" id="pin2" inputmode="numeric" autocomplete="off"></label>`
       :`<label class="fl">PIN 碼<input type="password" id="pin1" inputmode="numeric" autocomplete="off"></label><div class="muted" style="font-size:12px">忘記 PIN 請找系統管理者重設</div>`}
       <div style="display:flex;gap:8px"><button class="btn" id="pinBack">返回</button><button class="btn pri" id="pinGo">登入</button></div>`;
     $('#pin1').focus();
@@ -669,7 +675,12 @@ function roleDialog(force){
       const v=$('#pin1').value;
       if(H.root&&!(await hasPerm(H.root,true))){toast('請先允許存取資料夾');return}
       if(kind==='admin'){if(!(await checkPwd(v))){toast('密碼錯誤');return}ss.set('fsd2_admin_ok',S.set.adminHash||'default');login('admin','pwd','管理者');return}
-      if(first){if(!/^\d{4,}$/.test(v)){toast('PIN 請輸入 4 碼以上數字');return}if(v!==$('#pin2').value){toast('兩次輸入不同');return}
+      const loc=S.ro?ls.get(roPinKey(kind,id)):null;
+      if(first&&loc){if(await sha('pin:'+v)!==loc){toast('PIN 錯誤');return}}
+      else if(first&&S.ro){if(!/^\d{4,}$/.test(v)){toast('PIN 請輸入 4 碼以上數字');return}if(v!==$('#pin2').value){toast('兩次輸入不同');return}
+        if(!H.ret&&!(await pickRet()))return;
+        const hsh=await sha('pin:'+v);try{await sendPinReturn(kind,id,hsh)}catch(e){toast('無法送出 PIN：'+e.message);return}ls.set(roPinKey(kind,id),hsh);toast('PIN 已設定，辦公室系統下次開啟時會寫入')}
+      else if(first){if(!/^\d{4,}$/.test(v)){toast('PIN 請輸入 4 碼以上數字');return}if(v!==$('#pin2').value){toast('兩次輸入不同');return}
         const pp=(kind==='sales'?S.set.sales.find(x=>x.code===id):kind==='staff'?S.set.staff.find(x=>x.name===id):(S.set.viewers||[]).find(x=>x.name===id))||p;
         pp.pin=await sha('pin:'+v);p.pin=pp.pin;try{await writeSettings()}catch(e){toast('無法儲存 PIN：'+e.message);return}}
       else if(await sha('pin:'+v)!==p.pin){toast('PIN 錯誤');return}
@@ -962,7 +973,7 @@ function exportXlsx(L){
 /* ================= 案件編輯 ================= */
 function openCase(fsn,prefill){
   const c=S.byFsn[fsn];if(!c){const p=S.caseData[fsn];if(p&&p.movedTo&&S.byFsn[p.movedTo])openCase(p.movedTo,prefill);return}
-  const eng=!canEdit();const ro=['viewer','guest'].includes(S.role);const stOpts=ro?[c.stage]:allowedStages(c);
+  const eng=!canEdit()||!!S.ro;const ro=['viewer','guest'].includes(S.role)||!!S.ro;const stOpts=ro?[c.stage]:allowedStages(c);
   const r=Object.assign({stage:c.stage,staff:[],vehicle:'',tStart:'',tEnd:'',date:'',days:1,items:[],content:'',dept:'業務',price:'',note:'',doneDate:''},JSON.parse(JSON.stringify(c.r)));
   r.dept=r.dept||'業務';
   if(prefill){Object.assign(r,prefill);if(/^待安排/.test(r.note||''))r.note='';if(r.stage==='待安排'&&r.date)r.stage='已排程';if(!r.tStart){r.tStart='08:30';r.tEnd='17:30'}}
@@ -1460,7 +1471,8 @@ const photosDir=(fsn,c)=>subDir(['photos',fsn],c);
 const IMG={};
 async function imgUrl(fsn,name){
   const k=fsn+'/'+name;if(IMG[k])return IMG[k];
-  try{const f=await (await (await photosDir(fsn)).getFileHandle(name)).getFile();IMG[k]=URL.createObjectURL(f);return IMG[k]}catch(e){return ''}
+  try{let f=null;if(S.ro&&H.ret){try{f=await (await (await retDir(['drafts',fsn])).getFileHandle(name)).getFile()}catch(e){}}
+    if(!f)f=await (await (await photosDir(fsn)).getFileHandle(name)).getFile();IMG[k]=URL.createObjectURL(f);return IMG[k]}catch(e){return ''}
 }
 async function hydrateImgs(root){
   const els=[...(root||document).querySelectorAll('img[data-img]')];
@@ -1474,7 +1486,7 @@ async function compressImage(file,max=1600,q=0.82){
   return await new Promise(r=>c.toBlob(r,'image/jpeg',q));
 }
 async function savePhoto(fsn,blob,prefix,ext){
-  const d=await photosDir(fsn,true);const name=`${prefix}_${Date.now()}_${Math.random().toString(36).slice(2,6)}.${ext||'jpg'}`;
+  const d=S.ro?await retDir(['drafts',fsn],true):await photosDir(fsn,true);const name=`${prefix}_${Date.now()}_${Math.random().toString(36).slice(2,6)}.${ext||'jpg'}`;
   const fh=await d.getFileHandle(name,{create:true});const w=await fh.createWritable();await w.write(blob);await w.close();
   IMG[fsn+'/'+name]=URL.createObjectURL(blob);return name;
 }
@@ -1541,8 +1553,9 @@ function openReport(fsn){S.repFsn=fsn;S.rep=null;S.view='rep';render()}
 let repTimer=null;
 function renderRep(){
   const r=S.caseData[S.repFsn];if(!r){S.view=S.role==='eng'?'me':'board';render();return}
-  if(!S.rep||S.repFor!==r.fsn){S.rep=r.report?JSON.parse(JSON.stringify(r.report)):newReport(r);S.repFor=r.fsn;S.repBad=null}
-  const rp=S.rep,g=r.signal||{},edit=canEditReport(r),dis=edit?'':'disabled';const ownR=(r.staff||[]).includes(myName());
+  if(!S.rep||S.repFor!==r.fsn){const dr=S.ro&&S.roDrafts&&S.roDrafts[r.fsn];S.rep=dr?JSON.parse(JSON.stringify(dr.rep)):r.report?JSON.parse(JSON.stringify(r.report)):newReport(r);S.repFor=r.fsn;S.repBad=null}
+  const needRet=S.ro&&canEditReport(r)&&!(H.ret&&S.retOk);
+  const rp=S.rep,g=r.signal||{},edit=canEditReport(r)&&!needRet,dis=edit?'':'disabled';const ownR=(r.staff||[]).includes(myName());
   const phUp=edit&&can('rep.photo',ownR)||edit&&!ownR,phDel=edit&&can('rep.photoDel',ownR)||edit&&!ownR;
   if(!edit&&!can('rep.print',ownR)){$('#main').innerHTML='<div class="empty">沒有查看完工報告的權限</div>';return}ensureChk(rp,r);
   if(S.repBad)S.repBad=repValidate(rp,r);
@@ -1551,7 +1564,7 @@ function renderRep(){
   const rev=rp.review&&rp.review.result==='退回'?`<div class="errbox"><b>⚠ 報告被退回（${esc(rp.review.by)} ${esc(rp.review.at)}）：</b>${esc(rp.review.reason)}</div>`:'';
   $('#main').innerHTML=`<div class="sf" style="max-width:1100px">
    <div class="panel"><div class="ph"><h2>完工報告 Service Report</h2><span class="tag">${esc(r.fsn)}</span><span class="sp"></span><span class="muted" id="repSt"></span><button class="btn sm" id="rpBack">← 返回</button></div>
-    <div class="pb">${rev}<div class="info" style="margin:0"><div><span>客戶</span>${esc(r.cust)}</div><div><span>服務</span>${esc(g.subject||r.type)}</div><div class="w2c"><span>任務</span>${esc((g.tasks||[]).join('、')||r.content||'')}</div>
+    <div class="pb">${rev}${S.ro?roRepNote(r,rp,needRet):''}<div class="info" style="margin:0"><div><span>客戶</span>${esc(r.cust)}</div><div><span>服務</span>${esc(g.subject||r.type)}</div><div class="w2c"><span>任務</span>${esc((g.tasks||[]).join('、')||r.content||'')}</div>
      <div class="w2c"><span>地址</span>${esc(r.addr)}</div><div><span>聯絡人</span>${esc(r.contact||'')} ${esc(r.phone||'')}</div><div><span>照片報告</span>${g.photo?'<b style="color:var(--red)">需要</b>':'不需要'}</div></div></div></div>
    <div class="panel"><div class="ph"><h2>基本資料</h2></div><div class="pb fgrid">
     <label class="${bc('date')}"><span class="req">報告日期</span><input type="date" data-p="date" value="${esc(rp.date)}" ${dis}></label>
@@ -1616,6 +1629,7 @@ function renderRep(){
     const t=e.target;
     if(t.id==='rpBack'){if(edit)saveRepDraft(true);S.view=S.role==='eng'?'me':(S.prevView||'board');S.rep=null;render();return}
     if(t.id==='rpPrint'){printReport(r,rp);return}
+    if(t.id==='rpRet'){pickRet().then(ok=>{if(ok){S.rep=null;renderRep()}});return}
     if(t.id==='rpPrep'){if(edit)saveRepDraft(true);prepDialog(r.fsn);return}
     const fo=t.closest('[data-fopen]');if(fo){e.preventDefault();openStored(r.fsn,fo.dataset.fopen);return}
     if(!edit)return;
@@ -1679,7 +1693,7 @@ $('#fSign').onchange=async e=>{
   }catch(er){toast('上傳失敗：'+er.message)}
 };
 async function saveRepDraft(silent){
-  clearTimeout(repTimer);
+  clearTimeout(repTimer);if(S.ro)return saveRoDraft(silent);
   const r=S.caseData[S.repFsn];if(!r||!S.rep||!canEditReport(r))return;
   const o=JSON.parse(JSON.stringify(r));o.report=JSON.parse(JSON.stringify(S.rep));o.updatedAt=nowIso();o.updatedBy=who();
   try{await writeCase(o,r.updatedAt);build();const st=$('#repSt');if(st)st.textContent='草稿已儲存 '+new Date().toTimeString().slice(0,5);setSync('ok','已儲存');if(!silent)toast('草稿已儲存')}
@@ -1691,6 +1705,7 @@ async function submitReport(){
   const bad=repValidate(rp,r);S.repBad=bad;
   if(bad.length){renderRep();toast('還有 '+bad.length+' 項未完成');const e=document.querySelector('.bad');if(e)e.scrollIntoView({behavior:'smooth',block:'center'});return}
   rp.submittedAt=nowLocal();rp.submittedBy=who();rp.reportBy=rp.reportBy||who();if(rp.review&&rp.review.result==='退回')rp.review.resolved=true;
+  if(S.ro){await submitRo(r,rp);return}
   const patch={report:JSON.parse(JSON.stringify(rp)),doneDate:rp.date};if(!can('rev.approve')||r.stage==='已排程')patch.stage='待審核';
   clearTimeout(repTimer);
   await saveCase(r.fsn,patch,`${r.cust}：送出完工報告`,true);
@@ -1704,12 +1719,12 @@ function renderMe(){
   const todo=mine.filter(c=>c.stage==='已排程').sort((a,b)=>a.date.localeCompare(b.date));
   const rev=mine.filter(c=>c.stage==='待審核');
   const done=mine.filter(c=>c.stage==='結案').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);
-  const card=c=>{const r=c.r,g=r.signal,rp=r.report;const back=rp&&rp.review&&rp.review.result==='退回'&&!rp.review.resolved;
+  const card=c=>{const r=c.r,g=r.signal,dr=S.ro&&S.roDrafts&&S.roDrafts[c.fsn],rp=dr?dr.rep:r.report;const back=rp&&rp.review&&rp.review.result==='退回'&&!rp.review.resolved;
     return `<div class="mcard" style="--c:${back||c.late?'var(--red)':SC[c.stage]}">
     <div class="h"><div><b>${esc(c.cust)}</b><div class="row">${esc(c.fsn)}｜${md(c.date)}${c.days>1?' 起 '+c.days+' 天':''} ${esc(r.tStart||'')}${r.tEnd?'–'+esc(r.tEnd):''}</div></div><span class="stg" style="--c:${SC[c.stage]}"><i></i>${back?'報告退回':c.late?'逾期未報告':esc(c.stage)}</span></div>
     <div>${esc(r.content||c.type)}</div>
     ${back?`<div class="errbox" style="padding:6px 10px">退回原因：${esc(rp.review.reason)}</div>`:''}
-    <div class="row">👥 ${esc(c.staff.join('、'))}${r.vehicle?' · 🚐 '+esc(r.vehicle):''}${g&&g.photo?' · 📷 需照片報告':''}${rp&&!rp.submittedAt?' · 📝 草稿':''}</div>
+    <div class="row">👥 ${esc(c.staff.join('、'))}${r.vehicle?' · 🚐 '+esc(r.vehicle):''}${g&&g.photo?' · 📷 需照片報告':''}${dr&&dr.rep.sentItem?' · 📤 已回傳，待主任審核':rp&&!rp.submittedAt?' · 📝 草稿':''}</div>
     <div class="row">📍 ${esc(c.addr)}</div>
     <div class="act">${c.r.signal?`<button class="btn" data-psig="${esc(c.fsn)}">🖨 訊息單</button>`:''}${c.stage==='已排程'&&can('prep.print',true)?`<button class="btn" data-prep="${esc(c.fsn)}">🧾 出發列印</button>`:''}${c.stage!=='結案'?`<button class="btn" data-bg="${esc(c.fsn)}" title="開啟報工系統並自動帶入這張單">⏱ 報工</button>`:''}${c.stage==='已排程'?`<button class="btn pri" data-rep="${esc(c.fsn)}">📝 ${rp?'繼續填寫':'填寫'}完工報告</button>`:`<button class="btn" data-rep="${esc(c.fsn)}">查看報告</button>`}</div></div>`};
   $('#main').innerHTML=`<div style="max-width:780px;margin:0 auto">
@@ -1728,8 +1743,9 @@ function renderRev(){
   $('#main').innerHTML=`<div class="panel"><div class="ph"><h2>待審核完工報告</h2><span class="tag">${L.length}</span></div>
    <div class="tbl-wrap"><table><thead><tr><th>FSN</th><th>客戶</th><th>內容</th><th>完工日</th><th>工程師</th><th>送出</th><th></th></tr></thead><tbody>
    ${L.map(c=>{const rp=c.r.report||{};return `<tr data-fsn="${esc(c.fsn)}"><td>${esc(c.fsn)}</td><td>${esc(c.cust)}</td><td class="muted">${esc((c.r.content||c.type).slice(0,36))}</td><td>${md(c.r.doneDate||rp.date)}</td><td>${esc((rp.engineers||c.staff).join('、'))}</td><td class="muted">${esc(rp.submittedBy||'')} ${esc((rp.submittedAt||'').slice(5))}</td><td style="white-space:nowrap"><button class="btn sm pri" data-rv="${esc(c.fsn)}">${can('rev.approve')?'審核':'查看'}</button></td></tr>`}).join('')}</tbody></table>
-   ${L.length?'':'<div class="empty">沒有待審核的報告 👍</div>'}</div></div>`;
+   ${L.length?'':'<div class="empty">沒有待審核的報告 👍</div>'}</div></div><div id="retBox"></div>`;
   $('#main').onclick=e=>{const b=e.target.closest('[data-rv]')||e.target.closest('tr[data-fsn]');if(b)reviewDialog(b.dataset.rv||b.dataset.fsn)};
+  if(!S.ro&&can('rev.approve'))loadReturns();
 }
 async function reviewDialog(fsn){
   const r=S.caseData[fsn];if(!r)return;const rp=r.report;
@@ -1818,6 +1834,137 @@ async function printReport(r,rp){
 }
 
 
+
+/* ================= v3.1 內網唯讀複本＋完工報告回傳 =================
+   內網 S:\30_FieldService 是中繼從 SharePoint 複製的唯讀複本（有 _READONLY_COPY.json）。
+   內網只能看；完工報告草稿存在 S:\31_FieldService_回傳\drafts，送出後放到 outbox，
+   由中繼搬到 SharePoint 30_FieldService\_returns，主任在「審核」頁匯入後才寫進案件。 */
+const locT=x=>{const d=new Date(x);return isNaN(d)?String(x||''):ymd(d)+' '+d.toTimeString().slice(0,5)};
+const RO_MARKERS=['_READONLY_COPY.json','_看板複本_勿選.txt'];
+const RET_DIR='_returns'; // ASCII 名稱，避免同步工具或瀏覽器對中文資料夾名稱的相容問題
+const RO_ALLOW=new Set(['dash.view','board.view','board.log','board.contact','cal.view','list.view','list.export','rev.view','sig.print','mysig.view','me.view','rep.fill','rep.photo','rep.photoDel','rep.print','msg.view','msg.copy','prep.print']);
+async function detectRO(){
+  let ro=false;for(const n of RO_MARKERS){try{await H.root.getFileHandle(n);ro=true;break}catch(e){}}
+  S.ro=ro;if(ro&&!H.ret){H.ret=await idb.get('ret');if(H.ret){try{S.retOk=(await H.ret.queryPermission({mode:'readwrite'}))==='granted'}catch(e){S.retOk=false}}}
+  return ro;
+}
+async function readRelayTime(){try{const f=await (await H.root.getFileHandle('_relay_time.json')).getFile();const o=JSON.parse(await f.text());S.relay={t:o.time,pc:o.pc||''}}catch(e){S.relay=null}}
+function relayAge(){return S.relay&&S.relay.t?(Date.now()-Date.parse(S.relay.t))/60000:null}
+function roBar(){
+  const b=$('#roBar');if(!b)return;const age=relayAge();const stale=age!=null&&age>15;
+  if(!S.ro&&!stale){b.style.display='none';return}
+  const tm=S.relay&&S.relay.t?new Date(S.relay.t).toTimeString().slice(0,5):'—';
+  b.className=stale?'stale':'';b.style.display='flex';
+  b.innerHTML=S.ro?`<b>🔒 內網唯讀檢視</b><span>資料由中繼每 5 分鐘從 SharePoint 複製，最後同步 <b>${tm}</b>${stale?`（已 ${Math.round(age)} 分鐘沒更新，請確認 ${esc(S.relay.pc||'中繼電腦')} 有開機）`:''}。只能查看；完工報告可以填寫並「送出」回傳給主任審核。</span>${H.ret?`<span class="muted">回傳資料夾：${esc(H.ret.name)}</span>`:''}`
+    :`<b>⚠ 中繼已 ${Math.round(age)} 分鐘沒有同步</b><span>看板與內網電腦的資料停在 ${tm}，請確認 ${esc(S.relay.pc||'中繼電腦')} 有開機並連上網路。</span>`;
+}
+setInterval(()=>{if(S.mode==='fs')roBar()},60000);
+async function retDir(names,create){if(!H.ret)throw new Error('尚未選擇回傳資料夾');let d=H.ret;for(const n of names)d=await d.getDirectoryHandle(n,{create:!!create});return d}
+async function pickRet(){
+  try{const d=await showDirectoryPicker({id:'fsd2-ret',mode:'readwrite'});
+    let bad=false;try{await d.getFileHandle('settings.json');bad=true}catch(e){}
+    if(bad){toast('選錯了：這是 30_FieldService（唯讀複本）。請選 31_FieldService_回傳');return false}
+    if((await d.requestPermission({mode:'readwrite'}))!=='granted'){toast('需要允許編輯回傳資料夾');return false}
+    try{const t=await d.getFileHandle('_write_test.tmp',{create:true});const w=await t.createWritable();await w.write('ok');await w.close();await d.removeEntry('_write_test.tmp')}catch(e){toast('這個資料夾不能寫入（權限不足）：'+e.message);return false}
+    H.ret=d;S.retOk=true;await idb.set('ret',d);await loadRoDrafts();roBar();toast('已設定回傳資料夾：'+d.name);return true}
+  catch(e){if(e.name!=='AbortError')toast('選擇失敗：'+e.message);return false}
+}
+async function loadRoDrafts(){
+  S.roDrafts={};if(!H.ret||!S.retOk)return;
+  try{const dd=await retDir(['drafts'],true);for await(const [n,h] of dd.entries()){if(h.kind!=='directory')continue;try{const o=JSON.parse(await (await (await h.getFileHandle('report.json')).getFile()).text());if(o&&o.rep)S.roDrafts[n]=o}catch(e){}}}catch(e){console.warn(e)}
+}
+async function saveRoDraft(silent){
+  clearTimeout(repTimer);const r=S.caseData[S.repFsn];if(!r||!S.rep||!H.ret)return;
+  try{const d=await retDir(['drafts',r.fsn],true);const o={fsn:r.fsn,base:r.updatedAt,by:who(),at:nowIso(),rep:JSON.parse(JSON.stringify(S.rep))};
+    await writeJSON(d,'report.json',o);S.roDrafts=S.roDrafts||{};S.roDrafts[r.fsn]=o;
+    const st=$('#repSt');if(st)st.textContent='草稿已存到回傳資料夾 '+new Date().toTimeString().slice(0,5);setSync('ok','草稿已儲存');if(!silent)toast('草稿已儲存（回傳資料夾）')}
+  catch(e){toast('草稿儲存失敗：'+e.message);setSync('err','儲存失敗')}
+}
+async function submitRo(r,rp){
+  try{if(!H.ret)throw new Error('尚未選擇回傳資料夾');
+    setSync('busy','送出中…');
+    const item=r.fsn+'_'+nowIso().replace(/\D/g,'').slice(0,14);
+    const od=await retDir(['outbox',item],true);let dd=null;try{dd=await retDir(['drafts',r.fsn])}catch(e){}
+    const names=new Set();if(rp.sign)names.add(rp.sign);(rp.s03Files||[]).forEach(f=>names.add(f.f));(rp.units||[]).forEach(u=>{(u.chkFiles||[]).forEach(f=>names.add(f.f));(u.photos||[]).forEach(p=>{if(p.file)names.add(p.file)})});
+    const files=[];
+    for(const n of names){let f=null;if(dd){try{f=await (await dd.getFileHandle(n)).getFile()}catch(e){}}if(!f)continue; // 已在 SharePoint photos 裡的舊檔不用再傳
+      const w=await (await od.getFileHandle(n,{create:true})).createWritable();await w.write(f);await w.close();files.push(n)}
+    const rep=JSON.parse(JSON.stringify(rp));delete rep.sentItem;
+    await writeJSON(od,'item.json',{type:'report',fsn:r.fsn,year:r.year||S.set.year,base:r.updatedAt,by:who(),at:nowIso(),files,report:rep});
+    await writeJSON(od,'_ready.json',{at:nowIso()}); // 最後寫：中繼看到這個檔才搬
+    rp.sentItem=item;rp.sentAt=nowLocal();await saveRoDraft(true);
+    clearTimeout(repTimer);setSync('ok','已送出');
+    toast('已送出：中繼上傳到 SharePoint 後由主任審核（Addy 電腦開機時約 5～10 分鐘）');S.rep=null;S.view=S.role==='eng'?'me':'board';render();
+  }catch(e){console.error(e);toast('送出失敗：'+e.message);setSync('err','送出失敗')}
+}
+function roRepNote(r,rp,needRet){
+  if(needRet)return `<div class="warn" style="margin-bottom:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span>內網電腦的完工報告要存到 <b>S:\\31_FieldService_回傳</b>。第一次使用請先選擇這個資料夾。</span><button class="btn pri sm" id="rpRet">選擇回傳資料夾</button></div>`;
+  if(rp.sentItem)return `<div class="warn" style="margin-bottom:8px">📤 已於 ${esc(rp.sentAt||'')} 送出（${esc(rp.sentItem)}），等待中繼上傳與主任審核。修改後再按送出，會用新的一份取代。</div>`;
+  return `<div class="muted" style="font-size:12px;margin-bottom:8px">🔒 內網模式：草稿存在回傳資料夾，按「送出審核」後由主任在辦公室匯入。</div>`;
+}
+/* ---- 辦公室端：讀取 _回傳 ---- */
+async function listReturns(){
+  const out=[];let d;try{d=await H.root.getDirectoryHandle(RET_DIR)}catch(e){return out}
+  for await(const [n,h] of d.entries()){
+    if(h.kind!=='directory'||n.startsWith('_'))continue;
+    let ready=false,item=null;try{await h.getFileHandle('_ready.json');ready=true}catch(e){}
+    try{item=JSON.parse(await (await (await h.getFileHandle('item.json')).getFile()).text())}catch(e){}
+    const missing=[];if(item)for(const f of item.files||[]){try{await h.getFileHandle(f)}catch(e){missing.push(f)}}
+    if(!item&&!ready&&!/_\d{14}/.test(n))continue;
+    out.push({n,h,item,ready,missing,ok:ready&&!!item&&!missing.length});
+  }
+  return out.sort((a,b)=>a.n.localeCompare(b.n));
+}
+async function loadReturns(){
+  const box=$('#retBox');if(!box)return;const L=(await listReturns()).filter(x=>!x.item||x.item.type!=='pin');if($('#retBox')!==box)return;
+  if(!L.length){box.innerHTML='';return}
+  box.innerHTML=`<div class="panel" style="margin-top:12px"><div class="ph"><h2>📥 內網回傳的完工報告</h2><span class="tag">${L.length}</span><span class="muted" style="font-size:12px">工程師在內網電腦送出、由中繼上傳。匯入後會進入上面的待審核清單。</span></div>
+   <div class="tbl-wrap"><table><thead><tr><th>FSN</th><th>客戶</th><th>送出</th><th>檔案</th><th>狀態</th><th></th></tr></thead><tbody>
+   ${L.map((x,i)=>{const it=x.item||{},r=S.caseData[it.fsn]||{};const conf=it.base&&ts(r.updatedAt)>ts(it.base);
+     return `<tr><td style="white-space:nowrap">${esc(it.fsn||x.n)}</td><td>${esc(r.cust||'—')}</td><td class="muted">${esc(it.by||'')} ${esc(locT(it.at).slice(5))}</td><td>${(it.files||[]).length}</td>
+      <td>${!x.ready||!x.item?'<span class="muted">上傳中…</span>':x.missing.length?`<span class="muted">同步中（還差 ${x.missing.length} 個檔）</span>`:conf?'<span style="color:var(--red)">⚠ 案件期間有被修改</span>':'✓ 可匯入'}${r.stage==='結案'?' <span class="tag">已結案</span>':''}</td>
+      <td style="white-space:nowrap">${x.ok?`<button class="btn sm pri" data-rimp="${i}">匯入審核</button>`:''} <button class="btn sm" data-rdel="${i}">刪除</button></td></tr>`}).join('')}
+   </tbody></table></div></div>`;
+  box.onclick=e=>{const a=e.target.closest('[data-rimp]');if(a){importReturn(L[+a.dataset.rimp]);return}
+    const d=e.target.closest('[data-rdel]');if(d){const x=L[+d.dataset.rdel];confirmBox(`刪除這份回傳（${x.n}）？\n工程師需要重新送出。`,async()=>{try{await (await H.root.getDirectoryHandle(RET_DIR)).removeEntry(x.n,{recursive:true});toast('已刪除');loadReturns()}catch(er){toast('刪除失敗：'+er.message)}},'刪除')}};
+}
+async function importReturn(x){
+  const it=x.item,r=S.caseData[it.fsn];
+  if(!r||r.placeholder){toast('找不到案件 '+it.fsn+(r&&r.movedTo?'（已改號為 '+r.movedTo+'）':''));return}
+  const go=async()=>{
+    try{setSync('busy','匯入中…');
+      const pd=await photosDir(it.fsn,true);
+      for(const n of it.files||[]){const f=await (await x.h.getFileHandle(n)).getFile();const w=await (await pd.getFileHandle(n,{create:true})).createWritable();await w.write(f);await w.close();IMG[it.fsn+'/'+n]=URL.createObjectURL(f)}
+      const rp=it.report;rp.via='內網回傳';
+      const o=JSON.parse(JSON.stringify(r));o.report=rp;o.doneDate=rp.date||o.doneDate;if(['已排程','待審核',''].includes(o.stage||''))o.stage='待審核';
+      o.updatedAt=nowIso();o.updatedBy=who();o.log=(o.log||[]).concat([{t:o.updatedAt,by:o.updatedBy,msg:`${r.cust}：匯入內網回傳的完工報告（${it.by} ${locT(it.at)}）`}]);
+      await writeCase(o,r.updatedAt);
+      await (await H.root.getDirectoryHandle(RET_DIR)).removeEntry(x.n,{recursive:true});
+      build();setSync('ok','已匯入');toast('已匯入，請在待審核清單審核');render();
+    }catch(e){console.error(e);toast('匯入失敗：'+e.message);setSync('err','匯入失敗')}};
+  const warn=[];
+  if(ts(r.updatedAt)>ts(it.base))warn.push(`工程師填寫期間，案件被 ${r.updatedBy||'其他人'} 修改過。`);
+  if(r.report&&r.report.submittedAt&&r.report.submittedAt!==it.report.submittedAt)warn.push('案件已有一份送出的完工報告，匯入會取代它。');
+  if(r.stage==='結案')warn.push('案件已經結案。');
+  if(warn.length)confirmBox(warn.join('\n')+'\n\n仍要匯入？',go,'匯入');else go();
+}
+/* ---- 內網第一次設定 PIN：先在本機記住，再回傳給辦公室寫入設定 ---- */
+const roPinKey=(k,id)=>'fsd2_ropin_'+k+'|'+id;
+async function sendPinReturn(kind,id,hash){
+  if(!H.ret)throw new Error('請先選擇回傳資料夾（S:\\31_FieldService_回傳）後再設定 PIN');
+  const item='PIN_'+nowIso().replace(/\D/g,'').slice(0,14)+'_'+Math.random().toString(36).slice(2,6);
+  const od=await retDir(['outbox',item],true);await writeJSON(od,'item.json',{type:'pin',kind,id,pin:hash,at:nowIso()});await writeJSON(od,'_ready.json',{at:nowIso()});
+}
+async function processPinReturns(){
+  try{if(!S.permOk&&!(await hasPerm(H.root,false)))return;
+    const L=(await listReturns()).filter(x=>x.ok&&x.item&&x.item.type==='pin');if(!L.length)return;
+    let n=0;for(const x of L){const it=x.item;const p=it.kind==='sales'?S.set.sales.find(q=>q.code===it.id):it.kind==='staff'?S.set.staff.find(q=>q.name===it.id):(S.set.viewers||[]).find(q=>q.name===it.id);
+      if(p&&!p.pin){p.pin=it.pin;n++}
+      try{await (await H.root.getDirectoryHandle(RET_DIR)).removeEntry(x.n,{recursive:true})}catch(e){}}
+    if(n){await writeSettings();toast(`已套用 ${n} 筆內網設定的 PIN`)}
+  }catch(e){console.warn('PIN 回傳',e)}
+}
+
 /* ================= v3.0 上傳檔案（S03／檢查表） ================= */
 function fileThumbs(r,files,kind,i,canUp,canDel){return files.map((f,j)=>`<div class="fthumb">${f.type==='pdf'?`<a href="#" class="fpdf" data-fopen="${esc(f.f)}">📄 ${esc(f.n||'PDF')}</a>`:`<img data-img="${esc(r.fsn)}|${esc(f.f)}" data-fopen="${esc(f.f)}" title="點選放大">`}<div class="prow">${canUp&&f.type!=='pdf'?`<button type="button" class="btn sm" data-frot="${kind}|${i}|${j}" title="順時針旋轉 90°">↻ 旋轉</button>`:''}${canDel?`<button type="button" class="btn sm" data-fdel="${kind}|${i}|${j}" title="移除">✕</button>`:''}</div></div>`).join('')}
 function chkUploadHtml(r,u,i,dis,canUp,canDel,cls){
@@ -1847,7 +1994,7 @@ $('#fChk').onchange=async e=>{const fs=[...e.target.files];e.target.value='';if(
 
 /* 手機上傳收件匣：30_FieldService/inbox/<FSN>/ */
 const inboxDir=(fsn,c)=>subDir(['inbox',fsn],c);
-async function ensureInbox(fsn){try{if(S.mode==='fs'&&await hasPerm(H.root,false))await inboxDir(fsn,true)}catch(e){}}
+async function ensureInbox(fsn){try{if(S.mode==='fs'&&!S.ro&&await hasPerm(H.root,false))await inboxDir(fsn,true)}catch(e){}}
 async function listInbox(fsn){const out=[];try{const d=await inboxDir(fsn,false);for await(const [n,h] of d.entries())if(h.kind==='file'&&!/^[.~]|\.tmp$|^desktop\.ini$|^thumbs\.db$/i.test(n))out.push({n,h})}catch(e){}return out}
 let _ibUrls=[];
 async function loadInbox(r,rp,canUp){
@@ -1953,7 +2100,7 @@ async function printPrep(r,st){
   $('#print').innerHTML=html;
   // 記住這次的機台設定，完工報告會帶入型號／序號／檢查表
   const pu=units.map(u=>({model:u.model,sn:u.sn,fam:u.fam||famOf('',u.model),tpl:u.tpl,svc:u.svc||[],svcText:u.svcText||''}));
-  if(S.mode==='fs'&&!r.report&&JSON.stringify((r.prep||{}).units)!==JSON.stringify(pu)){await saveCase(r.fsn,{prep:{date:st.date,units:pu,at:nowLocal(),by:who()}},`${r.cust}：出發前列印（${units.length} 台）`,true)}
+  if(S.mode==='fs'&&!S.ro&&!r.report&&JSON.stringify((r.prep||{}).units)!==JSON.stringify(pu)){await saveCase(r.fsn,{prep:{date:st.date,units:pu,at:nowLocal(),by:who()}},`${r.cust}：出發前列印（${units.length} 台）`,true)}
   ensureInbox(r.fsn);
   doPrint('出發列印_'+r.fsn+'_'+r.cust);
 }
@@ -2300,6 +2447,7 @@ function migrate6(s){
 function P(key){
   if(!S.set||!S.role)return 'N';
   if(key==='set.perm')return S.role==='admin'?'Y':'N';
+  if(S.ro&&!RO_ALLOW.has(key))return 'N';
   const p=(S.set.perms||{})[key];if(!p){const d=PERM_DEF.find(x=>x[0]===key);return d?d[4][ROLES.findIndex(r=>r[0]===S.role)]||'N':'N'}
   return p[S.role]||'N';
 }
