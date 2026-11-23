@@ -249,6 +249,7 @@ dialog::backdrop{background:rgba(15,20,30,.45)}
 .pf.ck .lgs u{text-decoration:none;border-bottom:1px solid #000;display:inline-block;min-width:22mm}
 .pf.ck .ks td{height:7mm;text-align:center}.pf.ck .ks th{text-align:center}
 .chkbox.bad input,.chkbox.bad select,.chkbox.bad .tog{outline:none}
+.chip.job{border:1.5px dashed var(--c);background:#f3f5f8;color:#2d3a4a}.chip.job b{color:#2d3a4a}.chip.job .jb{font-style:normal;font-size:10px;font-weight:700;padding:0 4px;border-radius:3px;background:#5b6b7f;color:#fff;margin-right:4px}
 .chip .hf{font-style:normal;font-size:10px;font-weight:700;padding:0 4px;border-radius:3px;background:#fff;border:1px solid var(--c);color:var(--c);margin-right:4px}
 .daysbox{display:flex;gap:4px;align-items:center}.daysbox input{width:70px;text-align:center}
 .dayhint{font-size:11px;color:var(--ink2);margin-top:2px}
@@ -330,7 +331,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 <script>
 'use strict';
 /* ================= 常數 ================= */
-const APPVER='3.2.1（簡化完工報告／半天排程）';
+const APPVER='3.3（內部派工）';
 const BUSCH_LOGO='data:image/png;base64,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';
 (function(){const put=()=>{const h=document.querySelector('header h1');if(h&&!h.querySelector('.hver'))h.insertAdjacentHTML('beforeend','<small class="hver" style="opacity:.65;margin-left:6px">v'+APPVER.replace(/（.*$/,'')+'</small>')};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',put);else put()})();
 /* ===== 入口網站共用設定（中繼複製到本資料夾的 _共用設定.json）：人員、客戶、機種／型號 ===== */
@@ -583,6 +584,7 @@ function build(){
     c.wait=c.issue?(c.stage==='待安排'?diffD(c.issue,t):(c.date?diffD(c.issue,c.date):null)):null;
     c.due=c.end?dueDate(c.end):'';
     c.late=c.stage==='已排程'&&!!c.due&&c.due<t;
+    if(r.job){c.job=r.job;c.type='內部派工';c.cust=`［${r.job.cat||'內部'}］${r.cust||r.job.subject||''}`;c.late=false;c.wait=null}
     return c;
   });
   S.byFsn={};S.cases.forEach(c=>S.byFsn[c.fsn]=c);
@@ -807,16 +809,16 @@ function renderDash(){
 
 /* ================= 排程台 ================= */
 /* 卡片顏色依「服務主旨」（參考 Repair Shop 依站別上色）；階段用右上角標籤表示 */
-const TYPE_COLORS=[['保養','#1baf7a'],['維修','#eb6834'],['檢查','#6250d6'],['定位','#2a78d6'],['試車','#2a78d6']];
+const TYPE_COLORS=[['內部派工','#5b6b7f'],['保養','#1baf7a'],['維修','#eb6834'],['檢查','#6250d6'],['定位','#2a78d6'],['試車','#2a78d6']];
 function typeColor(t){t=String(t||'');let best=null,bi=1e9;TYPE_COLORS.forEach(([k,c])=>{const i=t.indexOf(k);if(i>=0&&i<bi){bi=i;best=c}});return best||'#7a7d75'}
 function typeLegend(){return `<div class="legend">${[['保養','#1baf7a'],['維修','#eb6834'],['檢查','#6250d6'],['系統定位/試車','#2a78d6'],['其他','#7a7d75']].map(([l,c])=>`<span class="nb"><i style="background:${c}"></i>${l}</span>`).join('')}<span class="nb"><b class="lb" style="color:#9a6a00">待審</b>報告待審核</span><span class="nb"><b class="lb" style="color:#1baf7a">✓</b>結案</span><span class="nb"><b class="lb" style="background:var(--red);color:#fff;border-color:var(--red)">逾期</b>未回報</span></div>`}
 function chipHtml(c,drag,rowStaff,day){
   const half=day?slotTag(slotOf(c,day)):'';
-  const cls=c.late?'late':c.stage==='待審核'?'done':c.stage==='結案'?'closed':'';
+  const cls=(c.job?'job ':'')+(c.late?'late':c.stage==='待審核'?'done':c.stage==='結案'?'closed':'');
   const bd=c.late?'逾期':c.stage==='待審核'?'待審':c.stage==='結案'?'✓':'';
   const t=(c.r.tStart?c.r.tStart+'–'+(c.r.tEnd||''):'')+(c.r.vehicle?' · '+c.r.vehicle:'');
   const others=rowStaff===undefined?c.staff:c.staff.filter(s=>s!==rowStaff);
-  return `<div class="chip ${cls}${bd?' bdg':''}" style="--c:${typeColor(c.type)}" data-fsn="${esc(c.fsn)}" ${drag?`draggable="true" data-from="${esc(rowStaff||'')}"`:''} data-tip="<b>${esc(c.cust)}</b><br>${esc(c.type)} · ${esc(c.stage)}${c.late?' · <b>逾期未回報</b>':''}<br>${esc(md(c.date))}${c.days!==1?' 起 '+fmtDays(c.days)+' 天':''}${half?'（'+half+'）':''} ${esc(t)}<br>人員：${esc(c.staff.join('、')||'未指派')}${c.r.content?'<br>'+esc(c.r.content):''}">${bd?`<i class="bd">${bd}</i>`:''}${half?`<i class="hf">${half}</i>`:''}<b>${esc(c.cust)}</b><span>${esc(c.type)}${others.length?' · '+(rowStaff===undefined?'':'+')+esc(others.join('、')):''}</span></div>`;
+  return `<div class="chip ${cls}${bd?' bdg':''}" style="--c:${typeColor(c.type)}" data-fsn="${esc(c.fsn)}" ${drag?`draggable="true" data-from="${esc(rowStaff||'')}"`:''} data-tip="<b>${esc(c.cust)}</b><br>${esc(c.type)} · ${esc(c.stage)}${c.late?' · <b>逾期未回報</b>':''}<br>${esc(md(c.date))}${c.days!==1?' 起 '+fmtDays(c.days)+' 天':''}${half?'（'+half+'）':''} ${esc(t)}<br>人員：${esc(c.staff.join('、')||'未指派')}${c.r.content?'<br>'+esc(c.r.content):''}">${bd?`<i class="bd">${bd}</i>`:''}${c.job?'<i class="jb">內部</i>':''}${half?`<i class="hf">${half}</i>`:''}<b>${esc(c.cust)}</b><span>${esc(c.type)}${others.length?' · '+(rowStaff===undefined?'':'+')+esc(others.join('、')):''}</span></div>`;
 }
 function renderBoard(){
   const t=today();S.week=S.week||mondayOf(t);
@@ -850,7 +852,7 @@ function renderBoard(){
        <div class="m"><span>${esc(c.type)}</span><span>${esc(c.sales)}</span><span>${md(c.issue)} 開單</span>${c.order==='X'?'<span style="color:var(--red)">無訂單</span>':''}</div>
        <div class="m">${ci&&ci.km?`<span>📍${esc(ci.area||'')} ${ci.km?ci.km+'km':''} ${ci.min?'· '+ci.min+'分':''}</span>`:`<span class="muted">${esc(c.addr.slice(0,18))}</span>`}</div></div>`}).join('')||'<div class="empty">沒有待安排案件 👍</div>'}</div>
    </div>
-   <div class="panel"><div class="ph"><h2>人員週排程</h2><span class="sp"></span>
+   <div class="panel"><div class="ph"><h2>人員週排程</h2>${can('job.edit')?'<button class="btn sm pri" id="jobNew" title="沒有訊息單、但要安排人員出勤">＋ 內部派工</button>':''}<span class="sp"></span>
      <button class="btn sm" id="wPrev">‹ 上週</button><button class="btn sm" id="wNow">本週</button><button class="btn sm" id="wNext">下週 ›</button>
      <input type="date" id="wPick" value="${S.week}"></div>
      <div class="pb" style="padding:8px 14px 0">${typeLegend()}</div>
@@ -864,13 +866,13 @@ function renderBoard(){
   $('#wNow').onclick=()=>{S.week=mondayOf(today());renderBoard()};
   $('#wPick').onchange=e=>{if(e.target.value){S.week=mondayOf(e.target.value);renderBoard()}};
   const m=$('#main');
-  m.onclick=e=>{const c=e.target.closest('[data-fsn]');if(c)openCase(c.dataset.fsn)};
+  m.onclick=e=>{if(e.target.id==='jobNew'){jobDialog(null);return}const c=e.target.closest('[data-fsn]');if(c)openCase(c.dataset.fsn)};
   m.ondragstart=e=>{const c=e.target.closest('[data-fsn]');if(!c)return;e.dataTransfer.setData('text/plain',JSON.stringify({fsn:c.dataset.fsn,from:c.dataset.from??null}));e.dataTransfer.effectAllowed='move'};
   m.ondragover=e=>{const c=e.target.closest('.cell');if(c){e.preventDefault();m.querySelectorAll('.cell.over').forEach(x=>x!==c&&x.classList.remove('over'));c.classList.add('over')}};
   m.ondragleave=e=>{const c=e.target.closest('.cell');if(c&&!c.contains(e.relatedTarget))c.classList.remove('over')};
   m.ondrop=e=>{if(!canEdit())return;const cell=e.target.closest('.cell');if(!cell)return;e.preventDefault();cell.classList.remove('over');
     let p;try{p=JSON.parse(e.dataTransfer.getData('text/plain'))}catch(er){return}
-    const c=S.byFsn[p.fsn];if(!c)return;const d=cell.dataset.d,s=cell.dataset.s==='未指派'?'':cell.dataset.s;
+    const c=S.byFsn[p.fsn];if(!c)return;if(c.job&&!can('job.edit'))return;const d=cell.dataset.d,s=cell.dataset.s==='未指派'?'':cell.dataset.s;
     if(c.stage==='待安排'&&p.from===null){openCase(c.fsn,{date:d,staff:s?[s]:[]});return}
     let staff=c.staff.slice();
     if(s&&!staff.includes(s)){if(p.from&&staff.includes(p.from))staff=staff.map(x=>x===p.from?s:x);else staff.push(s)}
@@ -944,7 +946,7 @@ function renderList(){
   const m=$('#main');
   $('#fq').oninput=e=>{f.q=e.target.value;const p=e.target.selectionStart;renderList();const n=$('#fq');n.focus();n.setSelectionRange(p,p)};
   $('#fs').onchange=e=>{f.sales=e.target.value;renderList()};$('#ft').onchange=e=>{f.type=e.target.value;renderList()};
-  if($('#exp'))$('#exp').onclick=()=>exportXlsx(L);
+  if($('#exp'))$('#exp').onclick=()=>exportXlsx(L.filter(c=>!c.job)); // 內部派工不匯出
   m.onclick=e=>{
     const s=e.target.closest('[data-s]');if(s){const k=s.dataset.s;f.stages.has(k)?f.stages.delete(k):f.stages.add(k);renderList();return}
     if(e.target.id==='clrLate'){e.preventDefault();f.late=false;renderList();return}
@@ -989,6 +991,7 @@ function exportXlsx(L){
 /* ================= 案件編輯 ================= */
 function openCase(fsn,prefill){
   const c=S.byFsn[fsn];if(!c){const p=S.caseData[fsn];if(p&&p.movedTo&&S.byFsn[p.movedTo])openCase(p.movedTo,prefill);return}
+  if(c.job){jobDialog(fsn);return}
   const eng=!canEdit()||!!S.ro;const ro=['viewer','guest'].includes(S.role)||!!S.ro;const stOpts=ro?[c.stage]:allowedStages(c);
   const r=Object.assign({stage:c.stage,staff:[],vehicle:'',tStart:'',tEnd:'',date:'',days:1,items:[],content:'',dept:'業務',price:'',note:'',doneDate:''},JSON.parse(JSON.stringify(c.r)));
   r.dept=r.dept||'業務';
@@ -1745,13 +1748,13 @@ function renderMe(){
   const rev=mine.filter(c=>c.stage==='待審核');
   const done=mine.filter(c=>c.stage==='結案').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);
   const card=c=>{const r=c.r,g=r.signal,dr=S.ro&&S.roDrafts&&S.roDrafts[c.fsn],rp=dr?dr.rep:r.report;const back=rp&&rp.review&&rp.review.result==='退回'&&!rp.review.resolved;
-    return `<div class="mcard" style="--c:${back||c.late?'var(--red)':SC[c.stage]}">
+    return `<div class="mcard" ${c.job?`data-job="${esc(c.fsn)}" style="--c:#5b6b7f;cursor:pointer"`:`style="--c:${back||c.late?'var(--red)':SC[c.stage]}"`}>
     <div class="h"><div><b>${esc(c.cust)}</b><div class="row">${esc(c.fsn)}｜${md(c.date)}${c.days!==1?' 起 '+fmtDays(c.days)+' 天':''} ${esc(r.tStart||'')}${r.tEnd?'–'+esc(r.tEnd):''}</div></div><span class="stg" style="--c:${SC[c.stage]}"><i></i>${back?'報告退回':c.late?'逾期未報告':esc(c.stage)}</span></div>
-    <div>${esc(r.content||c.type)}</div>
+    <div>${c.job?`<b style="color:#5b6b7f">內部派工・${esc(c.job.cat||'')}</b>${c.job.note?'　'+esc(c.job.note):''}`:esc(r.content||c.type)}</div>
     ${back?`<div class="errbox" style="padding:6px 10px">退回原因：${esc(rp.review.reason)}</div>`:''}
     <div class="row">👥 ${esc(c.staff.join('、'))}${r.vehicle?' · 🚐 '+esc(r.vehicle):''}${g&&g.photo?' · 📷 需照片報告':''}${dr&&dr.rep.sentItem?' · 📤 已回傳，待主任審核':rp&&!rp.submittedAt?' · 📝 草稿':''}</div>
     <div class="row">📍 ${esc(c.addr)}</div>
-    <div class="act">${c.r.signal?`<button class="btn" data-psig="${esc(c.fsn)}">🖨 訊息單</button>`:''}${c.stage==='已排程'&&can('prep.print',true)?`<button class="btn" data-prep="${esc(c.fsn)}">🧾 出發列印</button>`:''}${c.stage!=='結案'?`<button class="btn" data-bg="${esc(c.fsn)}" title="開啟報工系統並自動帶入這張單">⏱ 報工</button>`:''}${c.stage==='已排程'?`<button class="btn pri" data-rep="${esc(c.fsn)}">📝 ${rp?'繼續填寫':'填寫'}完工報告</button>`:`<button class="btn" data-rep="${esc(c.fsn)}">查看報告</button>`}</div></div>`};
+    <div class="act">${c.job?(c.stage==='已排程'&&can('job.done',true)?(jobSent(c.fsn)?'<span class="muted">✓ 已回報完成（同步中）</span>':`<button class="btn pri" data-jdone="${esc(c.fsn)}">✓ 回報完成</button>`):'')+(c.job.done&&c.job.done.note?`<span class="muted">📝 ${esc(c.job.done.note)}</span>`:''):''}${c.job?'':(c.r.signal?`<button class="btn" data-psig="${esc(c.fsn)}">🖨 訊息單</button>`:'')+(c.stage==='已排程'&&can('prep.print',true)?`<button class="btn" data-prep="${esc(c.fsn)}">🧾 出發列印</button>`:'')+(c.stage!=='結案'?`<button class="btn" data-bg="${esc(c.fsn)}" title="開啟報工系統並自動帶入這張單">⏱ 報工</button>`:'')+(c.stage==='已排程'?`<button class="btn pri" data-rep="${esc(c.fsn)}">📝 ${rp?'繼續填寫':'填寫'}完工報告</button>`:`<button class="btn" data-rep="${esc(c.fsn)}">查看報告</button>`)}</div></div>`};
   $('#main').innerHTML=`<div style="max-width:780px;margin:0 auto">
    <div class="sec-t">待完成<span class="tag">${todo.length}</span></div><div class="grid">${todo.map(card).join('')||'<div class="empty">目前沒有排程</div>'}</div>
    ${rev.length?`<div class="sec-t">待審核<span class="tag">${rev.length}</span></div><div class="grid">${rev.map(card).join('')}</div>`:''}
@@ -1759,7 +1762,9 @@ function renderMe(){
   $('#main').onclick=e=>{const p=e.target.closest('[data-rep]');if(p){S.prevView='me';openReport(p.dataset.rep);return}
     const s=e.target.closest('[data-psig]');if(s){printSignal(S.caseData[s.dataset.psig]);return}
     const pp=e.target.closest('[data-prep]');if(pp){prepDialog(pp.dataset.prep);return}
-    const bgb=e.target.closest('[data-bg]');if(bgb){openBg(bgb.dataset.bg);return}};
+    const bgb=e.target.closest('[data-bg]');if(bgb){openBg(bgb.dataset.bg);return}
+    const jd=e.target.closest('[data-jdone]');if(jd){jobDoneDialog(jd.dataset.jdone);return}
+    const mc=e.target.closest('.mcard[data-job]');if(mc&&!e.target.closest('button')){jobDialog(mc.dataset.job);return}};
 }
 
 /* ---------- 審核（排程負責人） ---------- */
@@ -1840,6 +1845,120 @@ async function printReport(r,rp){
 
 
 
+
+/* ================= v3.3 內部派工（沒有訊息單的出勤） =================
+   存成 cases/<年>/JB2026-0001.json，欄位與案件相同＋ job:{cat,subject,note,done}。
+   不算待安排、逾期、待審核；工程師按「回報完成」→ 結案（內網則經回傳資料夾）。 */
+const JOB_CATS_DEF=['勘查','拜訪','教育訓練','支援','取送件','請假／休假','其他'];
+const jobCats=()=>Array.isArray(S.set.jobCats)&&S.set.jobCats.length?S.set.jobCats:JOB_CATS_DEF;
+const jobSent=fsn=>{try{return (JSON.parse(ls.get('fsd2_jobdone')||'{}'))[fsn]}catch(e){return null}};
+async function allocJob(){
+  const y=String(S.set.year||new Date().getFullYear());let mx=0;
+  Object.keys(S.caseData).forEach(k=>{const m=k.match(/^JB(\d{4})-(\d{4})$/);if(m&&m[1]===y)mx=Math.max(mx,+m[2])});
+  const dir=await casesDir(S.set.year,true);
+  for(let n=mx+1;n<mx+100;n++){const id=`JB${y}-${String(n).padStart(4,'0')}`;let used=true;try{await dir.getFileHandle(id+'.json')}catch(e){used=false}if(!used)return id}
+  throw new Error('無法配號');
+}
+function jobDialog(fsn){
+  const r=fsn?S.caseData[fsn]:null,c=fsn?S.byFsn[fsn]:null;if(fsn&&!r)return;
+  const ed=can('job.edit')&&!S.ro&&(!r||r.stage!=='取消');const dis=ed?'':'disabled';const st=S.set;
+  const j=r?r.job||{}:{cat:jobCats()[0],subject:'',note:''};
+  const v=r?{date:r.date||'',days:roundDays(r.days||1),tStart:r.tStart||TIMES['全天'][0],tEnd:r.tEnd||TIMES['全天'][1],staff:(r.staff||[]).slice(),vehicle:r.vehicle||'',cust:r.cust||'',addr:r.addr||''}
+    :{date:today(),days:1,tStart:TIMES['全天'][0],tEnd:TIMES['全天'][1],staff:[],vehicle:'',cust:'',addr:''};
+  const allStaff=[...new Set([...staffList(),...v.staff])];
+  const own=r&&(r.staff||[]).includes(myName());
+  const dlg=$('#dlg');
+  dlg.innerHTML=`<div class="dh"><h3>${r?esc(c?c.cust:r.fsn):'＋ 內部派工'}</h3><span class="muted">${r?esc(r.fsn)+'　'+esc(r.stage||''):'沒有訊息單、但要安排人員出勤'}</span><span style="flex:1"></span><button class="btn" data-x>✕</button></div>
+   <div class="db">
+    ${r&&j.done?`<div class="warn" style="margin-bottom:8px">✓ ${esc(j.done.by||'')} 於 ${esc(locT(j.done.at))} 回報完成${j.done.note?'：'+esc(j.done.note):''}</div>`:''}
+    ${r&&j.convertedTo?`<div class="warn" style="margin-bottom:8px">已轉成訊息單案件 <b>${esc(j.convertedTo)}</b></div>`:''}
+    <form class="form" id="jf" onsubmit="return false">
+     <label>類別<select name="cat" ${dis}>${[...new Set([...jobCats(),j.cat].filter(Boolean))].map(x=>`<option ${x===j.cat?'selected':''}>${esc(x)}</option>`).join('')}</select></label>
+     <label class="s3"><span class="req">主旨</span><input type="text" name="subject" value="${esc(j.subject||'')}" placeholder="例：台積電 F18 售前勘查、ISO 教育訓練" ${dis}></label>
+     <label class="s2 cbx">客戶（選填）<input type="text" name="cust" autocomplete="off" value="${esc(v.cust)}" ${dis}><div class="cbl" id="jCustDrop" hidden></div></label>
+     <label class="s2">地址（選填）<input type="text" name="addr" value="${esc(v.addr)}" ${dis}></label>
+     <label><span class="req">日期</span><input type="date" name="date" value="${esc(v.date)}" ${dis}></label>
+     <label>天數（0.5＝半天）<span class="daysbox"><button type="button" class="btn sm" data-jdd="-0.5" ${dis}>−</button><input type="number" name="days" min="0.5" max="60" step="0.5" value="${esc(v.days)}" ${dis}><button type="button" class="btn sm" data-jdd="0.5" ${dis}>＋</button></span></label>
+     <label class="s2">時間<span style="display:flex;gap:6px;align-items:center"><input type="time" name="tStart" value="${esc(v.tStart)}" ${dis}>–<input type="time" name="tEnd" value="${esc(v.tEnd)}" ${dis}></span><span class="tog" id="jqt" style="margin-top:4px">${Object.keys(TIMES).map(k=>`<button type="button" data-jt="${k}" class="${TIMES[k][0]===v.tStart&&TIMES[k][1]===v.tEnd?'on':''}" ${dis}>${k}</button>`).join('')}</span></label>
+     <label class="s4"><span class="req">人員（可複選）</span><span class="tog" id="jstf">${allStaff.map(x=>`<button type="button" data-jp="${esc(x)}" class="${v.staff.includes(x)?'on':''}" ${dis}>${esc(x)}</button>`).join('')}</span></label>
+     <div class="s4" id="jconf"></div>
+     <label class="s4">車輛<span class="tog" id="jveh">${['',...(st.vehicles||[])].map(x=>`<button type="button" data-jv="${esc(x)}" class="${v.vehicle===x?'on':''}" ${dis}>${x||'不用車'}</button>`).join('')}</span></label>
+     <label class="s4">備註<input type="text" name="note" value="${esc(j.note||'')}" ${dis}></label>
+    </form>
+    ${r&&can('board.log')?`<div class="log">${(r.log||[]).slice().reverse().map(l=>`<div>${esc(String(l.t).slice(0,16).replace('T',' '))} · ${esc(l.by||'')} · ${esc(l.msg)}</div>`).join('')}</div>`:''}
+   </div>
+   <div class="df">${r&&ed&&r.stage==='已排程'?'<button class="btn" data-jconv title="業務補開了訊息單：把日期、人員、車輛帶到那張單">⇄ 轉成訊息單案件</button><button class="btn" data-jcancel style="color:var(--red)">取消派工</button>':''}${r&&ed&&r.stage==='取消'&&!j.convertedTo?'<button class="btn" data-jrestore>還原</button>':''}${r&&r.stage==='已排程'&&own&&can('job.done',true)?`<button class="btn" data-jdn>✓ 回報完成</button>`:''}${r&&ed&&r.stage==='結案'?'<button class="btn" data-jreopen>重新開啟</button>':''}
+    <span style="flex:1"></span><button class="btn" data-x>${ed?'取消':'關閉'}</button>${ed?`<button class="btn pri" data-jok>${r?'儲存':'建立'}</button>`:''}</div>`;
+  const F=dlg.querySelector('#jf');
+  if(ed)attachCombo(F.cust,dlg.querySelector('#jCustDrop'),()=>st.customers.map(x=>({v:x.name,sub:[x.area,x.contact].filter(Boolean).join(' · '),k:[x.name,...(x.alias||[]),x.area||''].join(' ')})),nm=>{F.cust.value=nm;const ci=st.customers.find(x=>x.name===nm);if(ci&&ci.addr&&!F.addr.value)F.addr.value=ci.addr});
+  const conf=()=>{const box=dlg.querySelector('#jconf');if(!box)return;const sl=F.date.value?caseSlots(F.date.value,F.days.value,F.tStart.value):[];const hits=[];
+    S.cases.forEach(o=>{if(o.fsn===fsn||!o.date||o.stage==='取消'||!(o.slots||[]).some(x=>sl.some(y=>y.d===x.d&&((x.am&&y.am)||(x.pm&&y.pm)))))return;const ov=o.staff.filter(x=>v.staff.includes(x));if(ov.length)hits.push(`${ov.join('、')} 已排 ${md(o.date)} ${o.cust}`)});
+    box.innerHTML=hits.length?`<div class="warn">⚠ 人員重疊：${hits.map(esc).join('；')}</div>`:''};
+  conf();
+  dlg.onchange=e=>{if(['date','days','tStart'].includes(e.target.name))conf()};
+  dlg.onclick=async e=>{const t=e.target;
+    if(t.closest('[data-x]')){dlg.close();return}
+    if(ed){
+      const jt=t.closest('[data-jt]');if(jt){[F.tStart.value,F.tEnd.value]=TIMES[jt.dataset.jt];const n=roundDays(F.days.value);if(jt.dataset.jt==='全天'){if(n%1)F.days.value=Math.ceil(n)}else if(n===1)F.days.value=0.5;dlg.querySelectorAll('[data-jt]').forEach(b=>b.classList.toggle('on',b===jt));conf();return}
+      const jd=t.closest('[data-jdd]');if(jd){F.days.value=roundDays((+F.days.value||1)+(+jd.dataset.jdd));conf();return}
+      const jp=t.closest('[data-jp]');if(jp){const n=jp.dataset.jp;v.staff=v.staff.includes(n)?v.staff.filter(x=>x!==n):[...v.staff,n];jp.classList.toggle('on');conf();return}
+      const jv=t.closest('[data-jv]');if(jv){v.vehicle=jv.dataset.jv;dlg.querySelectorAll('[data-jv]').forEach(b=>b.classList.toggle('on',b===jv));return}
+    }
+    if(t.closest('[data-jdn]')){dlg.close();jobDoneDialog(fsn);return}
+    if(t.closest('[data-jcancel]')){confirmBox('取消這筆內部派工？（可還原）',()=>{dlg.close();saveCase(fsn,{stage:'取消'},`${c.cust}：取消內部派工`)},'取消派工');return}
+    if(t.closest('[data-jrestore]')){dlg.close();saveCase(fsn,{stage:'已排程'},`${c.cust}：還原內部派工`);return}
+    if(t.closest('[data-jreopen]')){dlg.close();const jj=Object.assign({},r.job);delete jj.done;saveCase(fsn,{stage:'已排程',job:jj},`${c.cust}：重新開啟`);return}
+    if(t.closest('[data-jconv]')){dlg.close();jobConvert(fsn);return}
+    if(!t.closest('[data-jok]'))return;
+    const subject=F.subject.value.trim();if(!subject){toast('請填主旨');F.subject.focus();return}
+    if(!F.date.value){toast('請選日期');return}
+    if(!v.staff.length){toast('請選人員');return}
+    const patch={date:F.date.value,days:roundDays(F.days.value),tStart:F.tStart.value,tEnd:F.tEnd.value,staff:v.staff,vehicle:v.vehicle,cust:F.cust.value.trim(),addr:F.addr.value.trim(),type:'內部派工',
+      job:Object.assign({},j,{cat:F.cat.value,subject,note:F.note.value.trim()})};
+    dlg.close();
+    if(r){saveCase(fsn,patch,`［${patch.job.cat}］${subject}：修改內部派工（${md(patch.date)} ${patch.staff.join('、')}）`);return}
+    try{setSync('busy','建立中…');const id=await allocJob();const t0=nowIso();
+      const o=Object.assign({fsn:id,year:S.set.year,issue:today(),stage:'已排程',updatedAt:t0,updatedBy:who(),log:[{t:t0,by:who(),msg:`建立內部派工［${patch.job.cat}］${subject}（${md(patch.date)} ${patch.staff.join('、')}）`}]},patch);
+      await writeCase(o);build();render();setSync('ok','已建立');toast(`已建立內部派工 ${id}`)}
+    catch(er){console.error(er);setSync('err','建立失敗');toast('建立失敗：'+er.message)}
+  };
+  dlg.showModal();
+}
+function jobDoneDialog(fsn){
+  const r=S.caseData[fsn];if(!r)return;const dlg=$('#dlg');
+  dlg.innerHTML=`<div class="dh"><h3>✓ 回報完成</h3><span class="muted">${esc(r.fsn)}　［${esc((r.job||{}).cat||'')}］${esc((r.job||{}).subject||'')}</span><span style="flex:1"></span><button class="btn" data-x>✕</button></div>
+   <div class="db"><label class="fl">備註（選填，一行）<input type="text" id="jdNote" placeholder="例：已完成勘查，客戶需要報價 3 台 RA0630" style="width:100%"></label>
+   ${S.ro?'<div class="muted" style="font-size:12px;margin-top:6px">內網電腦：回報會經回傳資料夾送到辦公室，約 5～10 分鐘後同步。</div>':''}</div>
+   <div class="df"><span style="flex:1"></span><button class="btn" data-x>取消</button><button class="btn pri" data-ok>回報完成</button></div>`;
+  dlg.onclick=async e=>{if(e.target.closest('[data-x]')){dlg.close();return}if(!e.target.closest('[data-ok]'))return;
+    const note=dlg.querySelector('#jdNote').value.trim();dlg.close();const done={at:nowIso(),by:who(),note};
+    if(!S.ro){saveCase(fsn,{stage:'結案',doneDate:today(),job:Object.assign({},r.job,{done})},`［${r.job.cat}］${r.job.subject}：${who()} 回報完成${note?'－'+note:''}`);return}
+    try{if(!H.ret&&!(await pickRet()))return;
+      const item='JOB_'+nowIso().replace(/\D/g,'').slice(0,14)+'_'+fsn;const od=await retDir(['outbox',item],true);
+      await writeJSON(od,'item.json',{type:'jobdone',fsn,year:r.year||S.set.year,done,at:nowIso()});await writeJSON(od,'_ready.json',{at:nowIso()});
+      const m=JSON.parse(ls.get('fsd2_jobdone')||'{}');m[fsn]=done.at;ls.set('fsd2_jobdone',JSON.stringify(m));toast('已回報完成，同步到辦公室約需 5～10 分鐘');render()}
+    catch(er){toast('回報失敗：'+er.message)}};
+  dlg.showModal();
+}
+function jobConvert(fsn){
+  const r=S.caseData[fsn],c=S.byFsn[fsn];if(!r)return;
+  const L=S.cases.filter(x=>!x.job&&['待安排','已排程'].includes(x.stage)).sort((a,b)=>(b.issue||'').localeCompare(a.issue||''));
+  const dlg=$('#dlg');
+  dlg.innerHTML=`<div class="dh"><h3>⇄ 轉成訊息單案件</h3><span class="muted">${esc(c.cust)}</span><span style="flex:1"></span><button class="btn" data-x>✕</button></div>
+   <div class="db"><div class="muted" style="font-size:12px;margin-bottom:8px">選擇業務補開的訊息單，這筆內部派工的日期、天數、時間、人員、車輛會帶過去（該單變成「已排程」），內部派工自動關閉。</div>
+    <input type="text" id="jcq" placeholder="搜尋客戶／FSN" style="width:100%;margin-bottom:8px" value="${esc(r.cust||'')}">
+    <div id="jcl" style="max-height:50vh;overflow:auto"></div></div>
+   <div class="df"><span style="flex:1"></span><button class="btn" data-x>取消</button></div>`;
+  const draw=()=>{const q=dlg.querySelector('#jcq').value.trim().toLowerCase();const M=L.filter(x=>!q||(x.cust+x.fsn).toLowerCase().includes(q)).slice(0,40);
+    dlg.querySelector('#jcl').innerHTML=M.map(x=>`<div class="pcard" style="--c:${typeColor(x.type)};cursor:pointer;margin-bottom:6px" data-jto="${esc(x.fsn)}"><div class="t"><span>${esc(x.cust)}</span><span class="muted">${esc(x.stage)}</span></div><div class="m"><span>${esc(x.fsn)}</span><span>${esc(x.type)}</span><span>${md(x.issue)} 開單</span></div></div>`).join('')||'<div class="empty">找不到符合的訊息單（只列待安排／已排程）</div>'};
+  dlg.querySelector('#jcq').oninput=draw;draw();
+  dlg.onclick=e=>{if(e.target.closest('[data-x]')){dlg.close();return}const p=e.target.closest('[data-jto]');if(!p)return;const to=S.byFsn[p.dataset.jto];
+    confirmBox(`把 ${md(r.date)} 起 ${fmtDays(r.days)} 天、${(r.staff||[]).join('、')} 的排程帶到\n${to.fsn} ${to.cust}？`,async()=>{dlg.close();
+      await saveCase(to.fsn,{date:r.date,days:r.days,tStart:r.tStart,tEnd:r.tEnd,staff:(r.staff||[]).slice(),vehicle:r.vehicle||'',stage:'已排程'},`${to.cust}：由內部派工 ${fsn} 轉入排程`,true);
+      await saveCase(fsn,{stage:'取消',job:Object.assign({},r.job,{convertedTo:to.fsn})},`轉成訊息單案件 ${to.fsn}`)},'轉換')};
+  dlg.showModal();
+}
+
 /* ================= v3.1 內網唯讀複本＋完工報告回傳 =================
    內網 S:\30_FieldService 是中繼從 SharePoint 複製的唯讀複本（有 _READONLY_COPY.json）。
    內網只能看；完工報告草稿存在 S:\31_FieldService_回傳\drafts，送出後放到 outbox，
@@ -1847,7 +1966,7 @@ async function printReport(r,rp){
 const locT=x=>{const d=new Date(x);return isNaN(d)?String(x||''):ymd(d)+' '+d.toTimeString().slice(0,5)};
 const RO_MARKERS=['_READONLY_COPY.json','_看板複本_勿選.txt'];
 const RET_DIR='_returns'; // ASCII 名稱，避免同步工具或瀏覽器對中文資料夾名稱的相容問題
-const RO_ALLOW=new Set(['dash.view','board.view','board.log','board.contact','cal.view','list.view','list.export','rev.view','sig.print','mysig.view','me.view','rep.fill','rep.editOthers','rep.photo','rep.photoDel','rep.print','msg.view','msg.copy','prep.print']);
+const RO_ALLOW=new Set(['dash.view','board.view','board.log','board.contact','cal.view','list.view','list.export','rev.view','sig.print','mysig.view','me.view','rep.fill','rep.editOthers','job.done','rep.photo','rep.photoDel','rep.print','msg.view','msg.copy','prep.print']);
 async function detectRO(){
   let ro=false;for(const n of RO_MARKERS){try{await H.root.getFileHandle(n);ro=true;break}catch(e){}}
   S.ro=ro;if(ro&&!H.ret){H.ret=await idb.get('ret');if(H.ret){try{S.retOk=(await H.ret.queryPermission({mode:'readwrite'}))==='granted'}catch(e){S.retOk=false}}}
@@ -1922,7 +2041,7 @@ async function listReturns(){
   return out.sort((a,b)=>a.n.localeCompare(b.n));
 }
 async function loadReturns(){
-  const box=$('#retBox');if(!box)return;const L=(await listReturns()).filter(x=>!x.item||x.item.type!=='pin');if($('#retBox')!==box)return;
+  const box=$('#retBox');if(!box)return;const L=(await listReturns()).filter(x=>!x.item||!['pin','jobdone'].includes(x.item.type));if($('#retBox')!==box)return;
   if(!L.length){box.innerHTML='';return}
   box.innerHTML=`<div class="panel" style="margin-top:12px"><div class="ph"><h2>📥 內網回傳的完工報告</h2><span class="tag">${L.length}</span><span class="muted" style="font-size:12px">工程師在內網電腦送出、由中繼上傳。匯入後會進入上面的待審核清單。</span></div>
    <div class="tbl-wrap"><table><thead><tr><th>FSN</th><th>客戶</th><th>送出</th><th>檔案</th><th>狀態</th><th></th></tr></thead><tbody>
@@ -1963,7 +2082,13 @@ async function sendPinReturn(kind,id,hash){
 }
 async function processPinReturns(){
   try{if(!S.permOk&&!(await hasPerm(H.root,false)))return;
-    const L=(await listReturns()).filter(x=>x.ok&&x.item&&x.item.type==='pin');if(!L.length)return;
+    const all=await listReturns();
+    for(const x of all.filter(x=>x.ok&&x.item&&x.item.type==='jobdone')){const it=x.item,r=S.caseData[it.fsn];
+      try{if(r&&r.job&&r.stage!=='結案'){const o=JSON.parse(JSON.stringify(r));o.stage='結案';o.doneDate=String(it.done.at||'').slice(0,10)||today();o.job.done=it.done;o.updatedAt=nowIso();o.updatedBy=it.done.by||who();
+          o.log=(o.log||[]).concat([{t:o.updatedAt,by:o.updatedBy,msg:`［${o.job.cat}］${o.job.subject}：${it.done.by} 回報完成（內網）${it.done.note?'－'+it.done.note:''}`}]);await writeCase(o,r.updatedAt)}
+        await (await H.root.getDirectoryHandle(RET_DIR)).removeEntry(x.n,{recursive:true})}catch(e){console.warn('jobdone',e)}}
+    build();
+    const L=all.filter(x=>x.ok&&x.item&&x.item.type==='pin');if(!L.length)return;
     let n=0;for(const x of L){const it=x.item;const p=it.kind==='sales'?S.set.sales.find(q=>q.code===it.id):it.kind==='staff'?S.set.staff.find(q=>q.name===it.id):(S.set.viewers||[]).find(q=>q.name===it.id);
       if(p&&!p.pin){p.pin=it.pin;n++}
       try{await (await H.root.getDirectoryHandle(RET_DIR)).removeEntry(x.n,{recursive:true})}catch(e){}}
@@ -2415,6 +2540,8 @@ const PERM_DEF=[
  ['board.restore','排程台','還原已取消案件','','NNYYNN'],
  ['board.log','排程台','查看案件明細的異動紀錄','','YYYYYN'],
  ['case.editId','排程台','修改開單日／單號','改單號會一併搬移照片，舊單號保留轉址','NNYYNN'],
+ ['job.edit','排程台','新增／修改內部派工','沒有訊息單的出勤（勘查、拜訪、訓練、請假…）','NNYYNN'],
+ ['job.done','我的排程','內部派工回報完成','','NOYYNN'],
  ['board.contact','排程台','查看客戶聯絡人、電話','','YYYYYN'],
  ['cal.view','月曆','查看月曆','','YYYYYY'],
  ['list.view','案件清單','查看案件清單','','YYYYYY'],
@@ -2546,6 +2673,7 @@ function renderSet(){
       <label style="display:flex;gap:6px;align-items:center;flex-direction:row"><input type="checkbox" id="gLateW" ${st.lateWorkdays?'checked':''}> 只算工作天（跳過週六、日）</label></div>
       <span class="muted" style="font-size:11px">0 天＝結束日隔天就算逾期；1 天＋只算工作天＝週五的案件下週二才算逾期</span></div>
     <label class="s2">休息時段（完工報告工時自動扣除；逗號分隔，例：12:00-13:00,17:30-18:00）<input type="text" id="gBreaks" value="${esc((Array.isArray(st.breaks)?st.breaks:['12:00-13:00']).join(','))}"></label>
+    <label class="s2">內部派工類別（逗號分隔）<input type="text" id="gJobCats" value="${esc(jobCats().join(','))}"></label>
     <label class="s2">需求單位（逗號分隔）<input type="text" id="gDept" value="${esc((st.depts||[]).join(','))}"></label>
     <label class="s4">報工系統網址（派工訊息的報工連結用；空白＝${BG_DEFAULT}）<input type="text" id="gBg" value="${esc(st.baogongUrl||'')}" placeholder="${BG_DEFAULT}"></label>
     <label class="s2">服務項目對應（每行：訊息單主旨=報工服務項目）<textarea id="gSvcMap" rows="4">${esc(Object.entries(Object.assign({},SVC_MAP_DEF,st.svcMap||{})).map(([a,b])=>a+'='+b).join('\n'))}</textarea></label>
@@ -2609,7 +2737,7 @@ function bindSet(){
   on('sPick',pickRoot);
   const csv=id=>$('#'+id).value.split(/[,，]/).map(s=>s.trim()).filter(Boolean);
   // 一般
-  on('gSave',()=>{const bk=$('#gBreaks').value.split(/[,，\s]+/).map(x=>x.trim().replace(/[～~–—]/g,'-')).filter(Boolean);const bad=bk.find(x=>!/^\d{1,2}:\d{2}-\d{1,2}:\d{2}$/.test(x));if(bad){toast('休息時段格式錯誤：'+bad+'（例：12:00-13:00）');return}st.breaks=bk;const y=+$('#gYear').value||st.year;st.year=y;st.vehicles=csv('gVeh');st.brands=csv('gBrand');st.depts=csv('gDept');st.lateDays=Math.max(0,parseInt($('#gLate').value)||0);st.lateWorkdays=$('#gLateW').checked;st.baogongUrl=$('#gBg').value.trim();st.svcMap={};$('#gSvcMap').value.split('\n').forEach(l=>{const i=l.indexOf('=');if(i>0)st.svcMap[l.slice(0,i).trim()]=l.slice(i+1).trim()});st.company={name:$('#gCo').value.trim(),addr:$('#gAddr').value.trim(),tel:$('#gTel').value.trim(),fax:$('#gFax').value.trim()};save().then(()=>loadAll())});
+  on('gSave',()=>{const jc=$('#gJobCats').value.split(/[,，]+/).map(x=>x.trim()).filter(Boolean);if(jc.length)st.jobCats=jc;const bk=$('#gBreaks').value.split(/[,，\s]+/).map(x=>x.trim().replace(/[～~–—]/g,'-')).filter(Boolean);const bad=bk.find(x=>!/^\d{1,2}:\d{2}-\d{1,2}:\d{2}$/.test(x));if(bad){toast('休息時段格式錯誤：'+bad+'（例：12:00-13:00）');return}st.breaks=bk;const y=+$('#gYear').value||st.year;st.year=y;st.vehicles=csv('gVeh');st.brands=csv('gBrand');st.depts=csv('gDept');st.lateDays=Math.max(0,parseInt($('#gLate').value)||0);st.lateWorkdays=$('#gLateW').checked;st.baogongUrl=$('#gBg').value.trim();st.svcMap={};$('#gSvcMap').value.split('\n').forEach(l=>{const i=l.indexOf('=');if(i>0)st.svcMap[l.slice(0,i).trim()]=l.slice(i+1).trim()});st.company={name:$('#gCo').value.trim(),addr:$('#gAddr').value.trim(),tel:$('#gTel').value.trim(),fax:$('#gFax').value.trim()};save().then(()=>loadAll())});
   on('gPwd',async()=>{const a=$('#gP1').value,b=$('#gP2').value;if(a.length<4){toast('密碼至少 4 碼');return}if(a!==b){toast('兩次輸入不同');return}st.adminHash=await sha(a);ss.set('fsd2_admin_ok',st.adminHash);save('密碼已更新')});
   // 工程師／業務 表格
   if(S.stab==='perm')bindPermSet(st,m,on,save);
