@@ -333,7 +333,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 <script>
 'use strict';
 /* ================= 常數 ================= */
-const APPVER='3.4.3（流水號依業務各自編號）';
+const APPVER='3.4.4（登入安全：密碼／PIN 只由入口網站設定）';
 const BUSCH_LOGO='data:image/png;base64,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';
 (function(){const put=()=>{const h=document.querySelector('header h1');if(h&&!h.querySelector('.hver'))h.insertAdjacentHTML('beforeend','<small class="hver" style="opacity:.65;margin-left:6px">v'+APPVER.replace(/（.*$/,'')+'</small>')};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',put);else put()})();
 /* ===== 入口網站共用設定（中繼複製到本資料夾的 _共用設定.json）：人員、客戶、機種／型號 ===== */
@@ -341,7 +341,7 @@ const SHARED_FILE='_共用設定.json';
 function applyShared(st,sh){
   const on={people:false,cust:false,pump:false,at:sh&&sh.updatedAt||''};
   if(!sh||sh.app!=='shared-settings'){S.sharedOn=null;return}
-  const pins={};[...(st.staff||[]),...(st.sales||[]),...(st.viewers||[])].forEach(x=>{if(x&&x.name&&x.pin)pins[x.name]=x.pin});
+  /* v3.4.4 共用設定有人員名單時只認共用設定的 PIN（舊版或本系統 settings.json 裡的 PIN 不再算數，避免用舊版程式替別人設 PIN） */const pins={};
   const ppl=(sh.people||[]).filter(p=>p&&p.name);const has=r=>p=>(p.roles||[]).includes(r);
   if(ppl.length){on.people=true;
     st.staff=ppl.filter(p=>has('eng')(p)||has('chief')(p)).map(p=>({name:p.name,en:p.en||'',title:p.title||'',admin:has('chief')(p),alias:p.alias||[],active:p.active!==false,pin:p.pin||pins[p.name]||''}));
@@ -683,27 +683,25 @@ function roleDialog(force){
   const showPin=(kind,id)=>{
     if(kind==='guest'){login('guest','guest','訪客');return}
     const p=kind==='sales'?S.set.sales.find(x=>x.code===id):kind==='staff'?S.set.staff.find(x=>x.name===id):kind==='viewer'?(S.set.viewers||[]).find(x=>x.name===id):null;
-    const first=kind!=='admin'&&!(p&&p.pin);const locPin=first&&S.ro&&ls.get(roPinKey(kind,id));
+    /* v3.4.4 密碼和 PIN 只能由入口網站「共用設定」設定；系統裡（含內網）不再提供「第一次設定」，避免先點的人搶走管理者或冒用別人 */
+    const portalH=kind==='admin'?portalAdminHash():'';const aHash=kind==='admin'?adminKey():'';
     pick.style.display='none';pinBox.style.display='flex';
+    if(kind==='admin'?!aHash:!(p&&p.pin)){
+      pinBox.innerHTML=`<div style="font-size:16px"><b>${esc(kind==='admin'?'系統管理者':kind==='sales'?id+' '+(p?p.name:''):id)}</b></div>
+        <div class="warn">${kind==='admin'?'還沒有管理密碼。請到<b>入口網站 → 共用設定</b>設定管理密碼，這裡會用同一組密碼。':'還沒有 PIN。請管理者到<b>入口網站 → 共用設定 → 人員設定</b>幫你設定，約 5 分鐘後生效。'}</div>
+        <div style="display:flex;gap:8px"><button class="btn" id="pinBack">返回</button></div>`;
+      $('#pinBack').onclick=()=>{pinBox.style.display='none';pick.style.display='flex'};return}
     pinBox.innerHTML=`<div style="font-size:16px"><b>${esc(kind==='sales'?id+' '+(p?p.name:''):id)}</b></div>
-      ${kind==='admin'?`<label class="fl">管理者密碼<input type="password" id="pin1" autocomplete="off"></label>${S.set.adminHash?'':'<div class="muted" style="font-size:12px">尚未設定，預設 1234，登入後請到設定修改</div>'}`
-      :first&&!locPin?`<div class="muted">${S.ro?'（內網）':''}第一次登入，請設定你的個人 PIN 碼（4 碼以上數字），之後切換身分都要輸入。</div><label class="fl">設定 PIN<input type="password" id="pin1" inputmode="numeric" autocomplete="off"></label><label class="fl">再輸入一次<input type="password" id="pin2" inputmode="numeric" autocomplete="off"></label>`
-      :`<label class="fl">PIN 碼<input type="password" id="pin1" inputmode="numeric" autocomplete="off"></label><div class="muted" style="font-size:12px">忘記 PIN 請找系統管理者重設</div>`}
+      ${kind==='admin'?`<label class="fl">${portalH?'管理密碼（與入口網站相同）':'管理者密碼'}<input type="password" id="pin1" autocomplete="off"></label>`
+      :`<label class="fl">PIN 碼<input type="password" id="pin1" inputmode="numeric" autocomplete="off"></label><div class="muted" style="font-size:12px">忘記 PIN 請找管理者到入口網站 → 共用設定重設</div>`}
       <div style="display:flex;gap:8px"><button class="btn" id="pinBack">返回</button><button class="btn pri" id="pinGo">登入</button></div>`;
     $('#pin1').focus();
     const go=async()=>{
       const v=$('#pin1').value;
       if(H.root&&!(await hasPerm(H.root,true))){toast('請先允許存取資料夾');return}
-      if(kind==='admin'){if(!(await checkPwd(v))){toast('密碼錯誤');return}ss.set('fsd2_admin_ok',S.set.adminHash||'default');login('admin','pwd','管理者');return}
-      const loc=S.ro?ls.get(roPinKey(kind,id)):null;
-      if(first&&loc){if(await sha('pin:'+v)!==loc){toast('PIN 錯誤');return}}
-      else if(first&&S.ro){if(!/^\d{4,}$/.test(v)){toast('PIN 請輸入 4 碼以上數字');return}if(v!==$('#pin2').value){toast('兩次輸入不同');return}
-        if(!H.ret&&!(await pickRet()))return;
-        const hsh=await sha('pin:'+v);try{await sendPinReturn(kind,id,hsh)}catch(e){toast('無法送出 PIN：'+e.message);return}ls.set(roPinKey(kind,id),hsh);toast('PIN 已設定，辦公室系統下次開啟時會寫入')}
-      else if(first){if(!/^\d{4,}$/.test(v)){toast('PIN 請輸入 4 碼以上數字');return}if(v!==$('#pin2').value){toast('兩次輸入不同');return}
-        const pp=(kind==='sales'?S.set.sales.find(x=>x.code===id):kind==='staff'?S.set.staff.find(x=>x.name===id):(S.set.viewers||[]).find(x=>x.name===id))||p;
-        pp.pin=await sha('pin:'+v);p.pin=pp.pin;try{await writeSettings()}catch(e){toast('無法儲存 PIN：'+e.message);return}}
-      else if(await sha('pin:'+v)!==p.pin){toast('PIN 錯誤');return}
+      if(!v){toast('請輸入');return}
+      if(kind==='admin'){if(!(await checkPwd(v))){toast('密碼錯誤');return}ss.set('fsd2_admin_ok',adminKey());login('admin','pwd','管理者');return}
+      if(await sha('pin:'+v)!==p.pin){toast('PIN 錯誤');return}
       if(kind==='sales'){ss.set('fsd2_sales',id);login('sales','sales',id)}
       else if(kind==='viewer'){ss.set('fsd2_me',id);login('viewer','viewer',id)}
       else{ss.set('fsd2_me',id);login(p.admin?'chief':'eng',p.admin?'staff':'eng',id)}
@@ -727,7 +725,11 @@ function logout(){ss.clear();S.role='';S.view='';build();render()}
 let lastAct=Date.now();
 ['click','keydown','mousemove'].forEach(ev=>document.addEventListener(ev,()=>{lastAct=Date.now()},{passive:true}));
 setInterval(()=>{if(S.role&&Date.now()-lastAct>30*60*1000){logout();toast('閒置超過 30 分鐘，已自動登出')}},60*1000);
-function pwdOk(){return ss.get('fsd2_admin_ok')===(S.set.adminHash||'default')}
+/* 管理密碼：入口網站共用設定的 adminHash＝SHA-256('svc-portal:'+密碼)；共用設定沒有時才用本系統舊密碼；都沒有就不能用管理者登入（不再有預設 1234） */
+function portalAdminHash(){return (S.shared&&S.shared.app==='shared-settings'&&S.shared.adminHash)||''}
+function adminKey(){return portalAdminHash()||(S.set&&S.set.adminHash)||''}
+async function shaPortal(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('svc-portal:'+s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+function pwdOk(){const k=adminKey();return !!k&&ss.get('fsd2_admin_ok')===k}
 function roleValid(){
   if(!S.set)return true;
   if(S.role==='admin')return pwdOk();
@@ -737,7 +739,7 @@ function roleValid(){
   return S.role==='guest';
 }
 function adminOk(){return S.role==='admin'||S.role==='chief'}
-async function checkPwd(v){return S.set.adminHash?(await sha(v))===S.set.adminHash:v===DEFAULT_PWD}
+async function checkPwd(v){const ph=portalAdminHash();if(ph)return (await shaPortal(v))===ph;return !!S.set.adminHash&&(await sha(v))===S.set.adminHash}
 
 /* ================= 圖表工具 ================= */
 const tip=$('#tip');
@@ -2174,13 +2176,7 @@ async function importReturn(x){
   if(r.stage==='結案')warn.push('案件已經結案。');
   if(warn.length)confirmBox(warn.join('\n')+'\n\n仍要匯入？',go,'匯入');else go();
 }
-/* ---- 內網第一次設定 PIN：先在本機記住，再回傳給辦公室寫入設定 ---- */
-const roPinKey=(k,id)=>'fsd2_ropin_'+k+'|'+id;
-async function sendPinReturn(kind,id,hash){
-  if(!H.ret)throw new Error('請先選擇回傳資料夾（S:\\31_FieldService_回傳）後再設定 PIN');
-  const item='PIN_'+nowIso().replace(/\D/g,'').slice(0,14)+'_'+Math.random().toString(36).slice(2,6);
-  const od=await retDir(['outbox',item],true);await writeJSON(od,'item.json',{type:'pin',kind,id,pin:hash,at:nowIso()});await writeJSON(od,'_ready.json',{at:nowIso()});
-}
+/* ---- 內網回傳處理（v3.4.4 起不再接受內網設定的 PIN） ---- */
 async function processPinReturns(){
   try{if(!S.permOk&&!(await hasPerm(H.root,false)))return;
     const all=await listReturns();
@@ -2190,10 +2186,8 @@ async function processPinReturns(){
         await (await H.root.getDirectoryHandle(RET_DIR)).removeEntry(x.n,{recursive:true})}catch(e){console.warn('jobdone',e)}}
     build();
     const L=all.filter(x=>x.ok&&x.item&&x.item.type==='pin');if(!L.length)return;
-    let n=0;for(const x of L){const it=x.item;const p=it.kind==='sales'?S.set.sales.find(q=>q.code===it.id):it.kind==='staff'?S.set.staff.find(q=>q.name===it.id):(S.set.viewers||[]).find(q=>q.name===it.id);
-      if(p&&!p.pin){p.pin=it.pin;n++}
-      try{await (await H.root.getDirectoryHandle(RET_DIR)).removeEntry(x.n,{recursive:true})}catch(e){}}
-    if(n){await writeSettings();toast(`已套用 ${n} 筆內網設定的 PIN`)}
+    /* v3.4.4 起內網不能自己設 PIN：舊版留下的 PIN 回傳一律不套用，直接清掉 */
+    for(const x of L){try{await (await H.root.getDirectoryHandle(RET_DIR)).removeEntry(x.n,{recursive:true})}catch(e){}}
   }catch(e){console.warn('PIN 回傳',e)}
 }
 
@@ -2787,9 +2781,10 @@ function renderSet(){
     <label class="s2">公司名稱<input type="text" id="gCo" value="${esc((st.company||{}).name||'')}"></label><label class="s2">地址<input type="text" id="gAddr" value="${esc((st.company||{}).addr||'')}"></label>
     <label class="s2">電話<input type="text" id="gTel" value="${esc((st.company||{}).tel||'')}"></label><label class="s2">傳真<input type="text" id="gFax" value="${esc((st.company||{}).fax||'')}"></label>
     <div class="s4"><button class="btn pri" id="gSave">儲存</button></div>
-    <div class="s4" style="border-top:1px solid var(--line);padding-top:12px"><b>變更管理者密碼</b></div>
+    <div class="s4" style="border-top:1px solid var(--line);padding-top:12px"><b>管理者密碼</b></div>
+    ${portalAdminHash()?'<div class="s4 muted">由入口網站「共用設定」管理，登入時用入口網站的管理密碼；要修改請到入口網站。</div>':`<div class="s4 muted">入口網站共用設定還沒有管理密碼，暫用本系統密碼。建議到入口網站設定，之後兩邊共用。</div>
     <label>新密碼<input type="password" id="gP1"></label><label>再輸入一次<input type="password" id="gP2"></label>
-    <div class="s2" style="align-self:end"><button class="btn" id="gPwd">更新密碼</button></div></div>`;
+    <div class="s2" style="align-self:end"><button class="btn" id="gPwd">更新密碼</button></div>`}</div>`;
   if(tab==='staff')body=`<table class="etbl"><thead><tr><th>中文全名</th><th>英文名</th><th>職稱</th><th>舊資料簡稱（逗號分隔）</th><th>排程負責人</th><th>在職</th><th>PIN</th><th></th></tr></thead><tbody>
     ${st.staff.map((s,i)=>`<tr><td><input type="text" data-i="${i}" data-f="name" value="${esc(s.name)}"></td><td><input type="text" data-i="${i}" data-f="en" value="${esc(s.en)}"></td><td><input type="text" data-i="${i}" data-f="title" value="${esc(s.title)}"></td><td><input type="text" data-i="${i}" data-f="alias" value="${esc((s.alias||[]).join(','))}"></td><td><input type="checkbox" data-i="${i}" data-f="admin" ${s.admin?'checked':''}></td><td><input type="checkbox" data-i="${i}" data-f="active" ${s.active?'checked':''}></td><td>${s.pin?`<button class="btn sm" data-rpin="${i}">重設</button>`:'<span class="muted">未設定</span>'}</td><td><button class="btn sm dng" data-del="${i}">刪除</button></td></tr>`).join('')}</tbody></table>
     <div style="display:flex;gap:8px;margin-top:10px"><button class="btn" id="tAdd">＋ 新增工程師</button><button class="btn pri" id="tSave">儲存</button></div>
@@ -2844,7 +2839,7 @@ function bindSet(){
   const csv=id=>$('#'+id).value.split(/[,，]/).map(s=>s.trim()).filter(Boolean);
   // 一般
   on('gSave',()=>{const fs0=+$('#gFsnStart').value;if(!(fs0>=1&&fs0<=9999)){toast('流水號起始請填 1～9999');return}st.fsnStart=Object.assign({},st.fsnStart,{[String(st.year)]:fs0});const jc=$('#gJobCats').value.split(/[,，]+/).map(x=>x.trim()).filter(Boolean);if(jc.length)st.jobCats=jc;const bk=$('#gBreaks').value.split(/[,，\s]+/).map(x=>x.trim().replace(/[～~–—]/g,'-')).filter(Boolean);const bad=bk.find(x=>!/^\d{1,2}:\d{2}-\d{1,2}:\d{2}$/.test(x));if(bad){toast('休息時段格式錯誤：'+bad+'（例：12:00-13:00）');return}st.breaks=bk;const y=+$('#gYear').value||st.year;st.year=y;st.vehicles=csv('gVeh');st.brands=csv('gBrand');st.depts=csv('gDept');st.lateDays=Math.max(0,parseInt($('#gLate').value)||0);st.lateWorkdays=$('#gLateW').checked;st.baogongUrl=$('#gBg').value.trim();st.svcMap={};$('#gSvcMap').value.split('\n').forEach(l=>{const i=l.indexOf('=');if(i>0)st.svcMap[l.slice(0,i).trim()]=l.slice(i+1).trim()});st.company={name:$('#gCo').value.trim(),addr:$('#gAddr').value.trim(),tel:$('#gTel').value.trim(),fax:$('#gFax').value.trim()};save().then(()=>loadAll())});
-  on('gPwd',async()=>{const a=$('#gP1').value,b=$('#gP2').value;if(a.length<4){toast('密碼至少 4 碼');return}if(a!==b){toast('兩次輸入不同');return}st.adminHash=await sha(a);ss.set('fsd2_admin_ok',st.adminHash);save('密碼已更新')});
+  on('gPwd',async()=>{const a=$('#gP1').value,b=$('#gP2').value;if(a.length<4){toast('密碼至少 4 碼');return}if(a!==b){toast('兩次輸入不同');return}st.adminHash=await sha(a);ss.set('fsd2_admin_ok',adminKey());save('密碼已更新')});
   // 工程師／業務 表格
   if(S.stab==='perm')bindPermSet(st,m,on,save);
   if(S.stab==='staff'||S.stab==='sales'||S.stab==='viewer'){
@@ -2853,7 +2848,7 @@ function bindSet(){
     on('tAdd',()=>{sync();arr.push(S.stab==='staff'?{name:'',en:'',title:'',admin:false,alias:[],active:true}:S.stab==='viewer'?{name:'',title:'',active:true}:{code:'',name:'',active:true});renderSet()});
     on('tSave',()=>{sync();const k=S.stab==='sales'?'code':'name';const clean=arr.filter(o=>o[k]);if(new Set(clean.map(o=>o[k])).size!==clean.length){toast('有重複的'+(k==='name'?'姓名':'代碼'));return}arr.length=0;clean.forEach(o=>arr.push(o));save()});
     extra=e=>{const d=e.target.closest('[data-del]');if(d){sync();arr.splice(+d.dataset.del,1);renderSet();return}
-      const rp=e.target.closest('[data-rpin]');if(rp){const o=arr[+rp.dataset.rpin];confirmBox(`重設「${o.name||o.code}」的 PIN？下次登入時會要求重新設定。`,()=>{sync();o.pin='';save('PIN 已重設')})}};
+      const rp=e.target.closest('[data-rpin]');if(rp){const o=arr[+rp.dataset.rpin];confirmBox(`清除「${o.name||o.code}」在本系統的舊 PIN？之後要由管理者到入口網站 → 共用設定幫他設新的 PIN。`,()=>{sync();o.pin='';save('PIN 已重設')})}};
   }
   // 客戶
   if(S.stab==='cust'){
